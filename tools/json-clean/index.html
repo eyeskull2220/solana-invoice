@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JSON Cleaner</title>
+  <meta name="description" content="Paste JSON, pretty-print or minify it, then download. One HTML file. 49 USDC on Solana." />
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f3ee;
+      --card: #ffffff;
+      --ink: #1b1a17;
+      --muted: #5e5a53;
+      --line: #d9d3c7;
+      --accent: #0c4a36;
+      --accent-ink: #f4fff9;
+      --soft: #e4f0ea;
+      --warn-bg: #fff6e8;
+      --warn-line: #ecd4a4;
+      --shadow: 0 14px 40px rgba(40, 32, 18, 0.07);
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+    }
+    main {
+      width: min(1100px, 100%);
+      margin: 0 auto;
+      padding: 28px 16px 72px;
+    }
+    header h1 {
+      margin: 0 0 6px;
+      font-size: clamp(1.6rem, 4vw, 2.1rem);
+      letter-spacing: -0.03em;
+    }
+    .lead {
+      margin: 0 0 12px;
+      color: var(--muted);
+      max-width: 44rem;
+    }
+    .price {
+      display: inline-block;
+      margin: 0 0 22px;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--soft);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 650;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      margin: 0 0 14px;
+    }
+    h2 {
+      margin: 0 0 10px;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+    .panes {
+      display: grid;
+      gap: 12px;
+    }
+    @media (min-width: 840px) {
+      .panes { grid-template-columns: 1fr 1fr; }
+    }
+    .pane-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .pane-head h2 { margin: 0; }
+    textarea {
+      width: 100%;
+      min-height: 280px;
+      border: 1px solid var(--line);
+      background: #fcfaf6;
+      color: var(--ink);
+      border-radius: 12px;
+      padding: 12px;
+      font: 13.5px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      resize: vertical;
+    }
+    textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+    .drop {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-height: 72px;
+      margin-bottom: 10px;
+      padding: 14px 12px;
+      border: 1.5px dashed var(--line);
+      border-radius: 12px;
+      background: #fcfaf6;
+      text-align: center;
+      cursor: pointer;
+    }
+    .drop.drag { border-color: var(--accent); background: var(--soft); }
+    .drop span { color: var(--muted); font-size: 0.9rem; }
+    .hidden { display: none !important; }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    button, .btn {
+      font: 650 15px/1.2 ui-sans-serif, system-ui, sans-serif;
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 14px;
+      cursor: pointer;
+    }
+    .primary { background: var(--accent); color: var(--accent-ink); }
+    .ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+    button:disabled { opacity: 0.45; cursor: not-allowed; }
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin: 10px 0 0;
+    }
+    .stats b { color: var(--ink); }
+    .error {
+      background: var(--warn-bg);
+      border: 1px solid var(--warn-line);
+      border-radius: 12px;
+      padding: 10px 12px;
+      color: #6b3d0c;
+      margin: 10px 0 0;
+    }
+    .ok { color: var(--accent); font-size: 14px; margin: 10px 0 0; }
+    .note { color: var(--muted); font-size: 13px; margin: 10px 0 0; }
+    .addr {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      word-break: break-all;
+      background: #fcfaf6;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .net { color: var(--muted); font-size: 13px; margin: 10px 0 0; }
+    footer {
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>JSON Cleaner</h1>
+      <p class="lead">Paste messy JSON, pretty-print or minify it, then download. Everything stays on this device. No account, no upload, no wallet.</p>
+      <p class="price">49 USDC · Solana USDC</p>
+    </header>
+
+    <section class="card">
+      <div class="panes">
+        <div>
+          <div class="pane-head">
+            <h2>Paste</h2>
+            <div class="actions" style="margin:0">
+              <button type="button" class="ghost" id="clearBtn">Clear</button>
+            </div>
+          </div>
+          <label class="drop" id="drop" for="file">
+            <strong>Drop a .json file</strong>
+            <span>or tap to pick one</span>
+          </label>
+          <input id="file" class="hidden" type="file" accept=".json,application/json,text/plain" />
+          <textarea id="input" spellcheck="false" placeholder='{"paste": "json here"}'></textarea>
+        </div>
+        <div>
+          <div class="pane-head">
+            <h2>Result</h2>
+          </div>
+          <textarea id="output" spellcheck="false" readonly placeholder="Pretty or minify to see the cleaned JSON here."></textarea>
+        </div>
+      </div>
+      <p class="error hidden" id="error"></p>
+      <p class="ok hidden" id="status"></p>
+      <div class="stats" id="stats"></div>
+      <div class="actions">
+        <button type="button" class="primary" id="prettyBtn">Pretty</button>
+        <button type="button" class="ghost" id="minifyBtn">Minify</button>
+        <button type="button" class="ghost" id="copyBtn" disabled>Copy result</button>
+        <button type="button" class="ghost" id="downloadBtn" disabled>Download</button>
+      </div>
+    </section>
+
+    <section class="card" id="pay">
+      <h2>Pay 49 USDC on Solana</h2>
+      <p class="note" style="margin-top:0">Send exactly 49 USDC. Do not send SOL or any other chain.</p>
+      <p>Pay to:</p>
+      <div class="addr" id="addr">96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</div>
+      <p class="net">Network: Solana · Token: USDC</p>
+      <p class="net">Mint: EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v</p>
+      <div class="actions">
+        <button type="button" class="primary" id="copyAddrBtn">Copy address</button>
+      </div>
+      <p class="ok hidden" id="copyAddrStatus"></p>
+    </section>
+
+    <footer>
+      Offline one-file tool. Your JSON never leaves the browser. 49 USDC on Solana to 96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3.
+    </footer>
+  </main>
+
+  <script>
+    (function () {
+      var PAY_TO = "96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3";
+      var lastMode = "pretty";
+      var lastName = "cleaned.json";
+
+      var $ = function (id) { return document.getElementById(id); };
+      var inputEl = $("input");
+      var outputEl = $("output");
+      var errorEl = $("error");
+      var statusEl = $("status");
+      var statsEl = $("stats");
+      var copyBtn = $("copyBtn");
+      var downloadBtn = $("downloadBtn");
+      var drop = $("drop");
+      var fileInput = $("file");
+
+      function setError(msg) {
+        errorEl.textContent = msg || "";
+        errorEl.classList.toggle("hidden", !msg);
+      }
+
+      function setStatus(msg) {
+        statusEl.textContent = msg || "";
+        statusEl.classList.toggle("hidden", !msg);
+      }
+
+      function bytes(n) {
+        if (n < 1024) return n + " B";
+        return (Math.round(n / 102.4) / 10) + " KB";
+      }
+
+      function parseInput() {
+        var raw = inputEl.value;
+        if (!raw.trim()) throw new Error("Paste some JSON first.");
+        return JSON.parse(raw);
+      }
+
+      function apply(mode) {
+        setError("");
+        setStatus("");
+        try {
+          var value = parseInput();
+          var text = mode === "minify"
+            ? JSON.stringify(value)
+            : JSON.stringify(value, null, 2);
+          outputEl.value = text;
+          lastMode = mode;
+          copyBtn.disabled = false;
+          downloadBtn.disabled = false;
+          statsEl.innerHTML =
+            "<span>In: <b>" + bytes(inputEl.value.length) + "</b></span>" +
+            "<span>Out: <b>" + bytes(text.length) + "</b></span>" +
+            "<span>Mode: <b>" + (mode === "minify" ? "minify" : "pretty") + "</b></span>";
+          setStatus(mode === "minify" ? "Minified." : "Pretty-printed.");
+        } catch (err) {
+          outputEl.value = "";
+          copyBtn.disabled = true;
+          downloadBtn.disabled = true;
+          statsEl.innerHTML = "";
+          setError(err && err.message ? err.message : "Could not parse that JSON.");
+        }
+      }
+
+      function download() {
+        var text = outputEl.value;
+        if (!text) return;
+        var blob = new Blob([text], { type: "application/json;charset=utf-8" });
+        var a = document.createElement("a");
+        var base = lastName.replace(/\.json$/i, "") || "cleaned";
+        a.href = URL.createObjectURL(blob);
+        a.download = base + (lastMode === "minify" ? "-min.json" : "-pretty.json");
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+        setStatus("Downloaded " + a.download + ".");
+      }
+
+      function copyText(text, okEl, okMsg) {
+        function ok() {
+          okEl.textContent = okMsg;
+          okEl.classList.remove("hidden");
+        }
+        function fail() {
+          okEl.textContent = "Copy failed. Select the text instead.";
+          okEl.classList.remove("hidden");
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(ok).catch(fail);
+        } else {
+          fail();
+        }
+      }
+
+      function readFile(file) {
+        if (!file) return;
+        lastName = file.name || "cleaned.json";
+        var reader = new FileReader();
+        reader.onload = function () {
+          inputEl.value = String(reader.result || "");
+          apply("pretty");
+        };
+        reader.onerror = function () {
+          setError("Could not read that file.");
+        };
+        reader.readAsText(file);
+      }
+
+      $("prettyBtn").addEventListener("click", function () { apply("pretty"); });
+      $("minifyBtn").addEventListener("click", function () { apply("minify"); });
+      copyBtn.addEventListener("click", function () {
+        copyText(outputEl.value, statusEl, "Copied result.");
+      });
+      downloadBtn.addEventListener("click", download);
+      $("clearBtn").addEventListener("click", function () {
+        inputEl.value = "";
+        outputEl.value = "";
+        lastName = "cleaned.json";
+        fileInput.value = "";
+        copyBtn.disabled = true;
+        downloadBtn.disabled = true;
+        statsEl.innerHTML = "";
+        setError("");
+        setStatus("");
+      });
+      $("copyAddrBtn").addEventListener("click", function () {
+        copyText(PAY_TO, $("copyAddrStatus"), "Copied.");
+      });
+
+      fileInput.addEventListener("change", function () {
+        readFile(fileInput.files && fileInput.files[0]);
+      });
+      ["dragenter", "dragover"].forEach(function (ev) {
+        drop.addEventListener(ev, function (e) {
+          e.preventDefault();
+          drop.classList.add("drag");
+        });
+      });
+      ["dragleave", "drop"].forEach(function (ev) {
+        drop.addEventListener(ev, function (e) {
+          e.preventDefault();
+          drop.classList.remove("drag");
+        });
+      });
+      drop.addEventListener("drop", function (e) {
+        var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+        if (f) readFile(f);
+      });
+    })();
+  </script>
+</body>
+</html>
