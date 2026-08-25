@@ -136,7 +136,8 @@
       display: grid;
       gap: 14px;
     }
-    @media (min-width: 880px) {
+    .work > * { min-width: 0; }
+    @media (min-width: 960px) {
       .work { grid-template-columns: 1fr 1fr; align-items: stretch; }
     }
     textarea {
