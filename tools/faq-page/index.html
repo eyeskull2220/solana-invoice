@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FAQ page — 49 USDC</title>
+  <meta name="description" content="Build a FAQ page in the browser. Add Q&amp;A, preview, download one HTML file. 49 USDC on Solana." />
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f3ee;
+      --card: #ffffff;
+      --ink: #1b1a17;
+      --muted: #5e5a53;
+      --line: #d9d3c7;
+      --accent: #0c4a36;
+      --accent-ink: #f4fff9;
+      --soft: #e4f0ea;
+      --warn-bg: #fff6e8;
+      --warn-line: #ecd4a4;
+      --shadow: 0 14px 40px rgba(40, 32, 18, 0.07);
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+    }
+    main {
+      width: min(980px, 100%);
+      margin: 0 auto;
+      padding: 28px 16px 72px;
+    }
+    header h1 {
+      margin: 0 0 6px;
+      font-size: clamp(1.6rem, 4vw, 2.1rem);
+      letter-spacing: -0.03em;
+    }
+    .lead {
+      margin: 0 0 12px;
+      color: var(--muted);
+      max-width: 42rem;
+    }
+    .price {
+      display: inline-block;
+      margin: 0 0 22px;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--soft);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 650;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      margin: 0 0 14px;
+    }
+    h2 {
+      margin: 0 0 10px;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+    .cols-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    label.field {
+      display: block;
+      margin: 0 0 12px;
+    }
+    label.field span {
+      display: block;
+      font-size: 13px;
+      font-weight: 650;
+      margin: 0 0 6px;
+    }
+    input[type="text"], textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fcfaf6;
+      color: var(--ink);
+      border-radius: 10px;
+      padding: 11px 12px;
+      font: 15px/1.4 ui-sans-serif, system-ui, sans-serif;
+    }
+    textarea { min-height: 88px; resize: vertical; }
+    .qa {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fcfaf6;
+      padding: 12px;
+      margin: 0 0 10px;
+    }
+    .qa-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .qa-top b { font-size: 0.92rem; }
+    .qa-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    button, .btn {
+      font: 650 15px/1.2 ui-sans-serif, system-ui, sans-serif;
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 14px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .primary { background: var(--accent); color: var(--accent-ink); }
+    .ghost {
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+    button:disabled { opacity: 0.45; cursor: not-allowed; }
+    .addr {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      word-break: break-all;
+      line-height: 1.45;
+      background: var(--soft);
+      border-radius: 10px;
+      padding: 12px;
+      margin: 8px 0;
+    }
+    .net, .note, .ok, footer {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .ok { color: var(--accent); margin: 8px 0 0; }
+    .hidden { display: none !important; }
+    .error {
+      background: var(--warn-bg);
+      border: 1px solid var(--warn-line);
+      border-radius: 12px;
+      padding: 10px 12px;
+      color: #6b3d0c;
+      margin: 0 0 12px;
+    }
+    .preview-box {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      padding: 18px 16px;
+    }
+    .preview-box h3 {
+      margin: 0 0 6px;
+      font-size: 1.35rem;
+      letter-spacing: -0.03em;
+    }
+    .preview-box .intro {
+      color: var(--muted);
+      margin: 0 0 14px;
+      white-space: pre-wrap;
+    }
+    .preview-box details {
+      border-bottom: 1px solid var(--line);
+      padding: 10px 0;
+    }
+    .preview-box details:last-child { border-bottom: 0; }
+    .preview-box summary {
+      cursor: pointer;
+      font-weight: 650;
+      list-style: none;
+    }
+    .preview-box summary::-webkit-details-marker { display: none; }
+    .preview-box .answer {
+      margin: 8px 0 0;
+      color: var(--ink);
+      white-space: pre-wrap;
+    }
+    .empty { color: var(--muted); font-style: italic; margin: 0; }
+    footer { margin-top: 22px; }
+    footer a { color: inherit; }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>FAQ page</h1>
+      <p class="lead">Add questions and answers, preview the page, then download one HTML file. Everything stays on this device. No account, no upload, no wallet.</p>
+      <p class="price">49 USDC · Solana USDC</p>
+    </header>
+
+    <section class="card" id="pay">
+      <h2>Pay 49 USDC on Solana</h2>
+      <p>Send exactly 49 USDC to:</p>
+      <div class="addr" id="payAddr">96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</div>
+      <p class="net">Network: Solana · Token: USDC · Mint: EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v</p>
+      <div class="actions">
+        <button type="button" class="primary" id="copyBtn">Copy address</button>
+        <a class="btn ghost" id="payLink" href="#">Open Solana Pay link</a>
+      </div>
+      <p class="ok" id="copyStatus"></p>
+      <p class="note">USDC on Solana only — not SOL, not another chain. No wallet connect on this page.</p>
+    </section>
+
+    <section class="card">
+      <h2>Page</h2>
+      <p class="error hidden" id="error"></p>
+      <label class="field">
+        <span>Title</span>
+        <input id="title" type="text" maxlength="120" value="Frequently asked questions" />
+      </label>
+      <label class="field">
+        <span>Intro (optional)</span>
+        <textarea id="intro" maxlength="600" placeholder="Short note at the top of the FAQ">Answers to the questions people actually ask.</textarea>
+      </label>
+    </section>
+
+    <section class="card">
+      <div class="cols-head">
+        <h2>Questions &amp; answers</h2>
+        <div class="actions">
+          <button type="button" class="ghost" id="addBtn">Add Q&amp;A</button>
+        </div>
+      </div>
+      <div id="items"></div>
+    </section>
+
+    <section class="card">
+      <div class="cols-head">
+        <h2>Preview</h2>
+        <div class="actions">
+          <button type="button" class="primary" id="downloadBtn">Download faq.html</button>
+        </div>
+      </div>
+      <div class="preview-box" id="preview"></div>
+      <p class="ok hidden" id="status"></p>
+      <p class="note">The downloaded file is self-contained. Host it anywhere or send it as an attachment. Search and accordion run in the browser.</p>
+    </section>
+
+    <footer>
+      Offline one-file tool. 49 USDC on Solana to 96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3. No wallet on this page.
+    </footer>
+  </main>
+
+  <script>
+    (function () {
+      var PRICE = "49";
+      var PAY_TO = "96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3";
+      var USDC_MINT = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
+
+      function uid() {
+        return "q" + Math.random().toString(36).slice(2, 9);
+      }
+
+      var items = [
+        { id: uid(), q: "Do I need an account?", a: "No. Open the file, add questions, download the FAQ page." },
+        { id: uid(), q: "Where does the file run?", a: "In the browser. Host it anywhere or send it as an attachment." }
+      ];
+
+      var $ = function (id) { return document.getElementById(id); };
+      var errorEl = $("error");
+      var statusEl = $("status");
+      var itemsEl = $("items");
+      var previewEl = $("preview");
+      var copyStatus = $("copyStatus");
+
+      function showError(msg) {
+        errorEl.textContent = msg || "";
+        errorEl.classList.toggle("hidden", !msg);
+      }
+
+      function showStatus(msg) {
+        statusEl.textContent = msg || "";
+        statusEl.classList.toggle("hidden", !msg);
+      }
+
+      function escapeHtml(s) {
+        return String(s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function readConfig() {
+        var clean = [];
+        var i;
+        for (i = 0; i < items.length; i++) {
+          clean.push({
+            q: String(items[i].q || "").trim(),
+            a: String(items[i].a || "").trim()
+          });
+        }
+        return {
+          title: String($("title").value || "").trim() || "Frequently asked questions",
+          intro: String($("intro").value || "").trim(),
+          items: clean
+        };
+      }
+
+      function validate(cfg) {
+        if (!cfg.items.length) return "Add at least one question.";
+        var i, row;
+        for (i = 0; i < cfg.items.length; i++) {
+          row = cfg.items[i];
+          if (!row.q) return "Question " + (i + 1) + " is empty.";
+          if (!row.a) return "Answer " + (i + 1) + " is empty.";
+        }
+        return "";
+      }
+
+      function renderItems() {
+        itemsEl.innerHTML = "";
+        items.forEach(function (item, index) {
+          var wrap = document.createElement("div");
+          wrap.className = "qa";
+          wrap.innerHTML =
+            '<div class="qa-top">' +
+              "<b>Q&amp;A " + (index + 1) + "</b>" +
+              '<div class="qa-actions">' +
+                '<button type="button" class="ghost" data-act="up"' + (index === 0 ? " disabled" : "") + ">Up</button>" +
+                '<button type="button" class="ghost" data-act="down"' + (index === items.length - 1 ? " disabled" : "") + ">Down</button>" +
+                '<button type="button" class="ghost" data-act="remove">Remove</button>' +
+              "</div>" +
+            "</div>" +
+            '<label class="field"><span>Question</span><input type="text" data-field="q" maxlength="200" /></label>' +
+            '<label class="field" style="margin:0"><span>Answer</span><textarea data-field="a" maxlength="2000"></textarea></label>';
+          wrap.querySelector('[data-field="q"]').value = item.q;
+          wrap.querySelector('[data-field="a"]').value = item.a;
+          wrap.querySelector('[data-field="q"]').addEventListener("input", function (e) {
+            item.q = e.target.value;
+            renderPreview();
+          });
+          wrap.querySelector('[data-field="a"]').addEventListener("input", function (e) {
+            item.a = e.target.value;
+            renderPreview();
+          });
+          wrap.querySelector('[data-act="up"]').addEventListener("click", function () { move(index, -1); });
+          wrap.querySelector('[data-act="down"]').addEventListener("click", function () { move(index, 1); });
+          wrap.querySelector('[data-act="remove"]').addEventListener("click", function () { removeAt(index); });
+          itemsEl.appendChild(wrap);
+        });
+        if (!items.length) {
+          var empty = document.createElement("p");
+          empty.className = "empty";
+          empty.textContent = "No Q&A yet. Add one to start the page.";
+          itemsEl.appendChild(empty);
+        }
+      }
+
+      function move(index, dir) {
+        var next = index + dir;
+        if (next < 0 || next >= items.length) return;
+        var tmp = items[index];
+        items[index] = items[next];
+        items[next] = tmp;
+        renderItems();
+        renderPreview();
+      }
+
+      function removeAt(index) {
+        items.splice(index, 1);
+        renderItems();
+        renderPreview();
+      }
+
+      function faqInnerHtml(cfg) {
+        var blocks = cfg.items.map(function (row) {
+          return (
+            "<details>" +
+              "<summary>" + escapeHtml(row.q) + "</summary>" +
+              '<div class="answer">' + escapeHtml(row.a) + "</div>" +
+            "</details>"
+          );
+        }).join("");
+        return (
+          "<h1>" + escapeHtml(cfg.title) + "</h1>" +
+          (cfg.intro ? '<p class="intro">' + escapeHtml(cfg.intro) + "</p>" : "") +
+          '<label class="search"><span>Search</span><input type="search" id="q" placeholder="Filter questions" /></label>' +
+          '<div id="list">' + blocks + "</div>"
+        );
+      }
+
+      function faqPageHtml(cfg) {
+        return (
+          "<!doctype html>\n<html lang=\"en\">\n<head>\n" +
+          "  <meta charset=\"utf-8\" />\n" +
+          "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n" +
+          "  <title>" + escapeHtml(cfg.title) + "</title>\n" +
+          "  <style>\n" +
+          "    :root { color-scheme: light; --bg:#f6f3ee; --ink:#1b1a17; --muted:#5e5a53; --line:#d9d3c7; --accent:#0c4a36; }\n" +
+          "    * { box-sizing: border-box; }\n" +
+          "    html, body { margin: 0; padding: 0; }\n" +
+          "    body { min-height: 100vh; font: 16px/1.5 ui-sans-serif, system-ui, sans-serif; color: var(--ink); background: var(--bg); }\n" +
+          "    main { width: min(720px, 100%); margin: 0 auto; padding: 36px 16px 72px; }\n" +
+          "    h1 { margin: 0 0 8px; font-size: clamp(1.6rem, 4vw, 2.2rem); letter-spacing: -0.03em; }\n" +
+          "    .intro { color: var(--muted); margin: 0 0 22px; white-space: pre-wrap; }\n" +
+          "    .search { display: block; margin: 0 0 18px; }\n" +
+          "    .search span { display: block; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }\n" +
+          "    input[type=search] { width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 11px 12px; font: 15px/1.4 ui-sans-serif, system-ui, sans-serif; background: #fff; }\n" +
+          "    details { border-bottom: 1px solid var(--line); padding: 12px 0; }\n" +
+          "    summary { cursor: pointer; font-weight: 650; list-style: none; }\n" +
+          "    summary::-webkit-details-marker { display: none; }\n" +
+          "    .answer { margin: 8px 0 2px; white-space: pre-wrap; }\n" +
+          "    .hide { display: none; }\n" +
+          "    .empty { color: var(--muted); font-style: italic; }\n" +
+          "  </style>\n</head>\n<body>\n  <main>\n    " +
+          faqInnerHtml(cfg) +
+          "\n  </main>\n  <script>\n" +
+          "    (function () {\n" +
+          "      var q = document.getElementById('q');\n" +
+          "      var list = document.getElementById('list');\n" +
+          "      if (!q || !list) return;\n" +
+          "      q.addEventListener('input', function () {\n" +
+          "        var needle = q.value.toLowerCase().trim();\n" +
+          "        var nodes = list.querySelectorAll('details');\n" +
+          "        var shown = 0;\n" +
+          "        for (var i = 0; i < nodes.length; i++) {\n" +
+          "          var t = nodes[i].textContent.toLowerCase();\n" +
+          "          var on = !needle || t.indexOf(needle) !== -1;\n" +
+          "          nodes[i].classList.toggle('hide', !on);\n" +
+          "          if (on) shown += 1;\n" +
+          "        }\n" +
+          "        var empty = list.querySelector('.empty');\n" +
+          "        if (!shown) {\n" +
+          "          if (!empty) { empty = document.createElement('p'); empty.className = 'empty'; empty.textContent = 'No matching questions.'; list.appendChild(empty); }\n" +
+          "        } else if (empty) empty.remove();\n" +
+          "      });\n" +
+          "    })();\n" +
+          "  <\\/script>\n</body>\n</html>\n"
+        );
+      }
+
+      function renderPreview() {
+        var cfg = readConfig();
+        var err = validate(cfg);
+        showError(err);
+        $("downloadBtn").disabled = !!err;
+        if (err && !cfg.items.length) {
+          previewEl.innerHTML = '<p class="empty">Add a question to preview the page.</p>';
+          return;
+        }
+        var shown = cfg.items.filter(function (row) { return row.q || row.a; });
+        previewEl.innerHTML =
+          "<h3>" + escapeHtml(cfg.title) + "</h3>" +
+          (cfg.intro ? '<p class="intro">' + escapeHtml(cfg.intro) + "</p>" : "") +
+          (shown.length
+            ? shown.map(function (row) {
+                return (
+                  "<details open>" +
+                    "<summary>" + escapeHtml(row.q || "(question)") + "</summary>" +
+                    '<div class="answer">' + escapeHtml(row.a || "(answer)") + "</div>" +
+                  "</details>"
+                );
+              }).join("")
+            : '<p class="empty">Add a question to preview the page.</p>');
+      }
+
+      function downloadFile(name, text) {
+        var blob = new Blob([text], { type: "text/html;charset=utf-8" });
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = name;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+      }
+
+      function slugTitle(title) {
+        var s = String(title || "faq").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+        return (s || "faq") + ".html";
+      }
+
+      $("addBtn").addEventListener("click", function () {
+        items.push({ id: uid(), q: "", a: "" });
+        renderItems();
+        renderPreview();
+        var inputs = itemsEl.querySelectorAll('input[data-field="q"]');
+        if (inputs.length) inputs[inputs.length - 1].focus();
+      });
+
+      $("title").addEventListener("input", renderPreview);
+      $("intro").addEventListener("input", renderPreview);
+
+      $("downloadBtn").addEventListener("click", function () {
+        var cfg = readConfig();
+        var err = validate(cfg);
+        if (err) { showError(err); return; }
+        downloadFile(slugTitle(cfg.title), faqPageHtml(cfg));
+        showStatus("Downloaded. Open the file locally or host it anywhere.");
+      });
+
+      $("copyBtn").addEventListener("click", function () {
+        function ok() { copyStatus.textContent = "Copied."; }
+        function fail() { copyStatus.textContent = "Copy failed. Select the address instead."; }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(PAY_TO).then(ok).catch(fail);
+        } else {
+          fail();
+        }
+      });
+
+      $("payLink").href = "solana:" + PAY_TO + "?amount=" + PRICE + "&spl-token=" + encodeURIComponent(USDC_MINT);
+
+      renderItems();
+      renderPreview();
+    })();
+  </script>
+</body>
+</html>
