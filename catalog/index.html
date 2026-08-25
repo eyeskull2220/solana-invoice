@@ -1,0 +1,594 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Treasury tools catalog</title>
+  <meta name="description" content="One-file tools billed in USDC on Solana. Same treasury address for every product." />
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f3ee;
+      --card: #ffffff;
+      --ink: #1b1a17;
+      --muted: #5e5a53;
+      --line: #d9d3c7;
+      --accent: #0c4a36;
+      --accent-ink: #f4fff9;
+      --soft: #e4f0ea;
+      --warn-bg: #fff6e8;
+      --warn-line: #ecd4a4;
+      --shadow: 0 14px 40px rgba(40, 32, 18, 0.07);
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+    }
+    main {
+      width: min(760px, 100%);
+      margin: 0 auto;
+      padding: 28px 16px 72px;
+    }
+    header h1 {
+      margin: 0 0 6px;
+      font-size: clamp(1.6rem, 4vw, 2.1rem);
+      letter-spacing: -0.03em;
+    }
+    .lead {
+      margin: 0 0 16px;
+      color: var(--muted);
+      max-width: 42rem;
+    }
+    .pay {
+      background: var(--soft);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      margin: 0 0 22px;
+    }
+    .pay h2 {
+      margin: 0 0 6px;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+    .pay .net {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+    .addr {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      word-break: break-all;
+      line-height: 1.45;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+    .pay-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-top: 12px;
+    }
+    button, a.btn {
+      font: 650 15px/1.2 ui-sans-serif, system-ui, sans-serif;
+      border-radius: 10px;
+      padding: 11px 14px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    button, a.btn {
+      border: 0;
+      background: var(--accent);
+      color: var(--accent-ink);
+    }
+    button.secondary {
+      background: #fff;
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+    .ok {
+      margin: 0;
+      color: var(--accent);
+      font-size: 13px;
+    }
+    .warn {
+      background: var(--warn-bg);
+      border: 1px solid var(--warn-line);
+      border-radius: 12px;
+      padding: 10px 12px;
+      color: #6b3d0c;
+      margin: 0 0 22px;
+      font-size: 0.95rem;
+    }
+    h2.group {
+      margin: 28px 0 12px;
+      font-size: 1.15rem;
+      letter-spacing: -0.02em;
+    }
+    h2.group:first-of-type { margin-top: 8px; }
+    .count {
+      color: var(--muted);
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      margin: 0 0 14px;
+    }
+    .tool {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px 16px;
+    }
+    .tool h3 {
+      margin: 0 0 4px;
+      font-size: 1.1rem;
+      letter-spacing: -0.02em;
+    }
+    .tool p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+      max-width: 32rem;
+    }
+    .price {
+      display: inline-block;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--soft);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+    .path {
+      display: block;
+      margin-top: 8px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .memo {
+      margin: 8px 0 0;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    footer {
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    footer a { color: inherit; }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Treasury tools</h1>
+      <p class="lead">Every live Surge product and every <code>tools/*</code> folder, billed to one Solana USDC address. One-file tools. No accounts. No other chain.</p>
+    </header>
+
+    <section class="pay" id="pay">
+      <h2>Pay USDC on Solana</h2>
+      <p class="net">Network: Solana · Token: USDC · Same address for every product on this page.</p>
+      <div class="addr" id="addr">96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</div>
+      <div class="pay-actions">
+        <button type="button" id="copyBtn">Copy address</button>
+        <p class="ok" id="copyStatus"></p>
+      </div>
+    </section>
+
+    <p class="warn">Send USDC on Solana only to <code>96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</code>. Do not send SOL, XRP, or any other chain. Do not use a different address.</p>
+
+    <h2 class="group">Live on Surge <span class="count">(4)</span></h2>
+
+    <section class="card">
+      <div class="tool">
+        <div>
+          <h3>Solana Invoice</h3>
+          <p>Type amount, address, optional memo. Get a client-ready invoice file.</p>
+          <p class="memo">Pay memo: solana-invoice</p>
+        </div>
+        <span class="price">9 USDC</span>
+      </div>
+      <div class="card-actions">
+        <a class="btn" href="https://solana-invoice-treasury.surge.sh/" rel="noopener noreferrer">Open Solana Invoice</a>
+        <button type="button" class="secondary" data-copy-memo="solana-invoice">Copy pay address</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="tool">
+        <div>
+          <h3>CSV Cleaner</h3>
+          <p>Trim, drop empty and duplicate rows, keep chosen columns, download.</p>
+          <p class="memo">Pay memo: csv-cleaner</p>
+        </div>
+        <span class="price">49 USDC</span>
+      </div>
+      <div class="card-actions">
+        <a class="btn" href="https://csv-cleaner-treasury.surge.sh/" rel="noopener noreferrer">Open CSV Cleaner</a>
+        <button type="button" class="secondary" data-copy-memo="csv-cleaner">Copy pay address</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="tool">
+        <div>
+          <h3>Form to Email</h3>
+          <p>Build a contact form that opens a mail app or copies the answers.</p>
+          <p class="memo">Pay memo: form-to-email</p>
+        </div>
+        <span class="price">49 USDC</span>
+      </div>
+      <div class="card-actions">
+        <a class="btn" href="https://form-to-email-treasury.surge.sh/" rel="noopener noreferrer">Open Form to Email</a>
+        <button type="button" class="secondary" data-copy-memo="form-to-email">Copy pay address</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="tool">
+        <div>
+          <h3>RSS to Webhook</h3>
+          <p>Preview a feed, send the last item, or download a small watcher snippet.</p>
+          <p class="memo">Pay memo: rss-to-webhook</p>
+        </div>
+        <span class="price">49 USDC</span>
+      </div>
+      <div class="card-actions">
+        <a class="btn" href="https://rss-to-webhook-treasury.surge.sh/" rel="noopener noreferrer">Open RSS to Webhook</a>
+        <button type="button" class="secondary" data-copy-memo="rss-to-webhook">Copy pay address</button>
+      </div>
+    </section>
+
+    <h2 class="group">tools/* <span class="count">(18)</span></h2>
+
+    <section class="card">
+      <div class="tool">
+        <div>
+          <h3>Expense logger</h3>
+          <p>Log expenses on this device and export them.</p>
+          <code class="path">tools/expense-logger/</code>
+          <p class="memo">Pay memo: expense-logger</p>
+        </div>
+        <span class="price">49 USDC</span>
+      </div>
+      <div class="card-actions">
+        <a class="btn" href="../tools/expense-logger/">Open tools/expense-logger/</a>
+        <button type="button" class="secondary" data-copy-memo="expense-logger">Copy pay address</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="tool">
+        <div>
+          <h3>FAQ page builder</h3>
+          <p>Build a one-file FAQ page.</p>
+          <code class="path">tools/faq-page-builder/</code>
+          <p class="memo">Pay memo: faq-page-builder</p>
+        </div>
+        <span class="price">49 USDC</span>
+      </div>
+      <div class="card-actions">
+        <a class="btn" href="../tools/faq-page-builder/">Open tools/faq-page-builder/</a>
+        <button type="button" class="secondary" data-copy-memo="faq-page-builder">Copy pay address</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="tool">
+        <div>
+          <h3>ICS reminder</h3>
+          <p>Download a calendar reminder (.ics).</p>
+          <code class="path">tools/ics-reminder/</code>
+          <p class="memo">Pay memo: ics-reminder</p>
+        </div>
+        <span class="price">49 USDC</span>
+      </div>
+      <div class="card-actions">
+        <a class="btn" href="../tools/ics-reminder/">Open tools/ics-reminder/</a>
+        <button type="button" class="secondary" data-copy-memo="ics-reminder">Copy pay address</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="tool">
+        <div>
+          <h3>Intake form builder</h3>
+          <p>Build a client intake form. Mailto or copy answers.</p>
+          <code class="path">tools/intake-form-builder/</code>
+          <p class="memo">Pay memo: intake-form-builder</p>
+        </div>
+        <span class="price">49 USDC</span>
+      </div>
+      <div class="card-actions">
+        <a class="btn" href="../tools/intake-form-builder/">Open tools/intake-form-builder/</a>
+        <button type="button" class="secondary" data-copy-memo="intake-form-builder">Copy pay address</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="tool">
+        <div>
+          <h3>Invoice reminder</h3>
+          <p>Write a polite invoice reminder you can send.</p>
+          <code class="path">tools/invoice-reminder/</code>
+          <p class="memo">Pay memo: invoice-reminder</p>
+        </div>
+        <span class="price">49 USDC</span>
+      </div>
+      <div class="card-actions">
+        <a class="btn" href="../tools/invoice-reminder/">Open tools/invoice-reminder/</a>
+        <button type="button" class="secondary" data-copy-memo="invoice-reminder">Copy pay address</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="tool">
+        <div>
+          <h3>JSON cleaner</h3>
+          <p>Tidy, sort, and download JSON on this device.</p>
+          <code class="path">tools/json-cleaner/</code>
+          <p class="memo">Pay memo: json-cleaner</p>
+        </div>
+        <span class="price">49 USDC</span>
+      </div>
+      <div class="card-actions">
+        <a class="btn" href="../tools/json-cleaner/">Open tools/json-cleaner/</a>
+        <button type="button" class="secondary" data-copy-memo="json-cleaner">Copy pay address</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="tool">
+        <div>
+          <h3>Link in bio</h3>
+          <p>One-file list of links.</p>
+          <code class="path">tools/link-in-bio/</code>
+          <p class="memo">Pay memo: link-in-bio</p>
+        </div>
+        <span class="price">49 USDC</span>
+      </div>
+      <div class="card-actions">
+        <a class="btn" href="../tools/link-in-bio/">Open tools/link-in-bio/</a>
+        <button type="button" class="secondary" data-copy-memo="link-in-bio">Copy pay address</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="tool">
+        <div>
+          <h3>Markdown one-pager</h3>
+          <p>Turn markdown into a one-page HTML file.</p>
+          <code class="path">tools/markdown-one-pager/</code>
+          <p class="memo">Pay memo: markdown-one-pager</p>
+        </div>
+        <span class="price">49 USDC</span>
+      </div>
+      <div class="card-actions">
+        <a class="btn" href="../tools/markdown-one-pager/">Open tools/markdown-one-pager/</a>
+        <button type="button" class="secondary" data-copy-memo="markdown-one-pager">Copy pay address</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="tool">
+        <div>
+          <h3>Paywall stub</h3>
+          <p>Gate a page behind a USDC payment check.</p>
+          <code class="path">tools/paywall-stub/</code>
+          <p class="memo">Pay memo: paywall-stub</p>
+        </div>
+        <span class="price">49 USDC</span>
+      </div>
+      <div class="card-actions">
+        <a class="btn" href="../tools/paywall-stub/">Open tools/paywall-stub/</a>
+        <button type="button" class="secondary" data-copy-memo="paywall-stub">Copy pay address</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="tool">
+        <div>
+          <h3>Quote calculator</h3>
+          <p>Price a job from line items.</p>
+          <code class="path">tools/quote-calculator/</code>
+          <p class="memo">Pay memo: quote-calculator</p>
+        </div>
+        <span class="price">49 USDC</span>
+      </div>
+      <div class="card-actions">
+        <a class="btn" href="../tools/quote-calculator/">Open tools/quote-calculator/</a>
+        <button type="button" class="secondary" data-copy-memo="quote-calculator">Copy pay address</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="tool">
+        <div>
+          <h3>Receipt generator</h3>
+          <p>Make a client-ready receipt HTML file.</p>
+          <code class="path">tools/receipt-generator/</code>
+          <p class="memo">Pay memo: receipt-generator</p>
+        </div>
+        <span class="price">49 USDC</span>
+      </div>
+      <div class="card-actions">
+        <a class="btn" href="../tools/receipt-generator/">Open tools/receipt-generator/</a>
+        <button type="button" class="secondary" data-copy-memo="receipt-generator">Copy pay address</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="tool">
+        <div>
+          <h3>Scope sheet</h3>
+          <p>One-page project scope.</p>
+          <code class="path">tools/scope-sheet/</code>
+          <p class="memo">Pay memo: scope-sheet</p>
+        </div>
+        <span class="price">49 USDC</span>
+      </div>
+      <div class="card-actions">
+        <a class="btn" href="../tools/scope-sheet/">Open tools/scope-sheet/</a>
+        <button type="button" class="secondary" data-copy-memo="scope-sheet">Copy pay address</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="tool">
+        <div>
+          <h3>Status page</h3>
+          <p>One-file public status page.</p>
+          <code class="path">tools/status-page/</code>
+          <p class="memo">Pay memo: status-page</p>
+        </div>
+        <span class="price">49 USDC</span>
+      </div>
+      <div class="card-actions">
+        <a class="btn" href="../tools/status-page/">Open tools/status-page/</a>
+        <button type="button" class="secondary" data-copy-memo="status-page">Copy pay address</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="tool">
+        <div>
+          <h3>Time tracker</h3>
+          <p>Track time locally and export.</p>
+          <code class="path">tools/time-tracker/</code>
+          <p class="memo">Pay memo: time-tracker</p>
+        </div>
+        <span class="price">49 USDC</span>
+      </div>
+      <div class="card-actions">
+        <a class="btn" href="../tools/time-tracker/">Open tools/time-tracker/</a>
+        <button type="button" class="secondary" data-copy-memo="time-tracker">Copy pay address</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="tool">
+        <div>
+          <h3>USDC tip jar</h3>
+          <p>Show the treasury address for USDC tips on Solana.</p>
+          <code class="path">tools/usdc-tip-jar/</code>
+          <p class="memo">Pay memo: usdc-tip-jar</p>
+        </div>
+        <span class="price">any USDC</span>
+      </div>
+      <div class="card-actions">
+        <a class="btn" href="../tools/usdc-tip-jar/">Open tools/usdc-tip-jar/</a>
+        <button type="button" class="secondary" data-copy-memo="usdc-tip-jar">Copy pay address</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="tool">
+        <div>
+          <h3>UTM builder</h3>
+          <p>Build campaign URLs with UTM parameters.</p>
+          <code class="path">tools/utm-builder/</code>
+          <p class="memo">Pay memo: utm-builder</p>
+        </div>
+        <span class="price">49 USDC</span>
+      </div>
+      <div class="card-actions">
+        <a class="btn" href="../tools/utm-builder/">Open tools/utm-builder/</a>
+        <button type="button" class="secondary" data-copy-memo="utm-builder">Copy pay address</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="tool">
+        <div>
+          <h3>Waitlist page</h3>
+          <p>One-file waitlist. Mailto, no backend.</p>
+          <code class="path">tools/waitlist-page/</code>
+          <p class="memo">Pay memo: waitlist-page</p>
+        </div>
+        <span class="price">49 USDC</span>
+      </div>
+      <div class="card-actions">
+        <a class="btn" href="../tools/waitlist-page/">Open tools/waitlist-page/</a>
+        <button type="button" class="secondary" data-copy-memo="waitlist-page">Copy pay address</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="tool">
+        <div>
+          <h3>Webhook tester</h3>
+          <p>Send a test POST payload from the browser.</p>
+          <code class="path">tools/webhook-tester/</code>
+          <p class="memo">Pay memo: webhook-tester</p>
+        </div>
+        <span class="price">49 USDC</span>
+      </div>
+      <div class="card-actions">
+        <a class="btn" href="../tools/webhook-tester/">Open tools/webhook-tester/</a>
+        <button type="button" class="secondary" data-copy-memo="webhook-tester">Copy pay address</button>
+      </div>
+    </section>
+
+    <footer>
+      Catalog file: <code>catalog/index.html</code>. Pay address is Solana USDC only:
+      <code>96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</code>.
+    </footer>
+  </main>
+
+  <script>
+    (function () {
+      var PAY_ADDRESS = "96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3";
+      var status = document.getElementById("copyStatus");
+
+      function copyAddress(memo) {
+        function ok() {
+          status.textContent = memo ? "Copied. Memo: " + memo : "Copied.";
+        }
+        function fail() {
+          status.textContent = "Copy failed. Select the address above.";
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(PAY_ADDRESS).then(ok).catch(fail);
+        } else {
+          fail();
+        }
+      }
+
+      document.getElementById("copyBtn").addEventListener("click", function () {
+        copyAddress("");
+      });
+      document.querySelectorAll("[data-copy-memo]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          copyAddress(btn.getAttribute("data-copy-memo") || "");
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
