@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Waitlist — 49 USDC</title>
+  <meta name="description" content="Waitlist landing page generator. One HTML file. Mailto capture. Offline. 49 USDC on Solana." />
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f3ee;
+      --card: #ffffff;
+      --ink: #1b1a17;
+      --muted: #5e5a53;
+      --line: #d9d3c7;
+      --accent: #0c4a36;
+      --accent-ink: #f4fff9;
+      --soft: #e4f0ea;
+      --warn-bg: #fff6e8;
+      --warn-line: #ecd4a4;
+      --shadow: 0 14px 40px rgba(40, 32, 18, 0.07);
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+    }
+    main {
+      width: min(880px, 100%);
+      margin: 0 auto;
+      padding: 28px 16px 72px;
+    }
+    header h1 {
+      margin: 0 0 6px;
+      font-size: clamp(1.6rem, 4vw, 2.1rem);
+      letter-spacing: -0.03em;
+    }
+    .lead {
+      margin: 0 0 12px;
+      color: var(--muted);
+      max-width: 44rem;
+    }
+    .price {
+      display: inline-block;
+      margin: 0 0 22px;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--soft);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 650;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      margin: 0 0 14px;
+    }
+    h2 {
+      margin: 0 0 10px;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+    label.field {
+      display: block;
+      margin: 0 0 12px;
+    }
+    label.field span {
+      display: block;
+      font-size: 13px;
+      font-weight: 650;
+      margin: 0 0 6px;
+    }
+    input[type="text"], input[type="email"], textarea, select {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fcfaf6;
+      color: var(--ink);
+      border-radius: 10px;
+      padding: 11px 12px;
+      font: 15px/1.4 ui-sans-serif, system-ui, sans-serif;
+    }
+    textarea { min-height: 72px; resize: vertical; }
+    .row {
+      display: grid;
+      gap: 12px;
+    }
+    @media (min-width: 640px) {
+      .row.two { grid-template-columns: 1fr 1fr; }
+    }
+    .check {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fcfaf6;
+      margin: 0 0 12px;
+    }
+    .check input { margin-top: 3px; width: 18px; height: 18px; accent-color: var(--accent); }
+    .check b { display: block; font-size: 0.95rem; }
+    .check small { display: block; color: var(--muted); font-size: 0.8rem; }
+    .addr {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      word-break: break-all;
+      background: #fcfaf6;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .net { color: var(--muted); font-size: 13px; margin: 10px 0 0; }
+    .mint { word-break: break-all; }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    button, .btn {
+      font: 650 15px/1.2 ui-sans-serif, system-ui, sans-serif;
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 14px;
+      cursor: pointer;
+    }
+    .primary { background: var(--accent); color: var(--accent-ink); }
+    .ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+    button:disabled { opacity: 0.45; cursor: not-allowed; }
+    .error {
+      background: var(--warn-bg);
+      border: 1px solid var(--warn-line);
+      border-radius: 12px;
+      padding: 10px 12px;
+      color: #6b3d0c;
+      margin: 0 0 12px;
+    }
+    .hidden { display: none !important; }
+    .ok { color: var(--accent); font-size: 14px; margin: 10px 0 0; }
+    .note { color: var(--muted); font-size: 13px; margin: 10px 0 0; }
+    footer {
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    footer a { color: inherit; }
+    .preview-frame {
+      border: 1px dashed var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+      background: #fcfaf6;
+    }
+    .preview-frame iframe {
+      display: block;
+      width: 100%;
+      height: 560px;
+      border: 0;
+      background: transparent;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Waitlist</h1>
+      <p class="lead">Build a waitlist landing page as one HTML file. Visitors type an email; their mail app sends the signup to you. No backend, no account, no wallet on the generated page.</p>
+      <p class="price">49 USDC · Solana · USDC only</p>
+    </header>
+
+    <section class="card" id="pay">
+      <h2>Pay 49 USDC on Solana</h2>
+      <p class="note" style="margin:0 0 10px">Send exactly 49 USDC. Do not send SOL or any other chain.</p>
+      <p>Pay to:</p>
+      <div class="addr" id="payAddr">96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</div>
+      <p class="net">Network: Solana · Token: USDC</p>
+      <p class="net mint">Mint: EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v</p>
+      <div class="actions">
+        <button type="button" class="primary" id="copyAddr">Copy address</button>
+        <button type="button" class="ghost" id="copyPayUrl">Copy Solana Pay URL</button>
+      </div>
+      <p class="ok hidden" id="payStatus"></p>
+    </section>
+
+    <section class="card">
+      <h2>Page copy</h2>
+      <p class="error hidden" id="error"></p>
+      <div class="row two">
+        <label class="field">
+          <span>Product name</span>
+          <input id="product" type="text" value="Northline" />
+        </label>
+        <label class="field">
+          <span>Kicker (optional)</span>
+          <input id="kicker" type="text" value="Private beta" />
+        </label>
+      </div>
+      <label class="field">
+        <span>Headline</span>
+        <input id="headline" type="text" value="Get in before the list closes." />
+      </label>
+      <label class="field">
+        <span>Subhead</span>
+        <textarea id="subhead">A calm waitlist page you can host anywhere. Signups open the visitor’s email app — nothing is stored on a server.</textarea>
+      </label>
+      <label class="field">
+        <span>Meta line (optional)</span>
+        <input id="meta" type="text" value="Launching soon · limited spots" />
+      </label>
+    </section>
+
+    <section class="card">
+      <h2>Capture</h2>
+      <div class="row two">
+        <label class="field">
+          <span>Your email</span>
+          <input id="toEmail" type="email" autocomplete="email" placeholder="you@studio.example" />
+        </label>
+        <label class="field">
+          <span>Email subject</span>
+          <input id="subject" type="text" value="Waitlist signup" />
+        </label>
+      </div>
+      <div class="row two">
+        <label class="field">
+          <span>Button label</span>
+          <input id="cta" type="text" value="Join the waitlist" />
+        </label>
+        <label class="field">
+          <span>Theme</span>
+          <select id="theme">
+            <option value="paper" selected>Paper</option>
+            <option value="ink">Ink</option>
+          </select>
+        </label>
+      </div>
+      <label class="check">
+        <input id="askName" type="checkbox" checked />
+        <span>
+          <b>Ask for a name</b>
+          <small>Adds a name field above the email. Included in the mailto body.</small>
+        </span>
+      </label>
+    </section>
+
+    <section class="card">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px">
+        <h2 style="margin:0">Preview</h2>
+        <div class="actions" style="margin:0">
+          <button type="button" class="primary" id="downloadBtn">Download waitlist.html</button>
+        </div>
+      </div>
+      <div class="preview-frame">
+        <iframe id="preview" title="Waitlist page preview" sandbox="allow-scripts allow-forms allow-popups allow-top-navigation-by-user-activation"></iframe>
+      </div>
+      <p class="ok hidden" id="status"></p>
+      <p class="note">The downloaded file is self-contained. Host it anywhere or send it as an attachment. Join never posts to a server.</p>
+    </section>
+
+    <footer>
+      Offline one-file tool. 49 USDC on Solana to 96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3. USDC only — not SOL.
+    </footer>
+  </main>
+
+  <script>
+    (function () {
+      const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const MAILTO_LIMIT = 1800;
+      const PAY_ADDR = "96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3";
+      const USDC_MINT = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
+      const PAY_URL = "solana:" + PAY_ADDR + "?amount=49&spl-token=" + USDC_MINT;
+
+      const $ = (id) => document.getElementById(id);
+      const errorEl = $("error");
+      const statusEl = $("status");
+      const payStatusEl = $("payStatus");
+      const previewEl = $("preview");
+
+      function showError(msg) {
+        errorEl.textContent = msg || "";
+        errorEl.classList.toggle("hidden", !msg);
+      }
+
+      function showStatus(msg) {
+        statusEl.textContent = msg || "";
+        statusEl.classList.toggle("hidden", !msg);
+      }
+
+      function showPayStatus(msg) {
+        payStatusEl.textContent = msg || "";
+        payStatusEl.classList.toggle("hidden", !msg);
+      }
+
+      function escapeHtml(s) {
+        return String(s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function readConfig() {
+        const theme = $("theme").value === "ink" ? "ink" : "paper";
+        return {
+          product: String($("product").value || "").trim() || "Waitlist",
+          kicker: String($("kicker").value || "").trim(),
+          headline: String($("headline").value || "").trim() || "Join the waitlist.",
+          subhead: String($("subhead").value || "").trim(),
+          meta: String($("meta").value || "").trim(),
+          email: String($("toEmail").value || "").trim(),
+          subject: String($("subject").value || "").trim() || "Waitlist signup",
+          cta: String($("cta").value || "").trim() || "Join the waitlist",
+          askName: !!$("askName").checked,
+          theme: theme
+        };
+      }
+
+      async function copyText(text) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(text);
+          return;
+        }
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.setAttribute("readonly", "");
+        ta.style.position = "fixed";
+        ta.style.left = "-9999px";
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        ta.remove();
+      }
+
+      function landingCss(theme) {
+        if (theme === "ink") {
+          return [
+            ":root{color-scheme:dark;--bg:#07090f;--card:#121826;--ink:#eef2ff;--muted:#9aa6c3;--line:#2a3354;--accent:#14f195;--accent-ink:#042113;--field:#0d1324;--radius:16px}",
+            "body{background:radial-gradient(900px 420px at 10% -10%,#1a2450 0%,transparent 55%),radial-gradient(700px 360px at 110% 10%,#143528 0%,transparent 50%),var(--bg)}"
+          ].join("");
+        }
+        return [
+          ":root{color-scheme:light;--bg:#f6f3ee;--card:#fff;--ink:#1b1a17;--muted:#5e5a53;--line:#d9d3c7;--accent:#0c4a36;--accent-ink:#f4fff9;--field:#fcfaf6;--radius:16px}",
+          "body{background:var(--bg)}"
+        ].join("");
+      }
+
+      function landingSharedCss() {
+        return [
+          "*{box-sizing:border-box}html,body{margin:0;padding:0}",
+          "body{min-height:100vh;font:16px/1.5 ui-sans-serif,system-ui,-apple-system,sans-serif;color:var(--ink)}",
+          "main{width:min(560px,100%);margin:0 auto;padding:64px 16px 80px;text-align:center}",
+          ".kicker{margin:0 0 12px;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}",
+          "h1{margin:0 0 12px;font-size:clamp(1.8rem,6vw,2.4rem);letter-spacing:-.04em;line-height:1.15}",
+          ".lede{margin:0 0 14px;color:var(--muted);font-size:1.05rem}",
+          ".meta{margin:0 0 28px;color:var(--muted);font-size:14px}",
+          "form{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;text-align:left;box-shadow:0 14px 40px rgba(40,32,18,.07)}",
+          "label.field{display:block;margin:0 0 12px}",
+          "label.field span{display:block;font-size:13px;font-weight:650;margin:0 0 6px}",
+          "input{width:100%;border:1px solid var(--line);background:var(--field);color:var(--ink);border-radius:10px;padding:11px 12px;font:15px/1.4 ui-sans-serif,system-ui,sans-serif}",
+          ".actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}",
+          "button{font:650 15px/1.2 ui-sans-serif,system-ui,sans-serif;border:0;border-radius:10px;padding:11px 14px;cursor:pointer}",
+          ".primary{background:var(--accent);color:var(--accent-ink);flex:1}",
+          ".ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}",
+          "#status{margin:12px 0 0;color:var(--accent);font-size:14px}",
+          ".fine{margin:16px 0 0;color:var(--muted);font-size:13px;text-align:center}"
+        ].join("");
+      }
+
+      function landingInner(cfg) {
+        const nameField = cfg.askName
+          ? '<label class="field"><span>Name</span><input id="name" type="text" autocomplete="name" /></label>'
+          : "";
+        return [
+          (cfg.kicker ? '<p class="kicker">' + escapeHtml(cfg.kicker) + "</p>" : ""),
+          "<h1>" + escapeHtml(cfg.headline) + "</h1>",
+          (cfg.subhead ? '<p class="lede">' + escapeHtml(cfg.subhead) + "</p>" : ""),
+          (cfg.meta ? '<p class="meta">' + escapeHtml(cfg.meta) + "</p>" : ""),
+          '<form id="form" action="mailto:' + escapeHtml(cfg.email) + '" method="post" enctype="text/plain">',
+          nameField,
+          '<label class="field"><span>Email *</span><input id="email" name="email" type="email" autocomplete="email" required /></label>',
+          '<div class="actions">',
+          '<button type="submit" class="primary">' + escapeHtml(cfg.cta) + "</button>",
+          '<button type="button" class="ghost" id="copy">Copy signup</button>',
+          "</div>",
+          '<p id="status" hidden></p>',
+          "</form>",
+          '<p class="fine">Nothing is stored on a server. Join opens your email app with a draft to the owner.</p>'
+        ].join("");
+      }
+
+      function exportRuntime() {
+        return [
+          "const MAILTO_LIMIT=" + MAILTO_LIMIT + ";",
+          "const EMAIL_RE=/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;",
+          "function note(msg){ var s=document.getElementById('status'); s.textContent=msg; s.hidden=false; }",
+          "function collect(){",
+          "  var email=String(document.getElementById('email').value||'').trim();",
+          "  if(!EMAIL_RE.test(email)){ document.getElementById('email').focus(); throw new Error('Enter a valid email.'); }",
+          "  var lines=['Waitlist signup','Product: '+CONFIG.product,'Email: '+email];",
+          "  if(CONFIG.askName){",
+          "    var nameEl=document.getElementById('name');",
+          "    var name=nameEl?String(nameEl.value||'').trim():'';",
+          "    lines.push('Name: '+(name||'(blank)'));",
+          "  }",
+          "  return { email:email, body:lines.join('\\n') };",
+          "}",
+          "function mailtoUrl(body){",
+          "  return 'mailto:'+CONFIG.email+'?subject='+encodeURIComponent(CONFIG.subject)+'&body='+encodeURIComponent(body);",
+          "}",
+          "async function copyText(text){",
+          "  if(navigator.clipboard&&navigator.clipboard.writeText){ await navigator.clipboard.writeText(text); return; }",
+          "  var ta=document.createElement('textarea'); ta.value=text; ta.setAttribute('readonly','');",
+          "  ta.style.position='fixed'; ta.style.left='-9999px'; document.body.appendChild(ta); ta.select();",
+          "  document.execCommand('copy'); ta.remove();",
+          "}",
+          "document.getElementById('form').addEventListener('submit', function(e){",
+          "  e.preventDefault();",
+          "  try {",
+          "    if(!EMAIL_RE.test(CONFIG.email)) throw new Error('This page has no destination inbox yet.');",
+          "    var got=collect();",
+          "    var url=mailtoUrl(got.body);",
+          "    if(url.length>MAILTO_LIMIT){",
+          "      copyText(got.body).then(function(){ note('Message is too long for mailto. Signup copied — paste it into an email to '+CONFIG.email+'.'); });",
+          "      return;",
+          "    }",
+          "    window.location.href=url;",
+          "    note('Opened a draft to '+CONFIG.email+'. If nothing opened, use Copy signup.');",
+          "  } catch(err){ note(err.message||'Could not open email.'); }",
+          "});",
+          "document.getElementById('copy').addEventListener('click', async function(){",
+          "  try {",
+          "    var got=collect();",
+          "    await copyText('To: '+CONFIG.email+'\\nSubject: '+CONFIG.subject+'\\n\\n'+got.body);",
+          "    note('Signup copied. Paste it into an email to '+CONFIG.email+'.');",
+          "  } catch(err){ note(err.message||'Could not copy.'); }",
+          "});"
+        ].join("\n");
+      }
+
+      function buildFile(cfg) {
+        const safeCfg = JSON.stringify({
+          product: cfg.product,
+          email: cfg.email,
+          subject: cfg.subject,
+          askName: cfg.askName
+        }).replace(/</g, "\\u003c");
+        return [
+          "<!doctype html>",
+          '<html lang="en">',
+          "<head>",
+          '<meta charset="utf-8" />',
+          '<meta name="viewport" content="width=device-width, initial-scale=1" />',
+          "<title>" + escapeHtml(cfg.product) + " waitlist</title>",
+          "<style>" + landingCss(cfg.theme) + landingSharedCss() + "</style>",
+          "</head>",
+          "<body>",
+          "<main>",
+          landingInner(cfg),
+          "</main>",
+          "<script>",
+          "const CONFIG = " + safeCfg + ";",
+          exportRuntime(),
+          "</scr" + "ipt>",
+          "</body>",
+          "</html>",
+          ""
+        ].join("\n");
+      }
+
+      function renderPreview() {
+        const cfg = readConfig();
+        const html = buildFile(cfg);
+        previewEl.srcdoc = html;
+      }
+
+      function bindCopy(btn, text, okMsg) {
+        btn.addEventListener("click", function () {
+          copyText(text).then(function () {
+            showPayStatus(okMsg);
+          }).catch(function () {
+            showPayStatus("Copy failed. Select the address instead.");
+          });
+        });
+      }
+
+      bindCopy($("copyAddr"), PAY_ADDR, "Address copied.");
+      bindCopy($("copyPayUrl"), PAY_URL, "Solana Pay URL copied.");
+
+      ["product", "kicker", "headline", "subhead", "meta", "toEmail", "subject", "cta", "theme"].forEach(function (id) {
+        $(id).addEventListener("input", function () {
+          showError("");
+          renderPreview();
+        });
+        $(id).addEventListener("change", function () {
+          showError("");
+          renderPreview();
+        });
+      });
+      $("askName").addEventListener("change", function () {
+        renderPreview();
+      });
+
+      $("downloadBtn").addEventListener("click", function () {
+        const cfg = readConfig();
+        if (!EMAIL_RE.test(cfg.email)) {
+          showError("Enter a valid email. The generated page will send signups to that inbox.");
+          $("toEmail").focus();
+          return;
+        }
+        showError("");
+        const html = buildFile(cfg);
+        const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "waitlist.html";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+        showStatus("Downloaded waitlist.html. Open it locally or host the file anywhere.");
+      });
+
+      renderPreview();
+    })();
+  </script>
+</body>
+</html>
