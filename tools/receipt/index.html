@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Solana USDC Receipt</title>
+  <style>
+    :root {
+      --ink: #1a1612;
+      --muted: #6b6258;
+      --line: #d9cfc2;
+      --paper: #f7f1e6;
+      --paper-edge: #efe6d6;
+      --desk: #141210;
+      --panel: #1e1b18;
+      --panel-2: #2a2622;
+      --gold: #c4a574;
+      --teal: #2f6f62;
+      --danger: #b42318;
+      --focus: #e8d5b0;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Times New Roman", serif;
+      background:
+        radial-gradient(1200px 600px at 10% -10%, #2a241e 0%, transparent 55%),
+        var(--desk);
+      color: #f3ece3;
+    }
+
+    .app {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 32px 20px 64px;
+      display: grid;
+      grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+      gap: 28px;
+      align-items: start;
+    }
+
+    h1 {
+      font-size: 1.55rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      margin: 0 0 6px;
+    }
+    .lede {
+      color: #c9bfb2;
+      font-size: 0.95rem;
+      margin: 0 0 22px;
+      line-height: 1.45;
+    }
+
+    form {
+      background: var(--panel);
+      border: 1px solid #3a342e;
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    label {
+      display: block;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin: 14px 0 6px;
+    }
+    label:first-of-type { margin-top: 0; }
+
+    input, textarea {
+      width: 100%;
+      background: var(--panel-2);
+      color: #f7f1e6;
+      border: 1px solid #433c35;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font: 0.95rem/1.4 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    }
+    textarea { min-height: 84px; resize: vertical; }
+    input:focus, textarea:focus {
+      outline: 2px solid var(--focus);
+      outline-offset: 1px;
+    }
+    .hint {
+      color: var(--muted);
+      font-size: 0.78rem;
+      margin: 6px 0 0;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+    }
+    .error {
+      color: #f0b4ae;
+      font-size: 0.82rem;
+      min-height: 1.2em;
+      margin: 8px 0 0;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+    }
+
+    .payto {
+      background: #161310;
+      border: 1px dashed #5a5046;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font: 0.78rem/1.45 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      word-break: break-all;
+      color: #e7dccb;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+    button {
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: 0;
+      border-radius: 8px;
+      padding: 10px 14px;
+      cursor: pointer;
+    }
+    button.primary {
+      background: var(--gold);
+      color: #1a1612;
+    }
+    button.ghost {
+      background: transparent;
+      color: #e7dccb;
+      border: 1px solid #5a5046;
+    }
+    button:hover { filter: brightness(1.08); }
+    button:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    .stage { min-width: 0; }
+    .paper {
+      background: var(--paper);
+      color: var(--ink);
+      border-radius: 4px;
+      padding: 36px 32px 28px;
+      position: relative;
+      box-shadow:
+        0 1px 0 var(--paper-edge),
+        0 22px 50px rgba(0, 0, 0, 0.45);
+    }
+    .paper::before,
+    .paper::after {
+      content: "";
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      height: 10px;
+      background:
+        radial-gradient(circle at 8px 0, transparent 7px, var(--desk) 8px) repeat-x;
+      background-size: 16px 10px;
+    }
+    .paper::before { top: -6px; }
+    .paper::after { bottom: -6px; transform: rotate(180deg); }
+
+    .brand {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      border-bottom: 1px dashed #c9bba8;
+      padding-bottom: 14px;
+      margin-bottom: 18px;
+    }
+    .brand strong {
+      font-size: 1.15rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .stamp {
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--teal);
+      border: 1.5px solid var(--teal);
+      padding: 4px 8px;
+      transform: rotate(-6deg);
+      white-space: nowrap;
+    }
+
+    .amount {
+      font-size: clamp(2rem, 5vw, 2.8rem);
+      margin: 8px 0 4px;
+      letter-spacing: -0.02em;
+    }
+    .amount span {
+      font-size: 0.45em;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      vertical-align: super;
+    }
+    .meta {
+      color: var(--muted);
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 0.82rem;
+      margin-bottom: 22px;
+    }
+
+    dl {
+      margin: 0;
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 10px 14px;
+      font-size: 0.95rem;
+    }
+    dt {
+      color: var(--muted);
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding-top: 2px;
+    }
+    dd {
+      margin: 0;
+      word-break: break-word;
+    }
+    dd.mono, .mono {
+      font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      font-size: 0.82rem;
+      line-height: 1.45;
+    }
+    .empty { color: #b3a898; font-style: italic; }
+
+    .foot {
+      margin-top: 24px;
+      padding-top: 14px;
+      border-top: 1px dashed #c9bba8;
+      color: var(--muted);
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 0.75rem;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 820px) {
+      .app { grid-template-columns: 1fr; padding-top: 20px; }
+    }
+
+    @media print {
+      body { background: #fff; }
+      form, .actions { display: none !important; }
+      .app { display: block; padding: 0; }
+      .paper { box-shadow: none; }
+      .paper::before, .paper::after { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section>
+      <h1>Receipt generator</h1>
+      <p class="lede">Fill amount, payer, and memo. Download a standalone HTML receipt for 9 USDC on Solana.</p>
+      <form id="form" novalidate>
+        <label for="amount">Amount (USDC)</label>
+        <input id="amount" name="amount" type="number" min="0.000001" step="any" value="9" required>
+        <p class="hint">Default price is 9 USDC.</p>
+
+        <label for="payer">Payer</label>
+        <input id="payer" name="payer" type="text" maxlength="200" autocomplete="name" placeholder="Name or wallet" required>
+
+        <label for="memo">Memo</label>
+        <textarea id="memo" name="memo" maxlength="500" placeholder="Optional note on the receipt"></textarea>
+
+        <label for="payToDisplay">Pay to (Solana · USDC)</label>
+        <div class="payto" id="payToDisplay"></div>
+        <p class="hint">Circle USDC mint <span class="mono">EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v</span></p>
+
+        <p class="error" id="error" role="alert"></p>
+        <div class="actions">
+          <button type="submit" class="primary" id="download">Download HTML receipt</button>
+          <button type="button" class="ghost" id="copyAddress">Copy pay-to</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="stage">
+      <article class="paper" id="preview"></article>
+    </section>
+  </main>
+
+  <script>
+    const PAY_TO = "96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3";
+    const USDC_MINT = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
+    const DEFAULT_AMOUNT = "9";
+
+    const amountEl = document.getElementById("amount");
+    const payerEl = document.getElementById("payer");
+    const memoEl = document.getElementById("memo");
+    const errorEl = document.getElementById("error");
+    const previewEl = document.getElementById("preview");
+    const payToDisplay = document.getElementById("payToDisplay");
+    const form = document.getElementById("form");
+    const copyBtn = document.getElementById("copyAddress");
+
+    payToDisplay.textContent = PAY_TO;
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function pad(n) {
+      return String(n).padStart(2, "0");
+    }
+
+    function formatLocal(date) {
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "local";
+      return date.getFullYear() + "-" + pad(date.getMonth() + 1) + "-" + pad(date.getDate())
+        + " " + pad(date.getHours()) + ":" + pad(date.getMinutes())
+        + " (" + tz + ")";
+    }
+
+    function parseAmount(raw) {
+      const text = String(raw).trim();
+      if (!text) return { ok: false, message: "Enter an amount." };
+      const n = Number(text);
+      if (!Number.isFinite(n) || n <= 0) return { ok: false, message: "Amount must be a number greater than 0." };
+      return { ok: true, value: n, text: text };
+    }
+
+    function formatUsdc(n) {
+      if (Number.isInteger(n)) return String(n);
+      return n.toFixed(6).replace(/\.?0+$/, "");
+    }
+
+    function receiptId(amount, payer, memo, issued) {
+      const seed = amount + "|" + payer + "|" + memo + "|" + issued.toISOString();
+      let hash = 2166136261;
+      for (let i = 0; i < seed.length; i++) {
+        hash ^= seed.charCodeAt(i);
+        hash = Math.imul(hash, 16777619);
+      }
+      const hex = (hash >>> 0).toString(16).toUpperCase().padStart(8, "0");
+      const y = issued.getFullYear();
+      const m = pad(issued.getMonth() + 1);
+      const d = pad(issued.getDate());
+      return "RCPT-" + y + m + d + "-" + hex;
+    }
+
+    function solanaPayUrl(amount, memo) {
+      const params = new URLSearchParams();
+      params.set("amount", formatUsdc(amount));
+      params.set("spl-token", USDC_MINT);
+      if (memo) params.set("memo", memo);
+      return "solana:" + PAY_TO + "?" + params.toString();
+    }
+
+    function readState() {
+      const amount = parseAmount(amountEl.value === "" ? DEFAULT_AMOUNT : amountEl.value);
+      const payer = payerEl.value.trim();
+      const memo = memoEl.value.trim();
+      return { amount, payer, memo };
+    }
+
+    function validate(state, requirePayer) {
+      if (!state.amount.ok) return state.amount.message;
+      if (requirePayer && !state.payer) return "Enter a payer.";
+      return "";
+    }
+
+    function receiptBody(data) {
+      const payer = data.payer
+        ? escapeHtml(data.payer)
+        : '<span class="empty">Waiting for payer</span>';
+      const memo = data.memo
+        ? escapeHtml(data.memo)
+        : '<span class="empty">None</span>';
+      const amountText = data.amount.ok ? escapeHtml(formatUsdc(data.amount.value)) : "—";
+      const payUrl = data.amount.ok ? escapeHtml(solanaPayUrl(data.amount.value, data.memo)) : "—";
+
+      return (
+        '<div class="brand"><strong>Payment receipt</strong><span class="stamp">USDC · Solana</span></div>' +
+        '<div class="amount">' + amountText + ' <span>USDC</span></div>' +
+        '<div class="meta">' + escapeHtml(data.id) + ' · ' + escapeHtml(data.when) + '</div>' +
+        '<dl>' +
+          '<dt>Payer</dt><dd>' + payer + '</dd>' +
+          '<dt>Pay to</dt><dd class="mono">' + escapeHtml(PAY_TO) + '</dd>' +
+          '<dt>Asset</dt><dd>USDC on Solana</dd>' +
+          '<dt>Mint</dt><dd class="mono">' + escapeHtml(USDC_MINT) + '</dd>' +
+          '<dt>Memo</dt><dd>' + memo + '</dd>' +
+          '<dt>Pay URI</dt><dd class="mono">' + payUrl + '</dd>' +
+        '</dl>' +
+        '<p class="foot">Offline HTML receipt. Transfer Circle USDC on Solana mainnet to the pay-to address. This file is not a bank statement and does not prove on-chain settlement.</p>'
+      );
+    }
+
+    const issuedAt = new Date();
+    let currentId = "RCPT-DRAFT";
+
+    function render() {
+      const state = readState();
+      errorEl.textContent = validate(state, false);
+      currentId = receiptId(
+        state.amount.ok ? formatUsdc(state.amount.value) : "0",
+        state.payer,
+        state.memo,
+        issuedAt
+      );
+      previewEl.innerHTML = receiptBody({
+        amount: state.amount,
+        payer: state.payer,
+        memo: state.memo,
+        id: currentId,
+        when: formatLocal(issuedAt)
+      });
+    }
+
+    const RECEIPT_CSS = [
+      ":root{--ink:#1a1612;--muted:#6b6258;--paper:#f7f1e6;--teal:#2f6f62}",
+      "*{box-sizing:border-box}",
+      "html,body{margin:0;background:#f3eee4;color:var(--ink);font-family:Iowan Old Style,Palatino Linotype,Palatino,Times New Roman,serif}",
+      "article{max-width:640px;margin:32px auto;background:var(--paper);padding:40px 36px;border:1px solid #e4d8c4}",
+      ".brand{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px dashed #c9bba8;padding-bottom:14px;margin-bottom:18px}",
+      ".brand strong{font-size:1.15rem;letter-spacing:.12em;text-transform:uppercase}",
+      ".stamp{font-family:ui-sans-serif,system-ui,sans-serif;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);border:1.5px solid var(--teal);padding:4px 8px;transform:rotate(-6deg)}",
+      ".amount{font-size:2.6rem;margin:8px 0 4px}",
+      ".amount span{font-size:.45em;letter-spacing:.08em;color:var(--muted);vertical-align:super}",
+      ".meta{color:var(--muted);font-family:ui-sans-serif,system-ui,sans-serif;font-size:.82rem;margin-bottom:22px}",
+      "dl{margin:0;display:grid;grid-template-columns:120px 1fr;gap:10px 14px}",
+      "dt{color:var(--muted);font-family:ui-sans-serif,system-ui,sans-serif;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;padding-top:2px}",
+      "dd{margin:0;word-break:break-word}",
+      ".mono{font-family:ui-monospace,SF Mono,Menlo,Consolas,monospace;font-size:.82rem;line-height:1.45}",
+      ".empty{color:#b3a898;font-style:italic}",
+      ".foot{margin-top:24px;padding-top:14px;border-top:1px dashed #c9bba8;color:var(--muted);font-family:ui-sans-serif,system-ui,sans-serif;font-size:.75rem;line-height:1.5}",
+      "@media print{body{background:#fff}article{border:0;margin:0}}"
+    ].join("");
+
+    function slug(text) {
+      const s = text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+      return s.slice(0, 40) || "payer";
+    }
+
+    function downloadReceipt() {
+      const state = readState();
+      const message = validate(state, true);
+      errorEl.textContent = message;
+      if (message) {
+        (message.indexOf("payer") >= 0 ? payerEl : amountEl).focus();
+        return;
+      }
+
+      const id = receiptId(formatUsdc(state.amount.value), state.payer, state.memo, issuedAt);
+      const body = receiptBody({
+        amount: state.amount,
+        payer: state.payer,
+        memo: state.memo,
+        id: id,
+        when: formatLocal(issuedAt)
+      });
+      const html = "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\">"
+        + "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
+        + "<title>" + escapeHtml(id) + " · " + escapeHtml(formatUsdc(state.amount.value)) + " USDC</title>"
+        + "<style>" + RECEIPT_CSS + "</style></head><body><article>"
+        + body
+        + "</article></body></html>";
+
+      const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "receipt-" + slug(state.payer) + "-" + formatUsdc(state.amount.value) + "usdc.html";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      downloadReceipt();
+    });
+
+    copyBtn.addEventListener("click", function () {
+      navigator.clipboard.writeText(PAY_TO).then(function () {
+        copyBtn.textContent = "Copied";
+        setTimeout(function () { copyBtn.textContent = "Copy pay-to"; }, 1400);
+      }).catch(function () {
+        errorEl.textContent = "Could not copy. Select the pay-to address instead.";
+      });
+    });
+
+    amountEl.addEventListener("input", render);
+    payerEl.addEventListener("input", render);
+    memoEl.addEventListener("input", render);
+    render();
+  </script>
+</body>
+</html>
