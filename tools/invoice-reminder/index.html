@@ -162,9 +162,7 @@
       display: grid;
       gap: 10px;
       margin: 0 0 18px;
-    }
-    @media (min-width: 560px) {
-      .preview-letter .meta { grid-template-columns: 1fr 1fr 1fr; }
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     }
     .preview-letter .meta div {
       border: 1px solid var(--line);
@@ -452,12 +450,19 @@
         var dueOut = cfg.due
           ? escapeHtml(formatDate(cfg.due))
           : '<span class="empty">Due date</span>';
-        var invoiceRow = cfg.invoiceNo
-          ? '<div><span>Invoice</span><strong>' + escapeHtml(cfg.invoiceNo) + "</strong></div>"
-          : "";
-        var fromRow = cfg.fromName
-          ? '<div><span>From</span><strong>' + escapeHtml(cfg.fromName) + "</strong></div>"
-          : "";
+        var boxes = [
+          "<div><span>Client</span><strong>" + clientOut + "</strong></div>",
+          "<div><span>Due</span><strong>" + dueOut + "</strong></div>"
+        ];
+        if (cfg.invoiceNo) {
+          boxes.push('<div><span>Invoice</span><strong>' + escapeHtml(cfg.invoiceNo) + "</strong></div>");
+        }
+        if (cfg.fromName) {
+          boxes.push('<div><span>From</span><strong>' + escapeHtml(cfg.fromName) + "</strong></div>");
+        }
+        if (!cfg.invoiceNo && !cfg.fromName) {
+          boxes.push('<div><span>Status</span><strong>' + escapeHtml(st.label) + "</strong></div>");
+        }
         var payBox = "";
         if (cfg.payTo) {
           payBox =
@@ -474,12 +479,7 @@
           '<div class="kicker">Payment reminder</div>' +
           "<h3>REMINDER</h3>" +
           '<div class="' + badgeClass + '">' + escapeHtml(st.label) + "</div>" +
-          '<div class="meta">' +
-          "<div><span>Client</span><strong>" + clientOut + "</strong></div>" +
-          "<div><span>Due</span><strong>" + dueOut + "</strong></div>" +
-          (invoiceRow || fromRow || '<div><span>Status</span><strong>' + escapeHtml(st.label) + "</strong></div>") +
-          "</div>" +
-          (fromRow && invoiceRow ? '<div class="meta">' + fromRow + "</div>" : "") +
+          '<div class="meta">' + boxes.join("") + "</div>" +
           '<div class="kicker">Amount due</div>' +
           '<div class="amount">' + amountOut + "</div>" +
           '<div class="letter">' + letterHtml(cfg) + "</div>" +
@@ -509,8 +509,7 @@
           ".preview-letter{background:#fffcf7;border:1px solid var(--line);border-radius:4px;padding:32px 28px 24px;box-shadow:0 14px 40px rgba(40,32,18,.07)}",
           ".kicker{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}",
           "h3{margin:4px 0 18px;font-size:1.55rem;letter-spacing:.08em}",
-          ".meta{display:grid;gap:10px;margin:0 0 18px}",
-          "@media(min-width:560px){.meta{grid-template-columns:1fr 1fr 1fr}}",
+          ".meta{display:grid;gap:10px;margin:0 0 18px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}",
           ".meta div{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#fff}",
           ".meta span{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}",
           ".meta strong{font-size:1.05rem;word-break:break-word}",
