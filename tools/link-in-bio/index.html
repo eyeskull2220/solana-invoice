@@ -348,8 +348,8 @@
       var UNLOCK_KEY = "link-in-bio-unlock-v1";
       var MAX_PHOTO = 350 * 1024;
       var RPCS = [
-        "https://api.mainnet-beta.solana.com",
-        "https://solana-rpc.publicnode.com"
+        "https://solana-rpc.publicnode.com",
+        "https://api.mainnet-beta.solana.com"
       ];
       var SIG_RE = /^[1-9A-HJ-NP-Za-km-z]{86,88}$/;
       var THEMES = {
@@ -429,7 +429,7 @@
               label: String(l.label || "Link").trim() || "Link",
               url: normalizeUrl(l.url)
             };
-          }).filter(function (l) { return l.url; })
+          }).filter(function (l) { return l.url && !/^https?:\/\/$/i.test(l.url); })
         };
       }
 
@@ -498,6 +498,7 @@
         previewEl.querySelectorAll(".links a").forEach(function (a) {
           a.style.background = t.btn;
           a.style.color = t.btnInk;
+          a.addEventListener("click", function (e) { e.preventDefault(); });
         });
         var ed = $("editorAvatar");
         if (cfg.photo) {
@@ -796,6 +797,11 @@
         $("photo").value = "";
         paintPreview();
       });
+      var lastName = $("name").value;
+      $("name").addEventListener("input", function () {
+        if ($("pageTitle").value === lastName) $("pageTitle").value = $("name").value;
+        lastName = $("name").value;
+      });
       $("downloadBtn").addEventListener("click", function () {
         if (!paid) return;
         doDownload();
@@ -817,9 +823,15 @@
           }
           setPaid(true);
           doDownload();
-        }).catch(function () {
-          setPaid(true);
-          doDownload();
+        }).catch(function (e) {
+          var msg = (e && e.message) || "";
+          if (msg === "tx not found") {
+            err.textContent = "Transaction not found yet. Wait a few seconds and try again. USDC on Solana only.";
+          } else if (/invalid param|wrongsize/i.test(msg)) {
+            err.textContent = "That signature is not a valid Solana transaction.";
+          } else {
+            err.textContent = "Could not reach Solana RPC. Try again in a moment.";
+          }
         }).then(function () {
           btn.disabled = false;
         });
