@@ -1,0 +1,835 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Client Intake — 49 USDC</title>
+  <meta name="description" content="Build a client intake form and download one HTML file. Offline. 49 USDC on Solana." />
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f3ee;
+      --card: #ffffff;
+      --ink: #1b1a17;
+      --muted: #5e5a53;
+      --line: #d9d3c7;
+      --accent: #0c4a36;
+      --accent-ink: #f4fff9;
+      --soft: #e4f0ea;
+      --warn-bg: #fff6e8;
+      --warn-line: #ecd4a4;
+      --shadow: 0 14px 40px rgba(40, 32, 18, 0.07);
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+    }
+    main {
+      width: min(920px, 100%);
+      margin: 0 auto;
+      padding: 28px 16px 72px;
+    }
+    header h1 {
+      margin: 0 0 6px;
+      font-size: clamp(1.6rem, 4vw, 2.1rem);
+      letter-spacing: -0.03em;
+    }
+    .lead {
+      margin: 0 0 12px;
+      color: var(--muted);
+      max-width: 46rem;
+    }
+    .price {
+      display: inline-block;
+      margin: 0 0 22px;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--soft);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 650;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      margin: 0 0 14px;
+    }
+    h2 {
+      margin: 0 0 10px;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+    label.field, .mini {
+      display: block;
+      margin: 0 0 12px;
+    }
+    label.field span, .mini span {
+      display: block;
+      font-size: 13px;
+      font-weight: 650;
+      margin: 0 0 6px;
+    }
+    .mini span { font-size: 12px; color: var(--muted); font-weight: 500; }
+    input[type="text"], input[type="email"], input[type="tel"], input[type="url"],
+    input[type="number"], input[type="date"], textarea, select {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fcfaf6;
+      color: var(--ink);
+      border-radius: 10px;
+      padding: 11px 12px;
+      font: 15px/1.4 ui-sans-serif, system-ui, sans-serif;
+    }
+    textarea { min-height: 96px; resize: vertical; }
+    .row { display: grid; gap: 12px; }
+    @media (min-width: 640px) {
+      .row.two { grid-template-columns: 1fr 1fr; }
+    }
+    .fields { display: grid; gap: 10px; }
+    .field-card {
+      display: grid;
+      gap: 8px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fcfaf6;
+    }
+    @media (min-width: 860px) {
+      .field-card {
+        grid-template-columns: minmax(0, 1.3fr) 132px 88px minmax(0, 1.2fr) auto;
+        align-items: end;
+      }
+    }
+    .req {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-bottom: 10px;
+      font-size: 14px;
+    }
+    .req input { width: 16px; height: 16px; accent-color: var(--accent); }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    button, .btn {
+      font: 650 15px/1.2 ui-sans-serif, system-ui, sans-serif;
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 14px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .primary { background: var(--accent); color: var(--accent-ink); }
+    .ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+    button:disabled { opacity: 0.45; cursor: not-allowed; }
+    .icon { padding: 8px 10px; min-width: 40px; }
+    .icon-row { display: flex; gap: 6px; }
+    .error {
+      background: var(--warn-bg);
+      border: 1px solid var(--warn-line);
+      border-radius: 12px;
+      padding: 10px 12px;
+      color: #6b3d0c;
+      margin: 0 0 12px;
+    }
+    .hidden { display: none !important; }
+    .ok { color: var(--accent); font-size: 14px; margin: 10px 0 0; }
+    .note { color: var(--muted); font-size: 13px; margin: 10px 0 0; }
+    .addr {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      word-break: break-all;
+      background: #fcfaf6;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .net { color: var(--muted); font-size: 13px; margin: 10px 0 0; }
+    footer {
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .preview-box {
+      border: 1px dashed var(--line);
+      border-radius: 12px;
+      padding: 16px;
+      background: #fcfaf6;
+    }
+    .preview-box h3 {
+      margin: 0 0 6px;
+      font-size: 1.2rem;
+      letter-spacing: -0.02em;
+    }
+    .preview-box .intro {
+      color: var(--muted);
+      margin: 0 0 14px;
+      font-size: 0.95rem;
+    }
+    .preview-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .preview-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .preview-head h2 { margin: 0; }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Client Intake</h1>
+      <p class="lead">Name the studio, add the questions you ask every new lead, and download one HTML file. They fill it offline. Answers copy, download, or open as a mail draft. No backend, no account, no wallet connect.</p>
+      <p class="price">49 USDC · Solana only</p>
+    </header>
+
+    <section class="card" id="pay">
+      <h2>Pay 49 USDC on Solana</h2>
+      <p>Send exactly 49 USDC to:</p>
+      <div class="addr" id="payAddr">96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</div>
+      <p class="net">Network: Solana · Token: USDC · Mint: EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v</p>
+      <div class="actions">
+        <button type="button" class="primary" id="copyPay">Copy address</button>
+        <a class="btn ghost" id="payLink" href="#">Open pay link</a>
+      </div>
+      <p class="ok" id="copyPayStatus"></p>
+      <p class="note">USDC on Solana only — not SOL, not other chains. No wallet connect on this page.</p>
+    </section>
+
+    <section class="card">
+      <h2>Studio</h2>
+      <p class="error hidden" id="error"></p>
+      <div class="row two">
+        <label class="field">
+          <span>Studio / practice name</span>
+          <input id="studio" type="text" value="Northline Studio" />
+        </label>
+        <label class="field">
+          <span>Form title</span>
+          <input id="title" type="text" value="Project intake" />
+        </label>
+      </div>
+      <label class="field">
+        <span>Intro</span>
+        <input id="intro" type="text" value="A few questions so we can scope the work. Nothing is stored on a server." />
+      </label>
+      <div class="row two">
+        <label class="field">
+          <span>Reply email (optional)</span>
+          <input id="toEmail" type="email" autocomplete="email" placeholder="you@studio.example" />
+        </label>
+        <label class="field">
+          <span>Email subject</span>
+          <input id="subject" type="text" value="New client intake" />
+        </label>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Fields</h2>
+      <div class="fields" id="fields"></div>
+      <div class="actions">
+        <button type="button" class="ghost" id="addField">Add field</button>
+        <button type="button" class="ghost" id="resetFields">Reset defaults</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="preview-head">
+        <h2>Preview</h2>
+        <div class="actions" style="margin:0">
+          <button type="button" class="primary" id="downloadBtn">Download intake-form.html</button>
+        </div>
+      </div>
+      <div class="preview-box" id="preview"></div>
+      <p class="ok hidden" id="status"></p>
+      <p class="note">The downloaded file is self-contained. Host it anywhere or send it as an attachment. Submit never posts to a server.</p>
+    </section>
+
+    <footer>
+      Offline one-file tool. 49 USDC on Solana to 96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3. USDC only.
+    </footer>
+  </main>
+
+  <script>
+    (function () {
+      var PAY_TO = "96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3";
+      var PRICE = "49";
+      var USDC_MINT = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
+      var TYPES = ["text", "email", "tel", "url", "number", "date", "textarea", "select"];
+      var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      var MAILTO_LIMIT = 1800;
+
+      function uid() {
+        return "f" + Math.random().toString(36).slice(2, 9);
+      }
+
+      function defaults() {
+        return [
+          { id: uid(), label: "Full name", type: "text", required: true, options: "" },
+          { id: uid(), label: "Company", type: "text", required: false, options: "" },
+          { id: uid(), label: "Email", type: "email", required: true, options: "" },
+          { id: uid(), label: "Phone", type: "tel", required: false, options: "" },
+          { id: uid(), label: "Website", type: "url", required: false, options: "" },
+          { id: uid(), label: "Project type", type: "select", required: true, options: "Website, Brand, Product, Other" },
+          { id: uid(), label: "Budget", type: "select", required: false, options: "Under 5k, 5–15k, 15–40k, 40k+, Not sure yet" },
+          { id: uid(), label: "Timeline", type: "select", required: false, options: "ASAP, 1–2 months, 3–6 months, Flexible" },
+          { id: uid(), label: "Project brief", type: "textarea", required: true, options: "" },
+          { id: uid(), label: "How you found us", type: "text", required: false, options: "" }
+        ];
+      }
+
+      var fields = defaults();
+      var $ = function (id) { return document.getElementById(id); };
+      var errorEl = $("error");
+      var statusEl = $("status");
+      var fieldsEl = $("fields");
+      var previewEl = $("preview");
+
+      function showError(msg) {
+        errorEl.textContent = msg || "";
+        errorEl.classList.toggle("hidden", !msg);
+        if (msg) showStatus("");
+      }
+
+      function showStatus(msg) {
+        statusEl.textContent = msg || "";
+        statusEl.classList.toggle("hidden", !msg);
+      }
+
+      function escapeHtml(s) {
+        return String(s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function parseOptions(raw) {
+        return String(raw || "")
+          .split(",")
+          .map(function (part) { return part.trim(); })
+          .filter(Boolean);
+      }
+
+      function slug(label, used) {
+        var base = String(label || "field").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "field";
+        var name = base;
+        var n = 2;
+        while (used.has(name)) {
+          name = base + "-" + n;
+          n += 1;
+        }
+        used.add(name);
+        return name;
+      }
+
+      function normalizeType(type) {
+        switch (type) {
+          case "text":
+          case "email":
+          case "tel":
+          case "url":
+          case "number":
+          case "date":
+          case "textarea":
+          case "select":
+            return type;
+          default: {
+            var _exhaustive = type;
+            void _exhaustive;
+            return "text";
+          }
+        }
+      }
+
+      function readConfig() {
+        var used = new Set();
+        var cleanFields = fields.map(function (f) {
+          var type = normalizeType(f.type);
+          return {
+            name: slug(f.label, used),
+            label: String(f.label || "Field").trim() || "Field",
+            type: type,
+            required: !!f.required,
+            options: type === "select" ? parseOptions(f.options) : []
+          };
+        });
+        return {
+          studio: String($("studio").value || "").trim() || "Studio",
+          email: String($("toEmail").value || "").trim(),
+          subject: String($("subject").value || "").trim() || "New client intake",
+          title: String($("title").value || "").trim() || "Project intake",
+          intro: String($("intro").value || "").trim(),
+          fields: cleanFields
+        };
+      }
+
+      function fieldInputHtml(f, prefix) {
+        var id = prefix + f.name;
+        var req = f.required ? " required" : "";
+        var common = 'id="' + id + '" name="' + escapeHtml(f.name) + '"' + req;
+        switch (f.type) {
+          case "textarea":
+            return "<textarea " + common + ' rows="5"></textarea>';
+          case "select": {
+            var opts = ['<option value="">Choose one</option>'].concat(
+              f.options.map(function (opt) {
+                return "<option value=\"" + escapeHtml(opt) + "\">" + escapeHtml(opt) + "</option>";
+              })
+            );
+            return "<select " + common + ">" + opts.join("") + "</select>";
+          }
+          case "text":
+          case "email":
+          case "tel":
+          case "url":
+          case "number":
+          case "date":
+            return "<input " + common + ' type="' + escapeHtml(f.type) + '" />';
+          default: {
+            var _exhaustive = f.type;
+            void _exhaustive;
+            return "<input " + common + ' type="text" />';
+          }
+        }
+      }
+
+      function formInnerHtml(cfg, prefix) {
+        var blocks = cfg.fields.map(function (f) {
+          return '<label class="field">' +
+            "<span>" + escapeHtml(f.label) + (f.required ? " *" : "") + "</span>" +
+            fieldInputHtml(f, prefix) +
+            "</label>";
+        }).join("");
+        var studio = cfg.studio ? '<p class="kicker">' + escapeHtml(cfg.studio) + "</p>" : "";
+        var intro = cfg.intro ? '<p class="intro">' + escapeHtml(cfg.intro) + "</p>" : "";
+        var mailBtn = cfg.email
+          ? '<button type="submit" class="primary" id="' + prefix + 'send">Email answers</button>'
+          : "";
+        return studio +
+          "<h3>" + escapeHtml(cfg.title) + "</h3>" +
+          intro +
+          '<form id="' + prefix + 'form" novalidate>' +
+          blocks +
+          '<div class="preview-actions">' +
+          mailBtn +
+          '<button type="button" class="ghost" id="' + prefix + 'copy">Copy answers</button>' +
+          '<button type="button" class="ghost" id="' + prefix + 'download">Download answers</button>' +
+          "</div></form>";
+      }
+
+      function collectBody(cfg, prefix) {
+        var lines = [];
+        var i;
+        var f;
+        var el;
+        var v;
+        lines.push("Studio: " + cfg.studio);
+        lines.push("Form: " + cfg.title);
+        lines.push("");
+        for (i = 0; i < cfg.fields.length; i++) {
+          f = cfg.fields[i];
+          el = document.getElementById(prefix + f.name);
+          v = el ? String(el.value || "").trim() : "";
+          if (f.required && !v) {
+            if (el) el.focus();
+            throw new Error(f.label + " is required.");
+          }
+          lines.push(f.label + ": " + (v || "(blank)"));
+        }
+        return lines.join("\n");
+      }
+
+      function copyText(text) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          return navigator.clipboard.writeText(text);
+        }
+        var ta = document.createElement("textarea");
+        ta.value = text;
+        ta.setAttribute("readonly", "");
+        ta.style.position = "fixed";
+        ta.style.left = "-9999px";
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        ta.remove();
+        return Promise.resolve();
+      }
+
+      function downloadText(filename, text) {
+        var blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+      }
+
+      function bindForm(cfg, prefix, noteEl) {
+        var form = document.getElementById(prefix + "form");
+        var copyBtn = document.getElementById(prefix + "copy");
+        var dlBtn = document.getElementById(prefix + "download");
+        var sendBtn = document.getElementById(prefix + "send");
+        function note(msg) {
+          if (!noteEl) return;
+          noteEl.textContent = msg;
+          noteEl.hidden = false;
+          noteEl.classList.remove("hidden");
+        }
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+          try {
+            var body = collectBody(cfg, prefix);
+            if (!cfg.email) {
+              note("Add a reply email in Studio to open a mail draft, or copy the answers.");
+              return;
+            }
+            var url = "mailto:" + cfg.email + "?subject=" + encodeURIComponent(cfg.subject) + "&body=" + encodeURIComponent(body);
+            if (url.length > MAILTO_LIMIT) {
+              copyText(body).then(function () {
+                note("Answers are too long for mailto. Copied — paste into an email to " + cfg.email + ".");
+              });
+              return;
+            }
+            window.location.href = url;
+            note("Opened a draft to " + cfg.email + ". If nothing opened, use Copy answers.");
+          } catch (err) {
+            note(err.message || "Could not open email.");
+          }
+        });
+        copyBtn.addEventListener("click", function () {
+          try {
+            var body = collectBody(cfg, prefix);
+            var packed = cfg.email
+              ? "To: " + cfg.email + "\nSubject: " + cfg.subject + "\n\n" + body
+              : body;
+            copyText(packed).then(function () {
+              note(cfg.email ? "Answers copied. Paste them into an email to " + cfg.email + "." : "Answers copied.");
+            });
+          } catch (err) {
+            note(err.message || "Could not copy.");
+          }
+        });
+        dlBtn.addEventListener("click", function () {
+          try {
+            var body = collectBody(cfg, prefix);
+            downloadText("intake-answers.txt", body);
+            note("Downloaded intake-answers.txt.");
+          } catch (err) {
+            note(err.message || "Could not download.");
+          }
+        });
+        if (sendBtn && !cfg.email) sendBtn.classList.add("hidden");
+      }
+
+      function renderFields() {
+        fieldsEl.innerHTML = "";
+        fields.forEach(function (f, i) {
+          var wrap = document.createElement("div");
+          wrap.className = "field-card";
+
+          var labelBox = document.createElement("label");
+          labelBox.className = "mini";
+          labelBox.innerHTML = "<span>Label</span>";
+          var labelInput = document.createElement("input");
+          labelInput.type = "text";
+          labelInput.value = f.label;
+          labelInput.addEventListener("input", function () {
+            f.label = labelInput.value;
+            renderPreview();
+          });
+          labelBox.appendChild(labelInput);
+
+          var typeBox = document.createElement("label");
+          typeBox.className = "mini";
+          typeBox.innerHTML = "<span>Type</span>";
+          var typeSel = document.createElement("select");
+          TYPES.forEach(function (t) {
+            var opt = document.createElement("option");
+            opt.value = t;
+            opt.textContent = t;
+            if (t === f.type) opt.selected = true;
+            typeSel.appendChild(opt);
+          });
+          typeSel.addEventListener("change", function () {
+            f.type = typeSel.value;
+            renderFields();
+            renderPreview();
+          });
+          typeBox.appendChild(typeSel);
+
+          var req = document.createElement("label");
+          req.className = "req";
+          var box = document.createElement("input");
+          box.type = "checkbox";
+          box.checked = !!f.required;
+          box.addEventListener("change", function () {
+            f.required = box.checked;
+            renderPreview();
+          });
+          req.appendChild(box);
+          req.appendChild(document.createTextNode("Required"));
+
+          var optBox = document.createElement("label");
+          optBox.className = "mini";
+          optBox.innerHTML = "<span>Select options</span>";
+          var optInput = document.createElement("input");
+          optInput.type = "text";
+          optInput.value = f.options || "";
+          optInput.placeholder = "One, Two, Three";
+          optInput.disabled = f.type !== "select";
+          optInput.addEventListener("input", function () {
+            f.options = optInput.value;
+            renderPreview();
+          });
+          optBox.appendChild(optInput);
+
+          var icons = document.createElement("div");
+          icons.className = "icon-row";
+          var up = document.createElement("button");
+          up.type = "button";
+          up.className = "ghost icon";
+          up.textContent = "↑";
+          up.disabled = i === 0;
+          up.addEventListener("click", function () {
+            if (i === 0) return;
+            var tmp = fields[i - 1];
+            fields[i - 1] = fields[i];
+            fields[i] = tmp;
+            renderFields();
+            renderPreview();
+          });
+          var down = document.createElement("button");
+          down.type = "button";
+          down.className = "ghost icon";
+          down.textContent = "↓";
+          down.disabled = i === fields.length - 1;
+          down.addEventListener("click", function () {
+            if (i >= fields.length - 1) return;
+            var tmp = fields[i + 1];
+            fields[i + 1] = fields[i];
+            fields[i] = tmp;
+            renderFields();
+            renderPreview();
+          });
+          var del = document.createElement("button");
+          del.type = "button";
+          del.className = "ghost icon";
+          del.textContent = "✕";
+          del.addEventListener("click", function () {
+            if (fields.length === 1) return;
+            fields.splice(i, 1);
+            renderFields();
+            renderPreview();
+          });
+          icons.appendChild(up);
+          icons.appendChild(down);
+          icons.appendChild(del);
+
+          wrap.appendChild(labelBox);
+          wrap.appendChild(typeBox);
+          wrap.appendChild(req);
+          wrap.appendChild(optBox);
+          wrap.appendChild(icons);
+          fieldsEl.appendChild(wrap);
+        });
+      }
+
+      function renderPreview() {
+        var cfg = readConfig();
+        previewEl.innerHTML = formInnerHtml(cfg, "p-");
+        bindForm(cfg, "p-", statusEl);
+      }
+
+      function exportRuntime() {
+        return [
+          "const MAILTO_LIMIT=" + MAILTO_LIMIT + ";",
+          "function collectBody(cfg){",
+          "  const lines=['Studio: '+cfg.studio,'Form: '+cfg.title,''];",
+          "  for (const f of cfg.fields){",
+          "    const el=document.getElementById('x-'+f.name);",
+          "    const v=el?String(el.value||'').trim():'';",
+          "    if(f.required&&!v){ if(el) el.focus(); throw new Error(f.label+' is required.'); }",
+          "    lines.push(f.label+': '+(v||'(blank)'));",
+          "  }",
+          "  return lines.join('\\n');",
+          "}",
+          "function copyText(text){",
+          "  if(navigator.clipboard&&navigator.clipboard.writeText){ return navigator.clipboard.writeText(text); }",
+          "  const ta=document.createElement('textarea'); ta.value=text; ta.setAttribute('readonly','');",
+          "  ta.style.position='fixed'; ta.style.left='-9999px'; document.body.appendChild(ta); ta.select();",
+          "  document.execCommand('copy'); ta.remove(); return Promise.resolve();",
+          "}",
+          "function downloadText(name,text){",
+          "  const blob=new Blob([text],{type:'text/plain;charset=utf-8'});",
+          "  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name;",
+          "  document.body.appendChild(a); a.click(); a.remove();",
+          "  setTimeout(function(){ URL.revokeObjectURL(a.href); },1000);",
+          "}",
+          "const form=document.getElementById('x-form');",
+          "const copyBtn=document.getElementById('x-copy');",
+          "const dlBtn=document.getElementById('x-download');",
+          "const status=document.getElementById('status');",
+          "function note(msg){ status.textContent=msg; status.hidden=false; }",
+          "form.addEventListener('submit', function(e){",
+          "  e.preventDefault();",
+          "  try {",
+          "    const body=collectBody(CONFIG);",
+          "    if(!CONFIG.email){ note('Copy or download the answers, then send them yourself.'); return; }",
+          "    const url='mailto:'+CONFIG.email+'?subject='+encodeURIComponent(CONFIG.subject)+'&body='+encodeURIComponent(body);",
+          "    if(url.length>MAILTO_LIMIT){",
+          "      copyText(body).then(function(){ note('Answers are too long for mailto. Copied — paste into an email to '+CONFIG.email+'.'); });",
+          "      return;",
+          "    }",
+          "    window.location.href=url;",
+          "    note('Opened a draft to '+CONFIG.email+'. If nothing opened, use Copy answers.');",
+          "  } catch(err){ note(err.message||'Could not open email.'); }",
+          "});",
+          "copyBtn.addEventListener('click', function(){",
+          "  try {",
+          "    const body=collectBody(CONFIG);",
+          "    const packed=CONFIG.email?('To: '+CONFIG.email+'\\nSubject: '+CONFIG.subject+'\\n\\n'+body):body;",
+          "    copyText(packed).then(function(){ note(CONFIG.email?('Answers copied. Paste them into an email to '+CONFIG.email+'.'):'Answers copied.'); });",
+          "  } catch(err){ note(err.message||'Could not copy.'); }",
+          "});",
+          "dlBtn.addEventListener('click', function(){",
+          "  try {",
+          "    downloadText('intake-answers.txt', collectBody(CONFIG));",
+          "    note('Downloaded intake-answers.txt.');",
+          "  } catch(err){ note(err.message||'Could not download.'); }",
+          "});"
+        ].join("\n");
+      }
+
+      function buildFile(cfg) {
+        var css = [
+          ":root{color-scheme:light;--bg:#f6f3ee;--card:#fff;--ink:#1b1a17;--muted:#5e5a53;--line:#d9d3c7;--accent:#0c4a36;--accent-ink:#f4fff9;--radius:14px}",
+          "*{box-sizing:border-box}html,body{margin:0;padding:0}",
+          "body{min-height:100vh;font:16px/1.5 ui-sans-serif,system-ui,-apple-system,sans-serif;color:var(--ink);background:var(--bg)}",
+          "main{width:min(560px,100%);margin:0 auto;padding:36px 16px 72px}",
+          ".card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px 18px;box-shadow:0 14px 40px rgba(40,32,18,.07)}",
+          ".kicker{margin:0 0 4px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}",
+          "h1{margin:0 0 6px;font-size:1.6rem;letter-spacing:-.03em}",
+          ".intro{color:var(--muted);margin:0 0 16px}",
+          "label.field{display:block;margin:0 0 12px}",
+          "label.field span{display:block;font-size:13px;font-weight:650;margin:0 0 6px}",
+          "input,textarea,select{width:100%;border:1px solid var(--line);background:#fcfaf6;color:var(--ink);border-radius:10px;padding:11px 12px;font:15px/1.4 ui-sans-serif,system-ui,sans-serif}",
+          "textarea{min-height:120px;resize:vertical}",
+          ".preview-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}",
+          "button{font:650 15px/1.2 ui-sans-serif,system-ui,sans-serif;border:0;border-radius:10px;padding:11px 14px;cursor:pointer}",
+          ".primary{background:var(--accent);color:var(--accent-ink)}",
+          ".ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}",
+          "#status{margin:12px 0 0;color:var(--accent);font-size:14px}",
+          "footer{margin-top:18px;color:var(--muted);font-size:13px}"
+        ].join("");
+        var inner = formInnerHtml(cfg, "x-").replace("<h3>", "<h1>").replace("</h3>", "</h1>");
+        return [
+          "<!doctype html>",
+          '<html lang="en">',
+          "<head>",
+          '<meta charset="utf-8" />',
+          '<meta name="viewport" content="width=device-width, initial-scale=1" />',
+          "<title>" + escapeHtml(cfg.title) + "</title>",
+          "<style>" + css + "</style>",
+          "</head>",
+          "<body>",
+          "<main>",
+          '<section class="card">',
+          inner,
+          '<p id="status" hidden></p>',
+          "</section>",
+          "<footer>This form does not send data to a server. Copy, download, or open a mail draft.</footer>",
+          "</main>",
+          "<script>",
+          "const CONFIG = " + JSON.stringify(cfg).replace(/</g, "\\u003c") + ";",
+          exportRuntime(),
+          "</scr" + "ipt>",
+          "</body>",
+          "</html>",
+          ""
+        ].join("\n");
+      }
+
+      $("payLink").href = "solana:" + PAY_TO + "?amount=" + PRICE + "&spl-token=" + encodeURIComponent(USDC_MINT);
+
+      $("copyPay").addEventListener("click", function () {
+        var status = $("copyPayStatus");
+        function ok() { status.textContent = "Copied."; }
+        function fail() { status.textContent = "Copy failed. Select the address instead."; }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(PAY_TO).then(ok).catch(fail);
+        } else {
+          fail();
+        }
+      });
+
+      $("addField").addEventListener("click", function () {
+        fields.push({ id: uid(), label: "New field", type: "text", required: false, options: "" });
+        renderFields();
+        renderPreview();
+      });
+      $("resetFields").addEventListener("click", function () {
+        fields = defaults();
+        renderFields();
+        renderPreview();
+      });
+      ["studio", "title", "intro", "toEmail", "subject"].forEach(function (id) {
+        $(id).addEventListener("input", function () {
+          showError("");
+          renderPreview();
+        });
+      });
+      $("downloadBtn").addEventListener("click", function () {
+        var cfg = readConfig();
+        if (cfg.email && !EMAIL_RE.test(cfg.email)) {
+          showError("Reply email looks invalid. Leave it blank to copy/download answers only.");
+          $("toEmail").focus();
+          return;
+        }
+        if (!cfg.fields.length) {
+          showError("Add at least one field.");
+          return;
+        }
+        var missingSelect = cfg.fields.some(function (f) { return f.type === "select" && !f.options.length; });
+        if (missingSelect) {
+          showError("Select fields need at least one option (comma-separated).");
+          return;
+        }
+        showError("");
+        var html = buildFile(cfg);
+        var blob = new Blob([html], { type: "text/html;charset=utf-8" });
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "intake-form.html";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+        showStatus("Downloaded intake-form.html. Open it locally or host the file anywhere.");
+      });
+
+      renderFields();
+      renderPreview();
+    })();
+  </script>
+</body>
+</html>
