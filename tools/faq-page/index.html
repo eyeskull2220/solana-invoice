@@ -239,7 +239,7 @@
       <div class="cols-head">
         <h2>Preview</h2>
         <div class="actions">
-          <button type="button" class="primary" id="downloadBtn">Download faq.html</button>
+          <button type="button" class="primary" id="downloadBtn">Download HTML</button>
         </div>
       </div>
       <div class="preview-box" id="preview"></div>
@@ -437,7 +437,7 @@
           "        } else if (empty) empty.remove();\n" +
           "      });\n" +
           "    })();\n" +
-          "  <\\/script>\n</body>\n</html>\n"
+          "  <\/script>\n</body>\n</html>\n"
         );
       }
 
@@ -445,6 +445,7 @@
         var cfg = readConfig();
         var err = validate(cfg);
         showError(err);
+        if (err) showStatus("");
         $("downloadBtn").disabled = !!err;
         if (err && !cfg.items.length) {
           previewEl.innerHTML = '<p class="empty">Add a question to preview the page.</p>';
