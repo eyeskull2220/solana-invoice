@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Expense CSV logger</title>
+  <meta name="description" content="Add expense rows in the browser and download a CSV. 49 USDC on Solana. No account, no wallet connect." />
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f3ee;
+      --card: #ffffff;
+      --ink: #1b1a17;
+      --muted: #5e5a53;
+      --line: #d9d3c7;
+      --accent: #0c4a36;
+      --accent-ink: #f4fff9;
+      --soft: #e4f0ea;
+      --warn-bg: #fff6e8;
+      --warn-line: #ecd4a4;
+      --shadow: 0 14px 40px rgba(40, 32, 18, 0.07);
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+    }
+    main {
+      width: min(980px, 100%);
+      margin: 0 auto;
+      padding: 28px 16px 72px;
+    }
+    header h1 {
+      margin: 0 0 6px;
+      font-size: clamp(1.6rem, 4vw, 2.1rem);
+      letter-spacing: -0.03em;
+    }
+    .lead {
+      margin: 0 0 12px;
+      color: var(--muted);
+      max-width: 46rem;
+    }
+    .price {
+      display: inline-block;
+      margin: 0 0 22px;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--soft);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 650;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      margin: 0 0 14px;
+    }
+    h2 {
+      margin: 0 0 10px;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+    .cols-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .cols-head h2 { margin: 0; }
+    label.field { display: block; margin: 0 0 12px; }
+    label.field span {
+      display: block;
+      font-size: 13px;
+      font-weight: 650;
+      margin: 0 0 6px;
+    }
+    input[type="text"],
+    input[type="date"],
+    input[type="number"],
+    select {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fcfaf6;
+      color: var(--ink);
+      border-radius: 10px;
+      padding: 11px 12px;
+      font: 15px/1.4 ui-sans-serif, system-ui, sans-serif;
+    }
+    .row { display: grid; gap: 12px; }
+    @media (min-width: 720px) {
+      .row.four { grid-template-columns: 1.1fr 1.1fr 1.6fr 0.9fr; }
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    button, .btn {
+      font: 650 15px/1.2 ui-sans-serif, system-ui, sans-serif;
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 14px;
+      cursor: pointer;
+    }
+    .primary { background: var(--accent); color: var(--accent-ink); }
+    .ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+    .danger { color: #8a4b12; }
+    button:disabled { opacity: 0.45; cursor: not-allowed; }
+    .addr {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      word-break: break-all;
+      background: #fcfaf6;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .net, .note {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 10px 0 0;
+    }
+    .ok { color: var(--accent); font-size: 14px; margin: 10px 0 0; }
+    .error {
+      background: var(--warn-bg);
+      border: 1px solid var(--warn-line);
+      border-radius: 12px;
+      padding: 10px 12px;
+      color: #6b3d0c;
+      margin: 0 0 12px;
+    }
+    .hidden { display: none !important; }
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin: 0 0 10px;
+    }
+    .stats b { color: var(--ink); }
+    .table-wrap {
+      overflow: auto;
+      max-height: min(62vh, 640px);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+      min-width: 560px;
+    }
+    th, td {
+      text-align: left;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+    th {
+      position: sticky;
+      top: 0;
+      background: #f3efe7;
+      font-size: 12px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: var(--muted);
+      z-index: 1;
+    }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    td.desc { max-width: 280px; word-break: break-word; }
+    tr:last-child td { border-bottom: 0; }
+    .empty {
+      color: var(--muted);
+      margin: 0;
+      padding: 18px 4px;
+    }
+    footer {
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Expense CSV logger</h1>
+      <p class="lead">Add rows, keep a running total, and download a CSV. Everything stays on this device. No account, no upload, no wallet connect.</p>
+      <p class="price">49 USDC · Solana</p>
+    </header>
+
+    <section class="card" id="pay">
+      <h2>Pay 49 USDC on Solana</h2>
+      <p>Send exactly 49 USDC to:</p>
+      <div class="addr" id="addr">96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</div>
+      <p class="net">Network: Solana · Token: USDC (not SOL)</p>
+      <div class="actions">
+        <button type="button" class="primary" id="copyBtn">Copy address</button>
+      </div>
+      <p class="ok hidden" id="copyStatus"></p>
+    </section>
+
+    <section class="card">
+      <h2>Add a row</h2>
+      <p class="error hidden" id="error"></p>
+      <div class="row four">
+        <label class="field">
+          <span>Date</span>
+          <input id="date" type="date" />
+        </label>
+        <label class="field">
+          <span>Category</span>
+          <select id="category">
+            <option>Meals</option>
+            <option>Travel</option>
+            <option>Software</option>
+            <option>Office</option>
+            <option>Contractors</option>
+            <option>Other</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Description</span>
+          <input id="description" type="text" placeholder="Client lunch, train ticket…" autocomplete="off" />
+        </label>
+        <label class="field">
+          <span>Amount</span>
+          <input id="amount" type="number" step="0.01" inputmode="decimal" placeholder="0.00" />
+        </label>
+      </div>
+      <label class="field">
+        <span>Notes (optional)</span>
+        <input id="notes" type="text" placeholder="Receipt #, job name…" autocomplete="off" />
+      </label>
+      <div class="actions">
+        <button type="button" class="primary" id="addBtn">Add row</button>
+        <button type="button" class="ghost" id="resetFormBtn">Clear form</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="cols-head">
+        <h2>Log</h2>
+        <div class="actions" style="margin:0">
+          <button type="button" class="primary" id="downloadBtn">Download CSV</button>
+          <button type="button" class="ghost danger" id="clearBtn">Clear all rows</button>
+        </div>
+      </div>
+      <div class="stats" id="stats"></div>
+      <div class="table-wrap" id="tableWrap">
+        <p class="empty" id="empty">No expenses yet. Add a row to start the log.</p>
+        <table class="hidden" id="table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Category</th>
+              <th>Description</th>
+              <th class="num">Amount</th>
+              <th>Notes</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+      <p class="note">Rows are saved in this browser only. Download a CSV before you clear them.</p>
+    </section>
+
+    <footer>
+      Offline one-file tool. 49 USDC on Solana to 96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3. No wallet connect.
+    </footer>
+  </main>
+
+  <script>
+    (function () {
+      const PAY_TO = "96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3";
+      const PRICE_USDC = 49;
+      const STORAGE_KEY = "treasury-expense-log-v1";
+      const HEADERS = ["date", "category", "description", "amount", "notes"];
+
+      const $ = (id) => document.getElementById(id);
+      const dateEl = $("date");
+      const categoryEl = $("category");
+      const descriptionEl = $("description");
+      const amountEl = $("amount");
+      const notesEl = $("notes");
+      const errorEl = $("error");
+      const emptyEl = $("empty");
+      const tableEl = $("table");
+      const tbody = $("tbody");
+      const statsEl = $("stats");
+      const downloadBtn = $("downloadBtn");
+      const clearBtn = $("clearBtn");
+      const copyStatus = $("copyStatus");
+
+      const state = { rows: loadRows() };
+
+      function todayIso() {
+        const d = new Date();
+        const m = String(d.getMonth() + 1).padStart(2, "0");
+        const day = String(d.getDate()).padStart(2, "0");
+        return d.getFullYear() + "-" + m + "-" + day;
+      }
+
+      function loadRows() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          const parsed = raw ? JSON.parse(raw) : [];
+          if (!Array.isArray(parsed)) return [];
+          return parsed.filter((row) => row && typeof row === "object").map(normalizeRow);
+        } catch {
+          return [];
+        }
+      }
+
+      function saveRows() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state.rows));
+        } catch {
+          /* private mode / quota */
+        }
+      }
+
+      function normalizeRow(row) {
+        const amount = Number(row.amount);
+        return {
+          id: String(row.id || uid()),
+          date: String(row.date || ""),
+          category: String(row.category || ""),
+          description: String(row.description || ""),
+          amount: Number.isFinite(amount) ? amount : 0,
+          notes: String(row.notes || "")
+        };
+      }
+
+      function uid() {
+        return Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8);
+      }
+
+      function showError(msg) {
+        errorEl.textContent = msg;
+        errorEl.classList.toggle("hidden", !msg);
+      }
+
+      function csvCell(value) {
+        const s = String(value ?? "");
+        if (/[",\n\r]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+        return s;
+      }
+
+      function toCsv(rows) {
+        const lines = [HEADERS.join(",")];
+        for (const row of rows) {
+          lines.push([
+            csvCell(row.date),
+            csvCell(row.category),
+            csvCell(row.description),
+            csvCell(formatAmount(row.amount)),
+            csvCell(row.notes)
+          ].join(","));
+        }
+        return lines.join("\r\n") + "\r\n";
+      }
+
+      function formatAmount(n) {
+        return (Number(n) || 0).toFixed(2);
+      }
+
+      function escapeHtml(s) {
+        return String(s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function total() {
+        return state.rows.reduce((sum, row) => sum + (Number(row.amount) || 0), 0);
+      }
+
+      function render() {
+        const n = state.rows.length;
+        downloadBtn.disabled = n === 0;
+        clearBtn.disabled = n === 0;
+        statsEl.innerHTML = n
+          ? "<span><b>" + n + "</b> row" + (n === 1 ? "" : "s") + "</span><span>Total <b>" + formatAmount(total()) + "</b></span>"
+          : "";
+        emptyEl.classList.toggle("hidden", n > 0);
+        tableEl.classList.toggle("hidden", n === 0);
+        tbody.replaceChildren();
+        for (const row of state.rows) {
+          const tr = document.createElement("tr");
+          tr.innerHTML =
+            "<td>" + escapeHtml(row.date) + "</td>" +
+            "<td>" + escapeHtml(row.category) + "</td>" +
+            "<td class=\"desc\">" + escapeHtml(row.description) + "</td>" +
+            "<td class=\"num\">" + escapeHtml(formatAmount(row.amount)) + "</td>" +
+            "<td class=\"desc\">" + escapeHtml(row.notes) + "</td>" +
+            "<td><button type=\"button\" class=\"ghost\" data-del=\"" + escapeHtml(row.id) + "\">Remove</button></td>";
+          tbody.appendChild(tr);
+        }
+      }
+
+      function resetForm() {
+        dateEl.value = todayIso();
+        categoryEl.selectedIndex = 0;
+        descriptionEl.value = "";
+        amountEl.value = "";
+        notesEl.value = "";
+        showError("");
+        descriptionEl.focus();
+      }
+
+      function addRow() {
+        const date = dateEl.value.trim();
+        const category = categoryEl.value.trim();
+        const description = descriptionEl.value.trim();
+        const notes = notesEl.value.trim();
+        const amount = Number(amountEl.value);
+        if (!date) {
+          showError("Pick a date.");
+          dateEl.focus();
+          return;
+        }
+        if (!description) {
+          showError("Add a description.");
+          descriptionEl.focus();
+          return;
+        }
+        if (!Number.isFinite(amount)) {
+          showError("Enter a numeric amount.");
+          amountEl.focus();
+          return;
+        }
+        showError("");
+        state.rows.push({
+          id: uid(),
+          date: date,
+          category: category,
+          description: description,
+          amount: amount,
+          notes: notes
+        });
+        saveRows();
+        render();
+        descriptionEl.value = "";
+        amountEl.value = "";
+        notesEl.value = "";
+        descriptionEl.focus();
+      }
+
+      function removeRow(id) {
+        state.rows = state.rows.filter((row) => row.id !== id);
+        saveRows();
+        render();
+      }
+
+      function downloadCsv() {
+        if (!state.rows.length) return;
+        const csv = toCsv(state.rows);
+        const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "expenses-" + todayIso() + ".csv";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+      }
+
+      $("copyBtn").addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(PAY_TO);
+          copyStatus.textContent = "Address copied. Send exactly " + PRICE_USDC + " USDC on Solana.";
+          copyStatus.classList.remove("hidden");
+        } catch {
+          copyStatus.textContent = "Copy failed. Select the address above.";
+          copyStatus.classList.remove("hidden");
+        }
+      });
+
+      $("addBtn").addEventListener("click", addRow);
+      $("resetFormBtn").addEventListener("click", resetForm);
+      downloadBtn.addEventListener("click", downloadCsv);
+      clearBtn.addEventListener("click", () => {
+        if (!state.rows.length) return;
+        if (!window.confirm("Remove every row from this browser?")) return;
+        state.rows = [];
+        saveRows();
+        render();
+      });
+      tbody.addEventListener("click", (e) => {
+        const btn = e.target.closest("[data-del]");
+        if (!btn) return;
+        removeRow(btn.getAttribute("data-del"));
+      });
+      [descriptionEl, amountEl, notesEl].forEach((el) => {
+        el.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            addRow();
+          }
+        });
+      });
+
+      dateEl.value = todayIso();
+      $("addr").textContent = PAY_TO;
+      render();
+    })();
+  </script>
+</body>
+</html>
