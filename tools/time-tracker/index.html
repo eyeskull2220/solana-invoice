@@ -336,6 +336,7 @@
       function tick() {
         if (!state.running) return;
         clockEl.textContent = formatHms(elapsedMs());
+        totals();
       }
 
       function startTick() {
