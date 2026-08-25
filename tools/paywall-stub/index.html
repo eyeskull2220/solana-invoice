@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Paywall stub — 9 USDC</title>
+  <meta name="description" content="Copyable honor-system paste-tx paywall. 9 USDC on Solana.">
+  <!--
+    COPY INTO OTHER TOOLS
+    1. Paste the <style> block (or the .pw-* rules) into your page.
+    2. Paste #gate markup where the lock should appear.
+    3. Paste #product markup and replace the inner HTML with your tool.
+    4. Paste both <script> tags. Change only the CONFIG object.
+    5. Implement onUnlocked() to reveal your tool (the default hides #gate).
+  -->
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #07090f;
+      --card: #121826;
+      --ink: #eef2ff;
+      --muted: #9aa6c3;
+      --line: #2a3354;
+      --accent: #14f195;
+      --accent-ink: #042113;
+      --warn: #f5c542;
+      --danger: #ff8b6b;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(900px 420px at 10% -10%, #1a2450 0%, transparent 55%),
+        radial-gradient(700px 360px at 110% 10%, #143528 0%, transparent 50%),
+        var(--bg);
+    }
+    main { width: min(560px, calc(100% - 32px)); margin: 0 auto; padding: 36px 0 64px; }
+    h1 { font-size: clamp(1.5rem, 5vw, 2rem); line-height: 1.15; letter-spacing: -0.03em; margin: 0 0 8px; }
+    .lead { color: var(--muted); margin: 0 0 22px; }
+    .pw-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 20px 18px;
+      margin: 0 0 16px;
+    }
+    .pw-card h2 { margin: 0 0 8px; font-size: 1.05rem; }
+    .pw-label {
+      display: block;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 12px 0 6px;
+    }
+    .pw-addr {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      word-break: break-all;
+      background: #0d1324;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .pw-net { color: var(--muted); font-size: 13px; margin: 10px 0 0; }
+    .pw-card button {
+      appearance: none;
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 14px;
+      font-weight: 700;
+      cursor: pointer;
+      background: var(--accent);
+      color: var(--accent-ink);
+      width: 100%;
+      margin-top: 12px;
+    }
+    .pw-card button.pw-secondary {
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+    .pw-card button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .pw-card input[type="text"] {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #0d1324;
+      color: var(--ink);
+      border-radius: 12px;
+      padding: 12px;
+      font: 14px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    .pw-err { color: var(--danger); font-size: 14px; margin: 10px 0 0; min-height: 1.2em; }
+    .pw-ok { color: var(--accent); font-size: 14px; margin: 10px 0 0; }
+    .pw-qr { display: none; place-items: center; margin: 14px 0 4px; }
+    .pw-qr.show { display: grid; }
+    .pw-qr img { width: 168px; height: 168px; background: #fff; border-radius: 12px; padding: 8px; }
+    .pw-fine { color: var(--muted); font-size: 13px; margin: 14px 0 0; }
+    .pw-paid { color: var(--accent); font-size: 14px; margin: 0 0 16px; }
+    .pw-paid a { color: var(--accent); }
+    .pw-actions { display: grid; gap: 8px; }
+    @media (min-width: 420px) {
+      .pw-actions { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Paywall stub</h1>
+    <p class="lead">Honor-system paste-tx. Other tools copy this file, swap <code>#product</code>, and keep the gate.</p>
+
+    <div id="gate">
+      <section class="pw-card" id="pay">
+        <h2>Pay <span data-pw-price>9</span> USDC on Solana</h2>
+        <div class="pw-qr" id="qr" aria-hidden="true"></div>
+        <p>Send exactly <span data-pw-price>9</span> USDC to:</p>
+        <div class="pw-addr" id="addr"></div>
+        <p class="pw-net">Network: Solana · Token: USDC</p>
+        <div class="pw-actions">
+          <button type="button" id="copyBtn">Copy address</button>
+          <button type="button" class="pw-secondary" id="payLinkBtn">Solana Pay link</button>
+        </div>
+        <p class="pw-ok" id="copyStatus"></p>
+      </section>
+
+      <section class="pw-card" id="unlock">
+        <h2>Already paid?</h2>
+        <label class="pw-label" for="sig">Paste your Solana transaction signature</label>
+        <input id="sig" type="text" spellcheck="false" autocomplete="off" placeholder="5x… transaction signature">
+        <button type="button" id="unlockBtn">Unlock</button>
+        <p class="pw-err" id="unlockErr"></p>
+      </section>
+      <p class="pw-fine">No wallet connect. No account. USDC on Solana only — not SOL.</p>
+    </div>
+
+    <div id="product" hidden>
+      <p class="pw-paid" id="paidNote"></p>
+      <section class="pw-card">
+        <h2>Your tool goes here</h2>
+        <p>Replace <code>#product</code> with the gated HTML. Unlock runs after a pasted signature passes a loose check (format, then chain if reachable). If RPC is down, a valid-looking signature still unlocks — honor system.</p>
+      </section>
+    </div>
+  </main>
+
+  <script id="paywall-core">
+    var PaywallCore = (function () {
+      var BASE58_SIG = /^[1-9A-HJ-NP-Za-km-z]{86,88}$/;
+      var BASE58_ADDR = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
+
+      function extractSig(raw) {
+        var s = String(raw || "").trim();
+        var m = s.match(/(?:tx|transaction)\/([1-9A-HJ-NP-Za-km-z]{86,88})/i);
+        if (m) return m[1];
+        s = s.split(/[?#]/)[0].trim();
+        return s.replace(/\s+/g, "");
+      }
+
+      function looksLikeSig(s) {
+        return BASE58_SIG.test(s || "");
+      }
+
+      function looksLikeAddress(s) {
+        return BASE58_ADDR.test(s || "");
+      }
+
+      function tokenDelta(tx, owner, tokenMint, expectedRaw) {
+        var pre = (tx.meta && tx.meta.preTokenBalances) || [];
+        var post = (tx.meta && tx.meta.postTokenBalances) || [];
+        var i, p, before, after, map = {};
+        for (i = 0; i < pre.length; i++) {
+          p = pre[i];
+          if (p.mint === tokenMint && p.owner === owner && p.uiTokenAmount) {
+            map[p.accountIndex] = p.uiTokenAmount.amount || "0";
+          }
+        }
+        for (i = 0; i < post.length; i++) {
+          p = post[i];
+          if (p.mint === tokenMint && p.owner === owner && p.uiTokenAmount) {
+            after = p.uiTokenAmount.amount || "0";
+            before = map[p.accountIndex] != null ? map[p.accountIndex] : "0";
+            try {
+              if ((BigInt(after) - BigInt(before)).toString() === expectedRaw) return true;
+            } catch (e) {}
+          }
+        }
+        return false;
+      }
+
+      function collectParsed(tx) {
+        var out = [];
+        var msg = tx.transaction && tx.transaction.message;
+        var i, j, group, ix;
+        if (msg && msg.instructions) {
+          for (i = 0; i < msg.instructions.length; i++) out.push(msg.instructions[i]);
+        }
+        group = (tx.meta && tx.meta.innerInstructions) || [];
+        for (i = 0; i < group.length; i++) {
+          ix = group[i].instructions || [];
+          for (j = 0; j < ix.length; j++) out.push(ix[j]);
+        }
+        return out;
+      }
+
+      function parsedPays(tx, owner, tokenMint, expectedRaw) {
+        var ixs = collectParsed(tx);
+        var i, parsed, info, amt, destOwner;
+        for (i = 0; i < ixs.length; i++) {
+          parsed = ixs[i].parsed;
+          if (!parsed || !parsed.info) continue;
+          info = parsed.info;
+          amt = (info.tokenAmount && info.tokenAmount.amount) || info.amount;
+          if (String(amt) !== expectedRaw) continue;
+          destOwner = info.destinationOwner || info.authorityDestination || "";
+          if (info.mint && info.mint !== tokenMint) continue;
+          if (destOwner && destOwner === owner) return true;
+          if (info.destination === owner) return true;
+        }
+        return false;
+      }
+
+      function isPayment(tx, owner, tokenMint, expectedRaw) {
+        if (!tx || (tx.meta && tx.meta.err)) return false;
+        return tokenDelta(tx, owner, tokenMint, expectedRaw) ||
+          parsedPays(tx, owner, tokenMint, expectedRaw);
+      }
+
+      function solanaPayUrl(addr, amount, mint, label) {
+        var q = [
+          "amount=" + encodeURIComponent(String(amount)),
+          "spl-token=" + encodeURIComponent(mint)
+        ];
+        if (label) q.push("label=" + encodeURIComponent(label));
+        return "solana:" + addr + "?" + q.join("&");
+      }
+
+      return {
+        extractSig: extractSig,
+        looksLikeSig: looksLikeSig,
+        looksLikeAddress: looksLikeAddress,
+        tokenDelta: tokenDelta,
+        parsedPays: parsedPays,
+        isPayment: isPayment,
+        solanaPayUrl: solanaPayUrl
+      };
+    })();
+  </script>
+  <script>
+    (function () {
+      var CONFIG = {
+        priceUsdc: 9,
+        payTo: "96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3",
+        usdcMint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        expectedRaw: "9000000",
+        label: "Treasury tools",
+        storageKey: "pw-unlock:96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3:9",
+        rpcs: [
+          "https://api.mainnet-beta.solana.com",
+          "https://solana-rpc.publicnode.com"
+        ]
+      };
+
+      var priceNodes = document.querySelectorAll("[data-pw-price]");
+      var i;
+      for (i = 0; i < priceNodes.length; i++) {
+        priceNodes[i].textContent = String(CONFIG.priceUsdc);
+      }
+
+      var addr = CONFIG.payTo;
+      var pending = !addr || addr === "ADDRESS_PENDING" || !PaywallCore.looksLikeAddress(addr);
+      var shown = pending ? "TREASURY_SOLANA_USDC_ADDRESS" : addr;
+      document.getElementById("addr").textContent = shown;
+
+      var payUrl = pending ? "" : PaywallCore.solanaPayUrl(addr, CONFIG.priceUsdc, CONFIG.usdcMint, CONFIG.label);
+      var qrBox = document.getElementById("qr");
+      if (!pending) {
+        qrBox.classList.add("show");
+        qrBox.setAttribute("aria-hidden", "false");
+        var img = document.createElement("img");
+        img.alt = "QR to pay " + CONFIG.priceUsdc + " USDC on Solana";
+        img.width = 168;
+        img.height = 168;
+        img.src = "https://api.qrserver.com/v1/create-qr-code/?size=168x168&data=" + encodeURIComponent(payUrl);
+        qrBox.appendChild(img);
+      }
+
+      function setCopyStatus(msg) {
+        document.getElementById("copyStatus").textContent = msg || "";
+      }
+
+      function copyText(text, okMsg) {
+        if (pending) { setCopyStatus("Address not ready. Do not send yet."); return; }
+        function ok() { setCopyStatus(okMsg); }
+        function fail() { setCopyStatus("Copy failed. Select the address instead."); }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(ok).catch(fail);
+        } else {
+          fail();
+        }
+      }
+
+      document.getElementById("copyBtn").addEventListener("click", function () {
+        copyText(addr, "Copied.");
+      });
+      document.getElementById("payLinkBtn").addEventListener("click", function () {
+        copyText(payUrl, "Solana Pay link copied.");
+      });
+
+      function rpcGetTx(url, sig) {
+        return fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            jsonrpc: "2.0",
+            id: 1,
+            method: "getTransaction",
+            params: [sig, { encoding: "jsonParsed", maxSupportedTransactionVersion: 0 }]
+          })
+        }).then(function (r) {
+          if (!r.ok) throw new Error("rpc http " + r.status);
+          return r.json();
+        }).then(function (j) {
+          if (j.error) throw new Error(j.error.message || "rpc error");
+          if (!j.result) throw new Error("tx not found");
+          return j.result;
+        });
+      }
+
+      function verifyOnRpc(sig) {
+        var n = 0;
+        function next(err) {
+          if (n >= CONFIG.rpcs.length) return Promise.reject(err || new Error("rpc failed"));
+          var url = CONFIG.rpcs[n++];
+          return rpcGetTx(url, sig).catch(function (e) { return next(e); });
+        }
+        return next();
+      }
+
+      function persist(sig) {
+        try { localStorage.setItem(CONFIG.storageKey, sig); } catch (e) {}
+      }
+
+      function readPersisted() {
+        try { return localStorage.getItem(CONFIG.storageKey) || ""; } catch (e) { return ""; }
+      }
+
+      function onUnlocked(sig, how) {
+        persist(sig);
+        document.getElementById("gate").hidden = true;
+        document.getElementById("product").hidden = false;
+        var note = document.getElementById("paidNote");
+        var href = "https://solscan.io/tx/" + encodeURIComponent(sig);
+        note.innerHTML = "Unlocked" + (how ? " (" + how + ")" : "") +
+          " · <a href=\"" + href + "\" target=\"_blank\" rel=\"noopener\">View on Solscan</a>";
+      }
+
+      function honorUnlock(sig) {
+        document.getElementById("unlockErr").textContent = "";
+        onUnlocked(sig, "honor system");
+      }
+
+      function attemptUnlock(raw) {
+        var sig = PaywallCore.extractSig(raw);
+        var err = document.getElementById("unlockErr");
+        var btn = document.getElementById("unlockBtn");
+        err.textContent = "";
+        if (!PaywallCore.looksLikeSig(sig)) {
+          err.textContent = "That does not look like a Solana transaction signature.";
+          return Promise.resolve(false);
+        }
+        if (pending) {
+          honorUnlock(sig);
+          return Promise.resolve(true);
+        }
+        btn.disabled = true;
+        return verifyOnRpc(sig).then(function (tx) {
+          if (!PaywallCore.isPayment(tx, addr, CONFIG.usdcMint, CONFIG.expectedRaw)) {
+            err.textContent = "That transaction is not a " + CONFIG.priceUsdc +
+              " USDC payment to this address.";
+            return false;
+          }
+          onUnlocked(sig, "verified");
+          return true;
+        }).catch(function () {
+          honorUnlock(sig);
+          return true;
+        }).then(function (ok) {
+          btn.disabled = false;
+          return ok;
+        });
+      }
+
+      document.getElementById("unlockBtn").addEventListener("click", function () {
+        attemptUnlock(document.getElementById("sig").value);
+      });
+      document.getElementById("sig").addEventListener("keydown", function (e) {
+        if (e.key === "Enter") attemptUnlock(this.value);
+      });
+
+      var saved = readPersisted();
+      if (PaywallCore.looksLikeSig(saved)) onUnlocked(saved, "saved");
+
+      window.PaywallStub = {
+        CONFIG: CONFIG,
+        attemptUnlock: attemptUnlock,
+        onUnlocked: onUnlocked
+      };
+    })();
+  </script>
+</body>
+</html>
