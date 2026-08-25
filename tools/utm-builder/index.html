@@ -75,6 +75,9 @@
       justify-content: space-between;
       gap: 12px;
     }
+    @media (max-width: 560px) {
+      .pay-head { flex-direction: column; }
+    }
     .pay-head h2 { margin: 0 0 6px; }
     .net {
       margin: 0 0 10px;
@@ -291,7 +294,7 @@
         <button type="button" class="primary" id="copyAddr">Copy address</button>
         <a class="btn ghost" id="payLink" href="#">Open Solana Pay</a>
       </div>
-      <p class="ok" id="copyAddrStatus"></p>
+      <p class="ok hidden" id="copyAddrStatus"></p>
       <p class="note">Mint <span id="mintLabel">EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v</span>. No wallet connect on this page — pay from your own wallet.</p>
     </section>
 
@@ -449,7 +452,7 @@
         return out;
       }
 
-      function buildTagged(raw) {
+      function parseHttpUrl(raw) {
         var href = withProtocol(raw);
         if (!href) throw new Error("Add a website URL.");
         var url;
@@ -461,6 +464,18 @@
         if (url.protocol !== "http:" && url.protocol !== "https:") {
           throw new Error("Use an http or https URL.");
         }
+        var host = url.hostname || "";
+        if (!host || /\s/.test(host) || /%20/i.test(host)) {
+          throw new Error("That does not look like a URL.");
+        }
+        if (host !== "localhost" && host.indexOf(".") === -1 && host !== "127.0.0.1") {
+          throw new Error("That does not look like a URL.");
+        }
+        return url;
+      }
+
+      function buildTagged(raw) {
+        var url = parseHttpUrl(raw);
         var t = tags();
         KEYS.forEach(function (k) {
           if (t[k]) url.searchParams.set(k, t[k]);
@@ -524,17 +539,18 @@
         } catch (e) {}
       }
 
+      function clearPresetPress() {
+        document.querySelectorAll(".chip").forEach(function (c) {
+          c.setAttribute("aria-pressed", "false");
+        });
+      }
+
       function pullFromUrl() {
-        var href = withProtocol(baseUrl.value);
-        if (!href) {
-          show(errorEl, "Add a website URL first.");
-          return;
-        }
         var url;
         try {
-          url = new URL(href);
-        } catch (e) {
-          show(errorEl, "That does not look like a URL.");
+          url = parseHttpUrl(baseUrl.value);
+        } catch (err) {
+          show(errorEl, err.message || "That does not look like a URL.");
           return;
         }
         var found = 0;
@@ -543,8 +559,11 @@
           if (v != null && v !== "") {
             $(k).value = v;
             found += 1;
+          } else {
+            $(k).value = "";
           }
         });
+        clearPresetPress();
         show(errorEl, found ? "" : "No utm_* tags on that URL.");
         render();
         persist();
@@ -560,9 +579,7 @@
         $("bulkBody").innerHTML = "";
         show(copyLinkStatus, "");
         show(bulkStatus, "");
-        document.querySelectorAll(".chip").forEach(function (c) {
-          c.setAttribute("aria-pressed", "false");
-        });
+        clearPresetPress();
         try { localStorage.removeItem(STORE); } catch (e) {}
         render();
       }
@@ -651,7 +668,11 @@
         baseUrl.addEventListener(ev, function () { render(); persist(); });
         $("normalize").addEventListener(ev, function () { render(); persist(); });
         KEYS.forEach(function (k) {
-          $(k).addEventListener(ev, function () { render(); persist(); });
+          $(k).addEventListener(ev, function () {
+            if (k === "utm_source" || k === "utm_medium") clearPresetPress();
+            render();
+            persist();
+          });
         });
       });
 
