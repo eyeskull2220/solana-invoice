@@ -1,0 +1,622 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Invoice Reminder — 49 USDC</title>
+  <meta name="description" content="Type client, amount, and due date. Download a reminder HTML you can send. One file. Offline. 49 USDC on Solana." />
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f3ee;
+      --card: #ffffff;
+      --ink: #1b1a17;
+      --muted: #5e5a53;
+      --line: #d9d3c7;
+      --accent: #0c4a36;
+      --accent-ink: #f4fff9;
+      --soft: #e4f0ea;
+      --warn-bg: #fff6e8;
+      --warn-line: #ecd4a4;
+      --overdue: #8a4b12;
+      --shadow: 0 14px 40px rgba(40, 32, 18, 0.07);
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+    }
+    main {
+      width: min(880px, 100%);
+      margin: 0 auto;
+      padding: 28px 16px 72px;
+    }
+    header h1 {
+      margin: 0 0 6px;
+      font-size: clamp(1.6rem, 4vw, 2.1rem);
+      letter-spacing: -0.03em;
+    }
+    .lead {
+      margin: 0 0 12px;
+      color: var(--muted);
+      max-width: 44rem;
+    }
+    .price {
+      display: inline-block;
+      margin: 0 0 22px;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--soft);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 650;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      margin: 0 0 14px;
+    }
+    h2 {
+      margin: 0 0 10px;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+    label.field {
+      display: block;
+      margin: 0 0 12px;
+    }
+    label.field span {
+      display: block;
+      font-size: 13px;
+      font-weight: 650;
+      margin: 0 0 6px;
+    }
+    input[type="text"],
+    input[type="date"],
+    input[type="number"],
+    textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fcfaf6;
+      color: var(--ink);
+      border-radius: 10px;
+      padding: 11px 12px;
+      font: 15px/1.4 ui-sans-serif, system-ui, sans-serif;
+    }
+    textarea { min-height: 84px; resize: vertical; }
+    .row {
+      display: grid;
+      gap: 12px;
+    }
+    @media (min-width: 640px) {
+      .row.two { grid-template-columns: 1fr 1fr; }
+      .row.three { grid-template-columns: 1.2fr 1fr 1fr; }
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    button {
+      font: 650 15px/1.2 ui-sans-serif, system-ui, sans-serif;
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 14px;
+      cursor: pointer;
+    }
+    .primary { background: var(--accent); color: var(--accent-ink); }
+    .ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+    .error {
+      background: var(--warn-bg);
+      border: 1px solid var(--warn-line);
+      border-radius: 12px;
+      padding: 10px 12px;
+      color: #6b3d0c;
+      margin: 0 0 12px;
+    }
+    .hidden { display: none !important; }
+    .ok { color: var(--accent); font-size: 14px; margin: 10px 0 0; }
+    .note { color: var(--muted); font-size: 13px; margin: 10px 0 0; }
+    .addr {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      word-break: break-all;
+      background: #fcfaf6;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .net { color: var(--muted); font-size: 13px; margin: 10px 0 0; }
+    footer {
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .preview-letter {
+      background: #fffcf7;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 28px 24px 22px;
+    }
+    .preview-letter .kicker {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .preview-letter h3 {
+      margin: 4px 0 18px;
+      font-size: 1.55rem;
+      letter-spacing: 0.08em;
+    }
+    .preview-letter .meta {
+      display: grid;
+      gap: 10px;
+      margin: 0 0 18px;
+    }
+    @media (min-width: 560px) {
+      .preview-letter .meta { grid-template-columns: 1fr 1fr 1fr; }
+    }
+    .preview-letter .meta div {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 12px;
+      background: #fff;
+    }
+    .preview-letter .meta span {
+      display: block;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0 0 4px;
+    }
+    .preview-letter .meta strong {
+      font-size: 1.05rem;
+      word-break: break-word;
+    }
+    .preview-letter .amount {
+      font-size: clamp(1.8rem, 5vw, 2.6rem);
+      letter-spacing: -0.03em;
+      margin: 0 0 6px;
+    }
+    .preview-letter .letter { margin: 16px 0 0; }
+    .preview-letter .letter p { margin: 0 0 12px; }
+    .badge {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 650;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: var(--soft);
+      color: var(--accent);
+      margin: 0 0 12px;
+    }
+    .badge.overdue {
+      background: #f8eadc;
+      color: var(--overdue);
+    }
+    .empty { color: var(--muted); font-style: italic; }
+    .pay-box {
+      margin-top: 16px;
+      background: var(--soft);
+      border-radius: 12px;
+      padding: 14px;
+    }
+    .pay-box .label {
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0 0 8px;
+    }
+    .pay-box .addr {
+      background: #fff;
+    }
+    .head-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .head-row h2 { margin: 0; }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Invoice Reminder</h1>
+      <p class="lead">Type the client, the amount, and the due date. Download one HTML reminder you can send. Works offline. No account.</p>
+      <p class="price">49 USDC · Solana USDC</p>
+    </header>
+
+    <section class="card">
+      <h2>Reminder</h2>
+      <p class="error hidden" id="error"></p>
+      <div class="row three">
+        <label class="field">
+          <span>Client</span>
+          <input id="client" type="text" autocomplete="organization" placeholder="Northwind Studio" />
+        </label>
+        <label class="field">
+          <span>Amount due</span>
+          <input id="amount" type="text" inputmode="decimal" autocomplete="off" placeholder="1200.00" />
+        </label>
+        <label class="field">
+          <span>Due date</span>
+          <input id="due" type="date" />
+        </label>
+      </div>
+      <div class="row two">
+        <label class="field">
+          <span>From (optional)</span>
+          <input id="fromName" type="text" autocomplete="name" placeholder="Your name or studio" />
+        </label>
+        <label class="field">
+          <span>Invoice number (optional)</span>
+          <input id="invoiceNo" type="text" autocomplete="off" placeholder="INV-1042" />
+        </label>
+      </div>
+      <label class="field">
+        <span>Their pay-to address, if you want it on the reminder (optional)</span>
+        <input id="payTo" type="text" spellcheck="false" autocomplete="off" placeholder="Your USDC receive address on Solana" />
+      </label>
+      <label class="field">
+        <span>Note (optional)</span>
+        <textarea id="note" placeholder="Invoice for the April site rebuild. Reply if you need a copy of the original invoice."></textarea>
+      </label>
+    </section>
+
+    <section class="card">
+      <div class="head-row">
+        <h2>Preview</h2>
+        <div class="actions" style="margin:0">
+          <button type="button" class="primary" id="downloadBtn">Download reminder.html</button>
+        </div>
+      </div>
+      <div class="preview-letter" id="preview"></div>
+      <p class="ok hidden" id="status"></p>
+      <p class="note">The downloaded file is self-contained. Send it as an attachment or host it. Nothing leaves this page.</p>
+    </section>
+
+    <section class="card" id="pay">
+      <h2>Pay 49 USDC on Solana</h2>
+      <p>Send exactly 49 USDC to:</p>
+      <div class="addr" id="toolAddr">96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</div>
+      <p class="net">Network: Solana · Token: USDC — not SOL, not another chain.</p>
+      <div class="actions">
+        <button type="button" class="ghost" id="copyPayBtn">Copy address</button>
+      </div>
+      <p class="ok" id="copyPayStatus"></p>
+    </section>
+
+    <footer>
+      Offline one-file tool. 49 USDC on Solana to 96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3. No wallet connect.
+    </footer>
+  </main>
+
+  <script>
+    (function () {
+      var TOOL_PAY_TO = "96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3";
+      var MONTHS = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+      ];
+
+      var $ = function (id) { return document.getElementById(id); };
+      var errorEl = $("error");
+      var statusEl = $("status");
+      var previewEl = $("preview");
+
+      function showError(msg) {
+        errorEl.textContent = msg || "";
+        errorEl.classList.toggle("hidden", !msg);
+      }
+
+      function showStatus(msg) {
+        statusEl.textContent = msg || "";
+        statusEl.classList.toggle("hidden", !msg);
+      }
+
+      function escapeHtml(s) {
+        return String(s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function parseISODate(iso) {
+        var p = String(iso || "").split("-");
+        if (p.length !== 3) return null;
+        var y = Number(p[0]);
+        var m = Number(p[1]);
+        var d = Number(p[2]);
+        if (!y || !m || !d) return null;
+        return new Date(y, m - 1, d);
+      }
+
+      function startOfToday() {
+        var d = new Date();
+        return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+      }
+
+      function formatDate(iso) {
+        var dt = parseISODate(iso);
+        if (!dt) return "";
+        return MONTHS[dt.getMonth()] + " " + dt.getDate() + ", " + dt.getFullYear();
+      }
+
+      function formatAmount(raw) {
+        var s = String(raw || "").trim().replace(",", ".");
+        if (!s) return "";
+        if (!/^\d+(\.\d{0,6})?$/.test(s)) return null;
+        var n = Number(s);
+        if (!isFinite(n) || n < 0) return null;
+        var parts = s.split(".");
+        if (!parts[1]) return parts[0] + ".00";
+        if (parts[1].length === 1) return parts[0] + "." + parts[1] + "0";
+        return s;
+      }
+
+      function dayDiff(dueIso) {
+        var due = parseISODate(dueIso);
+        if (!due) return null;
+        return Math.round((due - startOfToday()) / 86400000);
+      }
+
+      function statusFor(days) {
+        if (days === null) return { kind: "empty", label: "Add a due date", letter: "" };
+        if (days > 1) {
+          return {
+            kind: "upcoming",
+            label: "Due in " + days + " days",
+            letter: "due on"
+          };
+        }
+        if (days === 1) {
+          return { kind: "upcoming", label: "Due tomorrow", letter: "due on" };
+        }
+        if (days === 0) {
+          return { kind: "today", label: "Due today", letter: "due today," };
+        }
+        var n = Math.abs(days);
+        return {
+          kind: "overdue",
+          label: n === 1 ? "1 day overdue" : n + " days overdue",
+          letter: "was due on"
+        };
+      }
+
+      function readConfig() {
+        return {
+          client: String($("client").value || "").trim(),
+          amountRaw: String($("amount").value || "").trim(),
+          amount: formatAmount($("amount").value),
+          due: String($("due").value || "").trim(),
+          fromName: String($("fromName").value || "").trim(),
+          invoiceNo: String($("invoiceNo").value || "").trim(),
+          payTo: String($("payTo").value || "").trim(),
+          note: String($("note").value || "").trim()
+        };
+      }
+
+      function letterHtml(cfg) {
+        var days = cfg.due ? dayDiff(cfg.due) : null;
+        var st = statusFor(days);
+        var dueNice = formatDate(cfg.due);
+        var client = cfg.client || "the client";
+        var amt = cfg.amount ? cfg.amount + " USDC" : "the outstanding amount";
+        var opening;
+        if (!cfg.client || !cfg.amount || !cfg.due) {
+          opening = "Fill client, amount, and due date to write the reminder.";
+        } else if (st.kind === "today") {
+          opening = "Hello " + client + " — this is a reminder that " + amt + " is due today, " + dueNice + ".";
+        } else if (st.kind === "overdue") {
+          opening = "Hello " + client + " — this is a reminder that " + amt + " was due on " + dueNice + " and is now " + st.label + ".";
+        } else {
+          opening = "Hello " + client + " — this is a friendly reminder that " + amt + " is due on " + dueNice + ".";
+        }
+        var close = cfg.fromName
+          ? "Thank you. — " + cfg.fromName
+          : "Thank you.";
+        return (
+          '<p>' + escapeHtml(opening) + "</p>" +
+          (cfg.note ? "<p>" + escapeHtml(cfg.note) + "</p>" : "") +
+          "<p>" + escapeHtml(close) + "</p>"
+        );
+      }
+
+      function reminderInner(cfg, opts) {
+        opts = opts || {};
+        var days = cfg.due ? dayDiff(cfg.due) : null;
+        var st = statusFor(days);
+        var badgeClass = st.kind === "overdue" ? "badge overdue" : "badge";
+        var clientOut = cfg.client
+          ? escapeHtml(cfg.client)
+          : '<span class="empty">Client name</span>';
+        var amountOut = cfg.amount
+          ? escapeHtml(cfg.amount) + " <span style=\"font-size:.42em;letter-spacing:.08em;color:#5e5a53\">USDC</span>"
+          : '<span class="empty">Amount</span>';
+        var dueOut = cfg.due
+          ? escapeHtml(formatDate(cfg.due))
+          : '<span class="empty">Due date</span>';
+        var invoiceRow = cfg.invoiceNo
+          ? '<div><span>Invoice</span><strong>' + escapeHtml(cfg.invoiceNo) + "</strong></div>"
+          : "";
+        var fromRow = cfg.fromName
+          ? '<div><span>From</span><strong>' + escapeHtml(cfg.fromName) + "</strong></div>"
+          : "";
+        var payBox = "";
+        if (cfg.payTo) {
+          payBox =
+            '<div class="pay-box">' +
+            '<div class="label">Pay USDC on Solana to</div>' +
+            '<div class="addr" id="' + (opts.addrId || "previewAddr") + '">' + escapeHtml(cfg.payTo) + "</div>" +
+            (opts.withCopy
+              ? '<div class="actions" style="margin-top:10px"><button type="button" class="primary" id="copyClientPay">Copy address</button><span class="ok" id="copyClientStatus"></span></div>'
+              : "") +
+            '<p class="net" style="margin:8px 0 0">Network: Solana · Token: USDC</p>' +
+            "</div>";
+        }
+        return (
+          '<div class="kicker">Payment reminder</div>' +
+          "<h3>REMINDER</h3>" +
+          '<div class="' + badgeClass + '">' + escapeHtml(st.label) + "</div>" +
+          '<div class="meta">' +
+          "<div><span>Client</span><strong>" + clientOut + "</strong></div>" +
+          "<div><span>Due</span><strong>" + dueOut + "</strong></div>" +
+          (invoiceRow || fromRow || '<div><span>Status</span><strong>' + escapeHtml(st.label) + "</strong></div>") +
+          "</div>" +
+          (fromRow && invoiceRow ? '<div class="meta">' + fromRow + "</div>" : "") +
+          '<div class="kicker">Amount due</div>' +
+          '<div class="amount">' + amountOut + "</div>" +
+          '<div class="letter">' + letterHtml(cfg) + "</div>" +
+          payBox
+        );
+      }
+
+      function renderPreview() {
+        previewEl.innerHTML = reminderInner(readConfig(), { addrId: "previewAddr" });
+      }
+
+      function validate(cfg) {
+        if (!cfg.client) return "Enter the client name.";
+        if (!cfg.amountRaw) return "Enter the amount due.";
+        if (cfg.amount === null) return "Use a number for the amount, up to 6 decimals.";
+        if (!cfg.due) return "Enter the due date.";
+        if (!parseISODate(cfg.due)) return "Enter a valid due date.";
+        return "";
+      }
+
+      function exportCss() {
+        return [
+          ":root{color-scheme:light;--bg:#f6f3ee;--card:#fff;--ink:#1b1a17;--muted:#5e5a53;--line:#d9d3c7;--accent:#0c4a36;--accent-ink:#f4fff9;--soft:#e4f0ea;--overdue:#8a4b12;--radius:14px}",
+          "*{box-sizing:border-box}html,body{margin:0;padding:0}",
+          "body{min-height:100vh;font:16px/1.5 ui-sans-serif,system-ui,-apple-system,sans-serif;color:var(--ink);background:var(--bg)}",
+          "main{width:min(640px,100%);margin:0 auto;padding:36px 16px 72px}",
+          ".preview-letter{background:#fffcf7;border:1px solid var(--line);border-radius:4px;padding:32px 28px 24px;box-shadow:0 14px 40px rgba(40,32,18,.07)}",
+          ".kicker{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}",
+          "h3{margin:4px 0 18px;font-size:1.55rem;letter-spacing:.08em}",
+          ".meta{display:grid;gap:10px;margin:0 0 18px}",
+          "@media(min-width:560px){.meta{grid-template-columns:1fr 1fr 1fr}}",
+          ".meta div{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#fff}",
+          ".meta span{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}",
+          ".meta strong{font-size:1.05rem;word-break:break-word}",
+          ".amount{font-size:clamp(1.8rem,5vw,2.6rem);letter-spacing:-.03em;margin:0 0 6px}",
+          ".letter{margin:16px 0 0}.letter p{margin:0 0 12px}",
+          ".badge{display:inline-block;font-size:12px;font-weight:650;padding:4px 8px;border-radius:999px;background:var(--soft);color:var(--accent);margin:0 0 12px}",
+          ".badge.overdue{background:#f8eadc;color:var(--overdue)}",
+          ".pay-box{margin-top:16px;background:var(--soft);border-radius:12px;padding:14px}",
+          ".pay-box .label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}",
+          ".addr{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;word-break:break-all;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px}",
+          ".net{color:var(--muted);font-size:13px}",
+          ".actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}",
+          "button{font:650 15px/1.2 ui-sans-serif,system-ui,sans-serif;border:0;border-radius:10px;padding:11px 14px;cursor:pointer}",
+          ".primary{background:var(--accent);color:var(--accent-ink)}",
+          ".ok{color:var(--accent);font-size:14px}",
+          "footer{margin-top:18px;color:var(--muted);font-size:13px}"
+        ].join("");
+      }
+
+      function buildFile(cfg) {
+        var copyScript = cfg.payTo
+          ? [
+            "document.getElementById('copyClientPay').addEventListener('click',function(){",
+            "  var addr=" + JSON.stringify(cfg.payTo) + ";",
+            "  var el=document.getElementById('copyClientStatus');",
+            "  function ok(){el.textContent='Copied.';}",
+            "  function fail(){el.textContent='Select the address and copy it.';}",
+            "  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(addr).then(ok).catch(fail);}else{fail();}",
+            "});"
+          ].join("\n")
+          : "";
+        return [
+          "<!doctype html>",
+          '<html lang="en">',
+          "<head>",
+          '<meta charset="utf-8" />',
+          '<meta name="viewport" content="width=device-width, initial-scale=1" />',
+          "<title>Payment reminder" + (cfg.client ? " — " + escapeHtml(cfg.client) : "") + "</title>",
+          "<style>" + exportCss() + "</style>",
+          "</head>",
+          "<body>",
+          "<main>",
+          '<article class="preview-letter">',
+          reminderInner(cfg, { addrId: "clientPayAddr", withCopy: !!cfg.payTo }),
+          "</article>",
+          "<footer>This reminder is a static file. It does not send data anywhere.</footer>",
+          "</main>",
+          copyScript ? "<script>" + copyScript + "</scr" + "ipt>" : "",
+          "</body>",
+          "</html>",
+          ""
+        ].join("\n");
+      }
+
+      function slug(s) {
+        return String(s || "client").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "client";
+      }
+
+      function copyText(text, statusEl, okMsg) {
+        function ok() { statusEl.textContent = okMsg || "Copied."; }
+        function fail() { statusEl.textContent = "Select the address and copy it."; }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(ok).catch(fail);
+        } else {
+          fail();
+        }
+      }
+
+      ["client", "amount", "due", "fromName", "invoiceNo", "payTo", "note"].forEach(function (id) {
+        $(id).addEventListener("input", function () {
+          showError("");
+          renderPreview();
+        });
+        $(id).addEventListener("change", renderPreview);
+      });
+
+      $("downloadBtn").addEventListener("click", function () {
+        var cfg = readConfig();
+        var err = validate(cfg);
+        if (err) {
+          showError(err);
+          showStatus("");
+          if (!cfg.client) $("client").focus();
+          else if (!cfg.amountRaw || cfg.amount === null) $("amount").focus();
+          else $("due").focus();
+          return;
+        }
+        showError("");
+        var html = buildFile(cfg);
+        var blob = new Blob([html], { type: "text/html;charset=utf-8" });
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = slug(cfg.client) + "-reminder.html";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+        showStatus("Downloaded " + a.download + ". Send that file, or open it and copy the letter.");
+      });
+
+      $("copyPayBtn").addEventListener("click", function () {
+        copyText(TOOL_PAY_TO, $("copyPayStatus"), "Copied.");
+      });
+
+      renderPreview();
+    })();
+  </script>
+</body>
+</html>
