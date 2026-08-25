@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Scope Sheet — 49 USDC</title>
+  <meta name="description" content="Fill a contract/scope one-pager and download one HTML file. 49 USDC on Solana.">
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f3ee;
+      --card: #ffffff;
+      --sheet: #fffcf7;
+      --ink: #1b1a17;
+      --muted: #5e5a53;
+      --line: #d9d3c7;
+      --accent: #0c4a36;
+      --accent-ink: #f4fff9;
+      --soft: #e4f0ea;
+      --warn: #8a4b12;
+      --ok: #0c4a36;
+      --shadow: 0 18px 50px rgba(40, 32, 18, 0.08);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+    }
+    .app {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 24px 16px 64px;
+      display: grid;
+      gap: 22px;
+    }
+    @media (min-width: 920px) {
+      .app { grid-template-columns: 360px 1fr; align-items: start; padding: 36px 24px 72px; }
+      .intro, .pay { grid-column: 1 / -1; }
+    }
+    .intro h1 {
+      margin: 0 0 6px;
+      font-size: clamp(1.7rem, 4vw, 2.15rem);
+      letter-spacing: -0.03em;
+    }
+    .intro p { margin: 0 0 8px; color: var(--muted); max-width: 42rem; }
+    .price {
+      margin: 10px 0 0;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .pay, .editor {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+    .pay h2, .editor h2 {
+      margin: 0 0 8px;
+      font-size: 1.02rem;
+    }
+    .addr {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      word-break: break-all;
+      background: #fcfaf6;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .net { color: var(--muted); font-size: 13px; margin: 8px 0 0; }
+    .pay-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    button, .btn {
+      appearance: none;
+      font: 650 15px/1.2 ui-sans-serif, system-ui, sans-serif;
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 14px;
+      cursor: pointer;
+    }
+    .primary { background: var(--accent); color: var(--accent-ink); }
+    .ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+    a.btn { text-decoration: none; display: inline-block; }
+    .ok { color: var(--ok); font-size: 14px; min-height: 1.2em; margin: 8px 0 0; }
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 12px 0 6px;
+    }
+    input, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font: 15px/1.4 ui-sans-serif, system-ui, sans-serif;
+      color: var(--ink);
+      background: #fff;
+    }
+    textarea { min-height: 88px; resize: vertical; }
+    input:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+    .pair { display: grid; gap: 0 10px; }
+    @media (min-width: 520px) { .pair { grid-template-columns: 1fr 1fr; } }
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .hint { font-size: 12px; color: var(--muted); margin: 8px 0 0; }
+    .sheet-wrap { display: flex; justify-content: center; }
+    .sheet {
+      width: min(720px, 100%);
+      background: var(--sheet);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      box-shadow: var(--shadow);
+      padding: 36px 32px 28px;
+      font: 16px/1.45 "Iowan Old Style", Palatino, "Palatino Linotype", Georgia, serif;
+    }
+    .top {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 18px;
+      margin-bottom: 22px;
+    }
+    .brand {
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .word { font-size: 1.85rem; letter-spacing: 0.1em; margin-top: 4px; }
+    .meta {
+      text-align: right;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .meta strong { display: block; color: var(--ink); font-weight: 650; }
+    .parties {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 1fr 1fr;
+      margin: 0 0 22px;
+    }
+    .kicker {
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .parties p, .block p { margin: 6px 0 0; white-space: pre-wrap; }
+    .fee {
+      background: var(--soft);
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin: 0 0 22px;
+    }
+    .fee .amount {
+      font-size: clamp(1.8rem, 5vw, 2.6rem);
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin: 4px 0 0;
+    }
+    .fee .amount span { font-size: 0.42em; letter-spacing: 0.08em; margin-left: 6px; color: var(--muted); }
+    .grid2 {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: 1fr;
+      margin: 0 0 18px;
+    }
+    @media (min-width: 640px) { .grid2 { grid-template-columns: 1fr 1fr; } }
+    .block h3 {
+      margin: 0 0 8px;
+      font-size: 0.95rem;
+      letter-spacing: 0.04em;
+    }
+    ul { margin: 0; padding: 0 0 0 1.1em; }
+    li { margin: 0 0 6px; }
+    .empty { color: var(--muted); font-style: italic; }
+    .signs {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: 1fr 1fr;
+      margin-top: 28px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+    }
+    .line {
+      margin-top: 36px;
+      border-bottom: 1px solid var(--ink);
+    }
+    .foot {
+      margin-top: 28px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .pay-to {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      word-break: break-all;
+      margin-top: 6px;
+    }
+    footer.note {
+      grid-column: 1 / -1;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    @media print {
+      body { background: #fff; }
+      .no-print { display: none !important; }
+      .app { display: block; padding: 0; }
+      .sheet { box-shadow: none; border: 0; width: 100%; padding: 12mm; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="intro no-print">
+      <h1>Stop scoping in a chat thread.</h1>
+      <p>Scope Sheet. One file. Fill the contract, download HTML, send it.</p>
+      <p>For freelancers and small studios who currently paste “here’s what I’ll do” into email. You get a one-page scope the client can open, print, or keep.</p>
+      <p class="price">49 USDC on Solana</p>
+    </header>
+
+    <section class="pay no-print" id="pay">
+      <h2>Pay 49 USDC on Solana</h2>
+      <p>Send exactly 49 USDC to:</p>
+      <div class="addr" id="payAddr">96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</div>
+      <p class="net">Network: Solana · Token: USDC · Mint: EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v</p>
+      <div class="pay-row">
+        <button type="button" class="primary" id="copyPay">Copy address</button>
+        <a class="btn ghost" id="payLink" href="#">Open pay link</a>
+      </div>
+      <p class="ok" id="copyPayStatus"></p>
+    </section>
+
+    <aside class="editor no-print">
+      <h2>Fill the scope</h2>
+      <div class="pair">
+        <div>
+          <label for="project">Project</label>
+          <input id="project" type="text" value="Website redesign" autocomplete="off">
+        </div>
+        <div>
+          <label for="issued">Date</label>
+          <input id="issued" type="date">
+        </div>
+      </div>
+      <div class="pair">
+        <div>
+          <label for="provider">Provider</label>
+          <input id="provider" type="text" value="North Studio" autocomplete="organization">
+        </div>
+        <div>
+          <label for="client">Client</label>
+          <input id="client" type="text" value="Harbor Co." autocomplete="off">
+        </div>
+      </div>
+      <div class="pair">
+        <div>
+          <label for="fee">Fee</label>
+          <input id="fee" type="text" inputmode="decimal" value="2400" autocomplete="off">
+        </div>
+        <div>
+          <label for="asset">Asset</label>
+          <input id="asset" type="text" value="USDC" autocomplete="off">
+        </div>
+      </div>
+      <label for="terms">Payment terms</label>
+      <input id="terms" type="text" value="50% to start, 50% on delivery" autocomplete="off">
+      <label for="recv">Pay to (optional, your receive address)</label>
+      <input id="recv" type="text" spellcheck="false" placeholder="Your Solana USDC address" autocomplete="off">
+      <label for="inscope">In scope (one line each)</label>
+      <textarea id="inscope">Homepage and 4 inner pages
+Mobile layout
+Handoff of HTML and CSS</textarea>
+      <label for="outscope">Out of scope (one line each)</label>
+      <textarea id="outscope">Copywriting
+Ongoing hosting
+SEO retainer</textarea>
+      <label for="deliver">Deliverables (one line each)</label>
+      <textarea id="deliver">Staging preview
+Source files
+30-minute walkthrough</textarea>
+      <label for="timeline">Timeline (one line each)</label>
+      <textarea id="timeline">Kickoff — week 1
+First draft — week 3
+Final files — week 5</textarea>
+      <label for="notes">Notes (optional)</label>
+      <textarea id="notes" placeholder="Assumptions, revisions, who supplies content"></textarea>
+      <div class="actions">
+        <button type="button" class="primary" id="downloadBtn">Download HTML</button>
+        <button type="button" class="ghost" id="printBtn">Print preview</button>
+      </div>
+      <p class="ok" id="dlStatus"></p>
+      <p class="hint">The downloaded file is the one-pager only. Works offline. No account.</p>
+    </aside>
+
+    <div class="sheet-wrap">
+      <article class="sheet" id="sheet" aria-label="Scope one-pager preview"></article>
+    </div>
+
+    <footer class="note no-print">
+      No wallet connect. USDC on Solana only — not SOL. This one-pager is a working scope, not legal advice.
+    </footer>
+  </div>
+
+  <script>
+    (function () {
+      var PAY_TO = "96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3";
+      var USDC_MINT = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
+      var PRICE = "49";
+      var IDS = ["project", "issued", "provider", "client", "fee", "asset", "terms", "recv", "inscope", "outscope", "deliver", "timeline", "notes"];
+
+      function $(id) { return document.getElementById(id); }
+
+      function todayISO() {
+        var d = new Date();
+        var m = String(d.getMonth() + 1);
+        var day = String(d.getDate());
+        if (m.length < 2) m = "0" + m;
+        if (day.length < 2) day = "0" + day;
+        return d.getFullYear() + "-" + m + "-" + day;
+      }
+
+      function formatDate(iso) {
+        if (!iso) return "";
+        var p = String(iso).split("-");
+        if (p.length !== 3) return iso;
+        var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        var mi = parseInt(p[1], 10) - 1;
+        if (mi < 0 || mi > 11) return iso;
+        return months[mi] + " " + parseInt(p[2], 10) + ", " + p[0];
+      }
+
+      function escapeHtml(s) {
+        return String(s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function lines(raw) {
+        return String(raw || "")
+          .split(/\r?\n/)
+          .map(function (x) { return x.replace(/^\s*[-*]\s*/, "").trim(); })
+          .filter(Boolean);
+      }
+
+      function listHtml(items, empty) {
+        if (!items.length) return '<p class="empty">' + escapeHtml(empty) + "</p>";
+        return "<ul>" + items.map(function (item) {
+          return "<li>" + escapeHtml(item) + "</li>";
+        }).join("") + "</ul>";
+      }
+
+      function slug(s) {
+        var base = String(s || "scope").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+        return base || "scope";
+      }
+
+      function readState() {
+        var fee = String($("fee").value || "").trim();
+        var asset = String($("asset").value || "").trim() || "USDC";
+        return {
+          project: String($("project").value || "").trim(),
+          issued: String($("issued").value || "").trim(),
+          provider: String($("provider").value || "").trim(),
+          client: String($("client").value || "").trim(),
+          fee: fee,
+          asset: asset,
+          terms: String($("terms").value || "").trim(),
+          recv: String($("recv").value || "").trim(),
+          inscope: lines($("inscope").value),
+          outscope: lines($("outscope").value),
+          deliver: lines($("deliver").value),
+          timeline: lines($("timeline").value),
+          notes: String($("notes").value || "").trim()
+        };
+      }
+
+      function feeHtml(state) {
+        if (!state.fee) return '<span class="empty">Enter a fee</span>';
+        return escapeHtml(state.fee) + " <span>" + escapeHtml(state.asset) + "</span>";
+      }
+
+      function sheetInner(state) {
+        var notes = "";
+        if (state.notes) {
+          notes =
+            '<section class="block">' +
+              "<h3>Notes</h3>" +
+              "<p>" + escapeHtml(state.notes) + "</p>" +
+            "</section>";
+        }
+        var recv = "";
+        if (state.recv) {
+          recv =
+            '<div class="kicker" style="margin-top:10px">Pay to</div>' +
+            '<div class="pay-to">' + escapeHtml(state.recv) + "</div>";
+        }
+        return (
+          '<header class="top">' +
+            "<div>" +
+              '<div class="brand">Scope Sheet</div>' +
+              '<div class="word">SCOPE</div>' +
+            "</div>" +
+            '<div class="meta">' +
+              "<div>Issued <strong>" + (state.issued ? escapeHtml(formatDate(state.issued)) : '<span class="empty">Date</span>') + "</strong></div>" +
+              "<div>Project <strong>" + (state.project ? escapeHtml(state.project) : '<span class="empty">Project name</span>') + "</strong></div>" +
+            "</div>" +
+          "</header>" +
+          '<section class="parties">' +
+            "<div><div class=\"kicker\">Provider</div><p>" + (state.provider ? escapeHtml(state.provider) : '<span class="empty">Your name</span>') + "</p></div>" +
+            "<div><div class=\"kicker\">Client</div><p>" + (state.client ? escapeHtml(state.client) : '<span class="empty">Client name</span>') + "</p></div>" +
+          "</section>" +
+          '<section class="fee">' +
+            '<div class="kicker">Fee</div>' +
+            '<div class="amount">' + feeHtml(state) + "</div>" +
+            (state.terms ? "<p>" + escapeHtml(state.terms) + "</p>" : "") +
+            recv +
+          "</section>" +
+          '<div class="grid2">' +
+            '<section class="block"><h3>In scope</h3>' + listHtml(state.inscope, "Add what is included") + "</section>" +
+            '<section class="block"><h3>Out of scope</h3>' + listHtml(state.outscope, "Add what is not included") + "</section>" +
+          "</div>" +
+          '<div class="grid2">' +
+            '<section class="block"><h3>Deliverables</h3>' + listHtml(state.deliver, "Add what you will hand over") + "</section>" +
+            '<section class="block"><h3>Timeline</h3>' + listHtml(state.timeline, "Add dates or weeks") + "</section>" +
+          "</div>" +
+          notes +
+          '<section class="signs">' +
+            "<div><div class=\"kicker\">Provider</div><div class=\"line\"></div><p>" + (state.provider ? escapeHtml(state.provider) : "") + "</p></div>" +
+            "<div><div class=\"kicker\">Client</div><div class=\"line\"></div><p>" + (state.client ? escapeHtml(state.client) : "") + "</p></div>" +
+          "</section>" +
+          '<footer class="foot">One-page working scope. Not legal advice. Signatures confirm the parties agree to this sheet.</footer>'
+        );
+      }
+
+      function exportCss() {
+        return [
+          ":root{--sheet:#fffcf7;--ink:#1b1a17;--muted:#5e5a53;--line:#d9d3c7;--soft:#e4f0ea}",
+          "*{box-sizing:border-box}",
+          "html,body{margin:0;padding:0}",
+          "body{min-height:100vh;font:16px/1.45 \"Iowan Old Style\",Palatino,\"Palatino Linotype\",Georgia,serif;color:var(--ink);background:#f6f3ee}",
+          ".wrap{max-width:760px;margin:0 auto;padding:28px 16px 48px}",
+          ".bar{display:flex;justify-content:flex-end;margin-bottom:14px}",
+          "button{font:650 15px/1.2 ui-sans-serif,system-ui,sans-serif;border:0;border-radius:10px;padding:10px 14px;cursor:pointer;background:#0c4a36;color:#f4fff9}",
+          ".sheet{background:var(--sheet);border:1px solid var(--line);border-radius:4px;box-shadow:0 18px 50px rgba(40,32,18,.08);padding:36px 32px 28px}",
+          ".top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:22px}",
+          ".brand{font-family:ui-sans-serif,system-ui,sans-serif;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}",
+          ".word{font-size:1.85rem;letter-spacing:.1em;margin-top:4px}",
+          ".meta{text-align:right;font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px;color:var(--muted)}",
+          ".meta strong{display:block;color:var(--ink);font-weight:650}",
+          ".parties{display:grid;gap:16px;grid-template-columns:1fr 1fr;margin:0 0 22px}",
+          ".kicker{font-family:ui-sans-serif,system-ui,sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}",
+          ".parties p,.block p{margin:6px 0 0;white-space:pre-wrap}",
+          ".fee{background:var(--soft);border-radius:12px;padding:16px 18px;margin:0 0 22px}",
+          ".fee .amount{font-size:clamp(1.8rem,5vw,2.6rem);letter-spacing:-.03em;line-height:1.1;margin:4px 0 0}",
+          ".fee .amount span{font-size:.42em;letter-spacing:.08em;margin-left:6px;color:var(--muted)}",
+          ".grid2{display:grid;gap:18px;grid-template-columns:1fr;margin:0 0 18px}",
+          "@media(min-width:640px){.grid2{grid-template-columns:1fr 1fr}}",
+          ".block h3{margin:0 0 8px;font-size:.95rem;letter-spacing:.04em}",
+          "ul{margin:0;padding:0 0 0 1.1em}",
+          "li{margin:0 0 6px}",
+          ".empty{color:var(--muted);font-style:italic}",
+          ".signs{display:grid;gap:18px;grid-template-columns:1fr 1fr;margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}",
+          ".line{margin-top:36px;border-bottom:1px solid var(--ink)}",
+          ".foot{margin-top:28px;padding-top:12px;border-top:1px solid var(--line);font-family:ui-sans-serif,system-ui,sans-serif;font-size:12px;color:var(--muted)}",
+          ".pay-to{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;word-break:break-all;margin-top:6px}",
+          "@media print{body{background:#fff}.no-print{display:none!important}.wrap{padding:0}.sheet{box-shadow:none;border:0;width:100%;padding:12mm}}"
+        ].join("");
+      }
+
+      function exportHtml(state) {
+        var title = (state.project ? state.project + " — " : "") + "Scope";
+        return (
+          "<!doctype html>\n<html lang=\"en\">\n<head>\n" +
+          "  <meta charset=\"utf-8\">\n" +
+          "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n" +
+          "  <title>" + escapeHtml(title) + "</title>\n" +
+          "  <style>" + exportCss() + "</style>\n" +
+          "</head>\n<body>\n" +
+          "  <div class=\"wrap\">\n" +
+          "    <div class=\"bar no-print\"><button type=\"button\" onclick=\"window.print()\">Print / Save PDF</button></div>\n" +
+          "    <article class=\"sheet\">" + sheetInner(state) + "</article>\n" +
+          "  </div>\n" +
+          "</body>\n</html>\n"
+        );
+      }
+
+      function render() {
+        $("sheet").innerHTML = sheetInner(readState());
+      }
+
+      function copyText(text, statusEl, okMsg) {
+        function ok() { statusEl.textContent = okMsg; }
+        function fail() { statusEl.textContent = "Copy failed. Select the address instead."; }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(ok).catch(fail);
+        } else {
+          fail();
+        }
+      }
+
+      function downloadFile() {
+        var state = readState();
+        var blob = new Blob([exportHtml(state)], { type: "text/html;charset=utf-8" });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = slug(state.project) + "-scope.html";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
+        $("dlStatus").textContent = "Downloaded " + a.download + ".";
+      }
+
+      $("issued").value = todayISO();
+      $("payLink").href = "solana:" + PAY_TO +
+        "?amount=" + PRICE +
+        "&spl-token=" + encodeURIComponent(USDC_MINT) +
+        "&label=" + encodeURIComponent("Scope Sheet") +
+        "&message=" + encodeURIComponent("Scope Sheet 49 USDC");
+
+      IDS.forEach(function (id) {
+        $(id).addEventListener("input", render);
+        $(id).addEventListener("change", render);
+      });
+      $("copyPay").addEventListener("click", function () {
+        copyText(PAY_TO, $("copyPayStatus"), "Copied.");
+      });
+      $("downloadBtn").addEventListener("click", downloadFile);
+      $("printBtn").addEventListener("click", function () { window.print(); });
+      render();
+    })();
+  </script>
+</body>
+</html>
