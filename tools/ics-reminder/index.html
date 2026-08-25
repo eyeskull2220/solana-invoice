@@ -608,8 +608,9 @@
       function render() {
         const result = build();
         if (result.error) {
-          showError(result.error);
-          previewEl.textContent = "";
+          const emptyTitle = result.error === "Add a title.";
+          showError(emptyTitle ? "" : result.error);
+          previewEl.textContent = emptyTitle ? "Add a title to preview the .ics file." : "";
           $("downloadBtn").disabled = true;
           $("copyIcsBtn").disabled = true;
           return;
