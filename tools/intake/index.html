@@ -305,6 +305,7 @@
       function showError(msg) {
         errorEl.textContent = msg || "";
         errorEl.classList.toggle("hidden", !msg);
+        if (msg) showStatus("");
       }
 
       function showStatus(msg) {
