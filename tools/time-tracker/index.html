@@ -1,0 +1,538 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Time Tracker — 49 USDC</title>
+  <meta name="description" content="One-file time tracker. Start, stop, export CSV. 49 USDC on Solana. No account, no wallet.">
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f3ee;
+      --card: #ffffff;
+      --ink: #1b1a17;
+      --muted: #5e5a53;
+      --line: #d9d3c7;
+      --accent: #0c4a36;
+      --accent-ink: #f4fff9;
+      --soft: #e4f0ea;
+      --warn-bg: #fff6e8;
+      --warn-line: #ecd4a4;
+      --danger: #8a2a1a;
+      --shadow: 0 14px 40px rgba(40, 32, 18, 0.07);
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+    }
+    main {
+      width: min(720px, 100%);
+      margin: 0 auto;
+      padding: 28px 16px 72px;
+    }
+    header h1 {
+      margin: 0 0 6px;
+      font-size: clamp(1.6rem, 4vw, 2.1rem);
+      letter-spacing: -0.03em;
+    }
+    .lead {
+      margin: 0 0 22px;
+      color: var(--muted);
+      max-width: 42rem;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px 16px;
+      box-shadow: var(--shadow);
+      margin: 0 0 14px;
+    }
+    .card h2 {
+      margin: 0 0 10px;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+    label.field {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0 0 6px;
+    }
+    input[type="text"] {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fcfaf6;
+      color: var(--ink);
+      border-radius: 12px;
+      padding: 12px;
+      font: 16px/1.4 ui-sans-serif, system-ui, sans-serif;
+    }
+    input[type="text"]:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 1px;
+    }
+    .clock {
+      font-variant-numeric: tabular-nums;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: clamp(2.4rem, 10vw, 3.6rem);
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin: 16px 0 6px;
+    }
+    .status {
+      color: var(--muted);
+      font-size: 0.92rem;
+      min-height: 1.4em;
+      margin: 0 0 16px;
+    }
+    .status.live { color: var(--accent); font-weight: 650; }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    button {
+      font: 650 15px/1.2 ui-sans-serif, system-ui, sans-serif;
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 14px;
+      cursor: pointer;
+    }
+    .primary { background: var(--accent); color: var(--accent-ink); }
+    .stop { background: #6b2218; color: #fff6f3; }
+    .ghost {
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+    button:disabled { opacity: 0.45; cursor: not-allowed; }
+    .totals {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 18px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin: 0;
+    }
+    .totals b { color: var(--ink); }
+    .list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .row {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 8px 12px;
+      align-items: start;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .row:last-child { border-bottom: 0; }
+    .row .task {
+      font-weight: 650;
+      word-break: break-word;
+    }
+    .row .when {
+      color: var(--muted);
+      font-size: 0.82rem;
+      margin-top: 2px;
+    }
+    .row .dur {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-variant-numeric: tabular-nums;
+      font-size: 0.95rem;
+      white-space: nowrap;
+      padding-top: 2px;
+    }
+    .row button {
+      padding: 7px 10px;
+      font-size: 13px;
+    }
+    .empty {
+      color: var(--muted);
+      margin: 0;
+    }
+    .payto {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      word-break: break-all;
+      background: #fcfaf6;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .net, .fine {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 10px 0 0;
+    }
+    .ok { color: var(--accent); font-size: 14px; margin: 10px 0 0; min-height: 1.2em; }
+    footer { margin-top: 8px; }
+    @media (max-width: 560px) {
+      .row { grid-template-columns: 1fr auto; }
+      .row .dur { grid-column: 1; }
+      .row button { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Time Tracker</h1>
+      <p class="lead">One HTML file. Start a task, stop it, export CSV. Everything stays on this device. No account, no wallet.</p>
+    </header>
+
+    <section class="card">
+      <label class="field" for="task">Task</label>
+      <input id="task" type="text" maxlength="200" placeholder="What are you working on?" autocomplete="off">
+      <div class="clock" id="clock" aria-live="polite">00:00:00</div>
+      <p class="status" id="status">Idle. Name a task and press Start.</p>
+      <div class="actions">
+        <button type="button" class="primary" id="startBtn">Start</button>
+        <button type="button" class="stop" id="stopBtn" disabled>Stop</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <p class="totals">
+        <span>Today <b id="todayTotal">00:00:00</b></span>
+        <span>All sessions <b id="allTotal">00:00:00</b></span>
+        <span>Entries <b id="count">0</b></span>
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>Sessions</h2>
+      <p class="empty" id="empty">No sessions yet. Start and stop a timer to log one.</p>
+      <ul class="list" id="list" hidden></ul>
+      <div class="actions" style="margin-top: 14px">
+        <button type="button" class="primary" id="exportBtn" disabled>Export CSV</button>
+        <button type="button" class="ghost" id="clearBtn" disabled>Clear all</button>
+      </div>
+    </section>
+
+    <section class="card" id="pay">
+      <h2>Pay 49 USDC on Solana</h2>
+      <p>Send exactly 49 USDC to:</p>
+      <div class="payto" id="addr"></div>
+      <p class="net">Network: Solana · Token: USDC · Mint: EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v</p>
+      <button type="button" class="primary" id="copyBtn">Copy address</button>
+      <p class="ok" id="copyStatus"></p>
+      <p class="fine">No wallet connect. No account. USDC on Solana only — not SOL.</p>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      var PAY_TO = "96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3";
+      var STORAGE_KEY = "treasury-time-tracker-v1";
+      var TICK_MS = 250;
+
+      var taskEl = document.getElementById("task");
+      var clockEl = document.getElementById("clock");
+      var statusEl = document.getElementById("status");
+      var startBtn = document.getElementById("startBtn");
+      var stopBtn = document.getElementById("stopBtn");
+      var listEl = document.getElementById("list");
+      var emptyEl = document.getElementById("empty");
+      var exportBtn = document.getElementById("exportBtn");
+      var clearBtn = document.getElementById("clearBtn");
+      var todayEl = document.getElementById("todayTotal");
+      var allEl = document.getElementById("allTotal");
+      var countEl = document.getElementById("count");
+      var addrEl = document.getElementById("addr");
+      var copyBtn = document.getElementById("copyBtn");
+      var copyStatus = document.getElementById("copyStatus");
+
+      addrEl.textContent = PAY_TO;
+
+      var state = loadState();
+      var tickId = null;
+
+      function loadState() {
+        try {
+          var raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return { running: null, sessions: [] };
+          var parsed = JSON.parse(raw);
+          var sessions = Array.isArray(parsed.sessions) ? parsed.sessions : [];
+          var running = parsed.running && parsed.running.startedAt ? parsed.running : null;
+          return { running: running, sessions: sessions };
+        } catch (e) {
+          return { running: null, sessions: [] };
+        }
+      }
+
+      function saveState() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        } catch (e) {}
+      }
+
+      function pad(n) {
+        return String(n).padStart(2, "0");
+      }
+
+      function formatHms(ms) {
+        var total = Math.max(0, Math.floor(ms / 1000));
+        var h = Math.floor(total / 3600);
+        var m = Math.floor((total % 3600) / 60);
+        var s = total % 60;
+        return pad(h) + ":" + pad(m) + ":" + pad(s);
+      }
+
+      function formatWhen(iso) {
+        var d = new Date(iso);
+        if (isNaN(d.getTime())) return iso;
+        return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate())
+          + " " + pad(d.getHours()) + ":" + pad(d.getMinutes());
+      }
+
+      function sameLocalDay(iso, now) {
+        var d = new Date(iso);
+        return d.getFullYear() === now.getFullYear()
+          && d.getMonth() === now.getMonth()
+          && d.getDate() === now.getDate();
+      }
+
+      function elapsedMs() {
+        if (!state.running) return 0;
+        return Date.now() - new Date(state.running.startedAt).getTime();
+      }
+
+      function newId() {
+        return Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8);
+      }
+
+      function csvEscape(value) {
+        var s = String(value == null ? "" : value);
+        if (/[",\n\r]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+        return s;
+      }
+
+      function setRunningUi(running) {
+        startBtn.disabled = running;
+        stopBtn.disabled = !running;
+        taskEl.readOnly = running;
+        if (running) {
+          statusEl.className = "status live";
+          statusEl.textContent = "Running · " + (state.running.task || "Untitled");
+        } else {
+          statusEl.className = "status";
+          statusEl.textContent = "Idle. Name a task and press Start.";
+          clockEl.textContent = "00:00:00";
+        }
+      }
+
+      function tick() {
+        if (!state.running) return;
+        clockEl.textContent = formatHms(elapsedMs());
+        totals();
+      }
+
+      function startTick() {
+        if (tickId) clearInterval(tickId);
+        tick();
+        tickId = setInterval(tick, TICK_MS);
+      }
+
+      function stopTick() {
+        if (tickId) {
+          clearInterval(tickId);
+          tickId = null;
+        }
+      }
+
+      function totals() {
+        var now = new Date();
+        var today = 0;
+        var all = 0;
+        var i, s, ms;
+        for (i = 0; i < state.sessions.length; i++) {
+          s = state.sessions[i];
+          ms = Number(s.durationMs) || 0;
+          all += ms;
+          if (sameLocalDay(s.stoppedAt || s.startedAt, now)) today += ms;
+        }
+        if (state.running) {
+          ms = elapsedMs();
+          all += ms;
+          today += ms;
+        }
+        todayEl.textContent = formatHms(today);
+        allEl.textContent = formatHms(all);
+        countEl.textContent = String(state.sessions.length);
+        exportBtn.disabled = state.sessions.length === 0 && !state.running;
+        clearBtn.disabled = state.sessions.length === 0 && !state.running;
+      }
+
+      function renderList() {
+        listEl.innerHTML = "";
+        if (state.sessions.length === 0) {
+          emptyEl.hidden = false;
+          listEl.hidden = true;
+          return;
+        }
+        emptyEl.hidden = true;
+        listEl.hidden = false;
+        var i, s, li, meta, dur, del;
+        for (i = 0; i < state.sessions.length; i++) {
+          s = state.sessions[i];
+          li = document.createElement("li");
+          li.className = "row";
+          meta = document.createElement("div");
+          meta.innerHTML = "<div class=\"task\"></div><div class=\"when\"></div>";
+          meta.querySelector(".task").textContent = s.task || "Untitled";
+          meta.querySelector(".when").textContent = formatWhen(s.startedAt) + " – " + formatWhen(s.stoppedAt);
+          dur = document.createElement("div");
+          dur.className = "dur";
+          dur.textContent = formatHms(s.durationMs);
+          del = document.createElement("button");
+          del.type = "button";
+          del.className = "ghost";
+          del.textContent = "Delete";
+          del.setAttribute("data-id", s.id);
+          li.appendChild(meta);
+          li.appendChild(dur);
+          li.appendChild(del);
+          listEl.appendChild(li);
+        }
+      }
+
+      function start() {
+        if (state.running) return;
+        var task = taskEl.value.trim() || "Untitled";
+        taskEl.value = task;
+        state.running = { task: task, startedAt: new Date().toISOString() };
+        saveState();
+        setRunningUi(true);
+        startTick();
+        totals();
+      }
+
+      function stop() {
+        if (!state.running) return;
+        var stoppedAt = new Date().toISOString();
+        var startedAt = state.running.startedAt;
+        var durationMs = Math.max(0, new Date(stoppedAt).getTime() - new Date(startedAt).getTime());
+        state.sessions.unshift({
+          id: newId(),
+          task: state.running.task || "Untitled",
+          startedAt: startedAt,
+          stoppedAt: stoppedAt,
+          durationMs: durationMs
+        });
+        state.running = null;
+        saveState();
+        stopTick();
+        setRunningUi(false);
+        renderList();
+        totals();
+        taskEl.focus();
+      }
+
+      function removeSession(id) {
+        state.sessions = state.sessions.filter(function (s) { return s.id !== id; });
+        saveState();
+        renderList();
+        totals();
+      }
+
+      function exportCsv() {
+        var rows = [["Task", "Started", "Stopped", "Duration seconds", "Duration"]];
+        var i, s, seconds;
+        for (i = 0; i < state.sessions.length; i++) {
+          s = state.sessions[i];
+          seconds = Math.floor((Number(s.durationMs) || 0) / 1000);
+          rows.push([
+            s.task || "Untitled",
+            s.startedAt,
+            s.stoppedAt,
+            String(seconds),
+            formatHms(s.durationMs)
+          ]);
+        }
+        if (state.running) {
+          seconds = Math.floor(elapsedMs() / 1000);
+          rows.push([
+            state.running.task || "Untitled",
+            state.running.startedAt,
+            "",
+            String(seconds),
+            formatHms(elapsedMs())
+          ]);
+        }
+        var csv = rows.map(function (row) {
+          return row.map(csvEscape).join(",");
+        }).join("\r\n") + "\r\n";
+        var blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        var stamp = new Date().toISOString().slice(0, 10);
+        a.href = url;
+        a.download = "time-tracker-" + stamp + ".csv";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      }
+
+      function clearAll() {
+        if (!window.confirm("Delete all sessions and stop the timer?")) return;
+        state.running = null;
+        state.sessions = [];
+        saveState();
+        stopTick();
+        setRunningUi(false);
+        renderList();
+        totals();
+      }
+
+      startBtn.addEventListener("click", start);
+      stopBtn.addEventListener("click", stop);
+      exportBtn.addEventListener("click", exportCsv);
+      clearBtn.addEventListener("click", clearAll);
+      listEl.addEventListener("click", function (event) {
+        var btn = event.target.closest("button[data-id]");
+        if (!btn) return;
+        removeSession(btn.getAttribute("data-id"));
+      });
+      taskEl.addEventListener("keydown", function (event) {
+        if (event.key === "Enter" && !state.running) {
+          event.preventDefault();
+          start();
+        }
+      });
+      copyBtn.addEventListener("click", function () {
+        function ok() { copyStatus.textContent = "Copied."; }
+        function fail() { copyStatus.textContent = "Copy failed. Select the address instead."; }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(PAY_TO).then(ok).catch(fail);
+        } else {
+          fail();
+        }
+      });
+
+      if (state.running) {
+        taskEl.value = state.running.task || "";
+        setRunningUi(true);
+        startTick();
+      } else {
+        setRunningUi(false);
+      }
+      renderList();
+      totals();
+      window.addEventListener("beforeunload", saveState);
+    })();
+  </script>
+</body>
+</html>
