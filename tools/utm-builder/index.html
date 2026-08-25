@@ -1,0 +1,722 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>UTM Builder — 49 USDC</title>
+  <meta name="description" content="Build campaign URLs in the browser. One HTML file. 49 USDC on Solana." />
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f3ee;
+      --card: #ffffff;
+      --ink: #1b1a17;
+      --muted: #5e5a53;
+      --line: #d9d3c7;
+      --accent: #0c4a36;
+      --accent-ink: #f4fff9;
+      --soft: #e4f0ea;
+      --warn-bg: #fff6e8;
+      --warn-line: #ecd4a4;
+      --shadow: 0 14px 40px rgba(40, 32, 18, 0.07);
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+    }
+    main {
+      width: min(880px, 100%);
+      margin: 0 auto;
+      padding: 28px 16px 72px;
+    }
+    header h1 {
+      margin: 0 0 6px;
+      font-size: clamp(1.6rem, 4vw, 2.1rem);
+      letter-spacing: -0.03em;
+    }
+    .lead {
+      margin: 0 0 12px;
+      color: var(--muted);
+      max-width: 44rem;
+    }
+    .price {
+      display: inline-block;
+      margin: 0 0 22px;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--soft);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 650;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      margin: 0 0 14px;
+    }
+    h2 {
+      margin: 0 0 10px;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+    .pay-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    @media (max-width: 560px) {
+      .pay-head { flex-direction: column; }
+    }
+    .pay-head h2 { margin: 0 0 6px; }
+    .net {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .addr {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13.5px;
+      word-break: break-all;
+      line-height: 1.45;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fcfaf6;
+      margin: 0 0 12px;
+    }
+    #qr {
+      width: 148px;
+      height: 148px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+    }
+    #qr img { width: 132px; height: 132px; display: block; }
+    label.field {
+      display: block;
+      margin: 0 0 12px;
+    }
+    label.field span, .mini {
+      display: block;
+      font-size: 13px;
+      font-weight: 650;
+      margin: 0 0 6px;
+    }
+    .mini { font-weight: 500; color: var(--muted); font-size: 12px; margin: 0 0 4px; }
+    input[type="text"], input[type="url"], textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fcfaf6;
+      color: var(--ink);
+      border-radius: 10px;
+      padding: 11px 12px;
+      font: 15px/1.4 ui-sans-serif, system-ui, sans-serif;
+    }
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+    }
+    input:focus, textarea:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 1px;
+    }
+    .row {
+      display: grid;
+      gap: 12px;
+    }
+    @media (min-width: 640px) {
+      .row.two { grid-template-columns: 1fr 1fr; }
+      .row.three { grid-template-columns: 1fr 1fr 1fr; }
+    }
+    .presets {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0 0 14px;
+    }
+    .chip {
+      font: 650 13px/1.2 ui-sans-serif, system-ui, sans-serif;
+      border: 1px solid var(--line);
+      background: #fcfaf6;
+      color: var(--ink);
+      border-radius: 999px;
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+    .chip:hover, .chip[aria-pressed="true"] {
+      border-color: var(--accent);
+      background: var(--soft);
+      color: var(--accent);
+    }
+    .check {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fcfaf6;
+      margin: 0 0 12px;
+    }
+    .check input { margin-top: 3px; width: 18px; height: 18px; accent-color: var(--accent); }
+    .check b { display: block; font-size: 0.95rem; }
+    .check small { display: block; color: var(--muted); font-size: 0.8rem; }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    button, .btn {
+      font: 650 15px/1.2 ui-sans-serif, system-ui, sans-serif;
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 14px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .primary { background: var(--accent); color: var(--accent-ink); }
+    .ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+    button:disabled, .btn[aria-disabled="true"] { opacity: 0.45; cursor: not-allowed; pointer-events: none; }
+    .out {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13.5px;
+      word-break: break-all;
+      line-height: 1.5;
+      padding: 14px;
+      border: 1.5px dashed var(--line);
+      border-radius: 12px;
+      background: #fcfaf6;
+      min-height: 3.2em;
+    }
+    .out.empty { color: var(--muted); font-style: italic; font-family: ui-sans-serif, system-ui, sans-serif; }
+    .ok { color: var(--accent); font-size: 14px; margin: 10px 0 0; }
+    .error {
+      background: var(--warn-bg);
+      border: 1px solid var(--warn-line);
+      border-radius: 12px;
+      padding: 10px 12px;
+      color: #6b3d0c;
+      margin: 0 0 12px;
+    }
+    .hidden { display: none !important; }
+    .note, .fine {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 10px 0 0;
+    }
+    details {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 12px;
+      background: #fcfaf6;
+      margin: 0 0 12px;
+    }
+    details summary {
+      cursor: pointer;
+      font-weight: 650;
+      font-size: 0.95rem;
+    }
+    details .body { margin-top: 12px; }
+    .bulk-out {
+      margin: 12px 0 0;
+      overflow: auto;
+      max-height: 280px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    th, td {
+      text-align: left;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      word-break: break-all;
+    }
+    th {
+      background: #f3efe7;
+      font-size: 12px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    tr:last-child td { border-bottom: 0; }
+    .bad { color: #6b3d0c; }
+    footer {
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>UTM Builder</h1>
+      <p class="lead">Type a page URL and campaign tags. Copy a clean tracking link. Everything stays on this device. No account, no upload, no wallet connect.</p>
+      <p class="price">49 USDC · Solana USDC</p>
+    </header>
+
+    <section class="card" id="pay">
+      <div class="pay-head">
+        <div>
+          <h2>Pay 49 USDC on Solana</h2>
+          <p class="net">Send exactly 49 USDC. Network: Solana · Token: USDC — not SOL, not another chain.</p>
+        </div>
+        <div id="qr" aria-label="Solana Pay QR for 49 USDC"></div>
+      </div>
+      <p class="mini">Pay to</p>
+      <div class="addr" id="addr">96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</div>
+      <div class="actions">
+        <button type="button" class="primary" id="copyAddr">Copy address</button>
+        <a class="btn ghost" id="payLink" href="#">Open Solana Pay</a>
+      </div>
+      <p class="ok hidden" id="copyAddrStatus"></p>
+      <p class="note">Mint <span id="mintLabel">EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v</span>. No wallet connect on this page — pay from your own wallet.</p>
+    </section>
+
+    <section class="card">
+      <h2>Link</h2>
+      <p class="error hidden" id="error"></p>
+      <label class="field">
+        <span>Website URL</span>
+        <input id="baseUrl" type="url" spellcheck="false" autocomplete="off" placeholder="https://example.com/landing" />
+      </label>
+      <div class="actions" style="margin:0 0 12px">
+        <button type="button" class="ghost" id="pullBtn">Pull tags from URL</button>
+        <button type="button" class="ghost" id="clearBtn">Clear</button>
+      </div>
+      <p class="mini">Presets fill source and medium. You still set the campaign name.</p>
+      <div class="presets" id="presets"></div>
+      <div class="row two">
+        <label class="field">
+          <span>utm_source</span>
+          <input id="utm_source" type="text" spellcheck="false" placeholder="newsletter" />
+        </label>
+        <label class="field">
+          <span>utm_medium</span>
+          <input id="utm_medium" type="text" spellcheck="false" placeholder="email" />
+        </label>
+      </div>
+      <label class="field">
+        <span>utm_campaign</span>
+        <input id="utm_campaign" type="text" spellcheck="false" placeholder="spring_sale" />
+      </label>
+      <div class="row two">
+        <label class="field">
+          <span>utm_term <span style="font-weight:500;color:var(--muted)">(optional)</span></span>
+          <input id="utm_term" type="text" spellcheck="false" placeholder="paid keyword" />
+        </label>
+        <label class="field">
+          <span>utm_content <span style="font-weight:500;color:var(--muted)">(optional)</span></span>
+          <input id="utm_content" type="text" spellcheck="false" placeholder="header_cta" />
+        </label>
+      </div>
+      <label class="check">
+        <input type="checkbox" id="normalize" checked />
+        <span>
+          <b>Normalize tags</b>
+          <small>Lowercase values and turn spaces into underscores. The page URL is left alone.</small>
+        </span>
+      </label>
+    </section>
+
+    <section class="card">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px">
+        <h2 style="margin:0">Tagged URL</h2>
+        <div class="actions" style="margin:0">
+          <button type="button" class="primary" id="copyLink">Copy link</button>
+          <a class="btn ghost" id="openLink" href="#" target="_blank" rel="noopener noreferrer">Open</a>
+        </div>
+      </div>
+      <div class="out empty" id="out">Add a website URL to build a link.</div>
+      <p class="ok hidden" id="copyLinkStatus"></p>
+      <p class="note">Existing query params stay. Empty UTM fields are omitted. Hash fragments are kept.</p>
+    </section>
+
+    <section class="card">
+      <details>
+        <summary>Bulk: same tags on many URLs</summary>
+        <div class="body">
+          <label class="field" style="margin:0">
+            <span>One URL per line</span>
+            <textarea id="bulkIn" spellcheck="false" placeholder="https://example.com/a&#10;https://example.com/b"></textarea>
+          </label>
+          <div class="actions">
+            <button type="button" class="primary" id="bulkBuild">Build list</button>
+            <button type="button" class="ghost" id="bulkCopy">Copy tagged URLs</button>
+            <button type="button" class="ghost" id="bulkCsv">Download CSV</button>
+          </div>
+          <p class="ok hidden" id="bulkStatus"></p>
+          <div class="bulk-out hidden" id="bulkWrap">
+            <table>
+              <thead>
+                <tr><th>In</th><th>Tagged</th></tr>
+              </thead>
+              <tbody id="bulkBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <footer>
+      Offline one-file tool. 49 USDC on Solana to 96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3. Tags never leave the browser.
+    </footer>
+  </main>
+
+  <script>
+    (function () {
+      var PAY_TO = "96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3";
+      var PRICE = "49";
+      var USDC_MINT = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
+      var STORE = "treasury-utm-builder-v1";
+      var KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"];
+      var PRESETS = [
+        { name: "Google Ads", source: "google", medium: "cpc" },
+        { name: "Email", source: "newsletter", medium: "email" },
+        { name: "X", source: "twitter", medium: "social" },
+        { name: "LinkedIn", source: "linkedin", medium: "social" },
+        { name: "Facebook", source: "facebook", medium: "social" },
+        { name: "Partner", source: "partner", medium: "referral" }
+      ];
+
+      var $ = function (id) { return document.getElementById(id); };
+      var baseUrl = $("baseUrl");
+      var errorEl = $("error");
+      var outEl = $("out");
+      var copyLinkStatus = $("copyLinkStatus");
+      var copyAddrStatus = $("copyAddrStatus");
+      var bulkStatus = $("bulkStatus");
+      var openLink = $("openLink");
+      var lastBulk = [];
+
+      function show(el, msg) {
+        el.textContent = msg || "";
+        el.classList.toggle("hidden", !msg);
+      }
+
+      function copyText(text, okEl, okMsg) {
+        function ok() { show(okEl, okMsg || "Copied."); }
+        function fail() { show(okEl, "Copy failed. Select the text instead."); }
+        if (!text) { show(okEl, "Nothing to copy yet."); return; }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(ok).catch(fail);
+        } else {
+          fail();
+        }
+      }
+
+      function withProtocol(raw) {
+        var s = String(raw || "").trim();
+        if (!s) return "";
+        if (/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(s)) return s;
+        return "https://" + s;
+      }
+
+      function normalizeValue(v, on) {
+        v = String(v || "").trim();
+        if (!on) return v;
+        return v.toLowerCase().replace(/\s+/g, "_");
+      }
+
+      function tags() {
+        var on = $("normalize").checked;
+        var out = {};
+        KEYS.forEach(function (k) {
+          out[k] = normalizeValue($(k).value, on);
+        });
+        return out;
+      }
+
+      function parseHttpUrl(raw) {
+        var href = withProtocol(raw);
+        if (!href) throw new Error("Add a website URL.");
+        var url;
+        try {
+          url = new URL(href);
+        } catch (e) {
+          throw new Error("That does not look like a URL.");
+        }
+        if (url.protocol !== "http:" && url.protocol !== "https:") {
+          throw new Error("Use an http or https URL.");
+        }
+        var host = url.hostname || "";
+        if (!host || /\s/.test(host) || /%20/i.test(host)) {
+          throw new Error("That does not look like a URL.");
+        }
+        if (host !== "localhost" && host.indexOf(".") === -1 && host !== "127.0.0.1") {
+          throw new Error("That does not look like a URL.");
+        }
+        return url;
+      }
+
+      function buildTagged(raw) {
+        var url = parseHttpUrl(raw);
+        var t = tags();
+        KEYS.forEach(function (k) {
+          if (t[k]) url.searchParams.set(k, t[k]);
+          else url.searchParams.delete(k);
+        });
+        return url.toString();
+      }
+
+      function currentLink() {
+        try {
+          var link = buildTagged(baseUrl.value);
+          show(errorEl, "");
+          return link;
+        } catch (err) {
+          show(errorEl, err.message || "Could not build that URL.");
+          return "";
+        }
+      }
+
+      function render() {
+        var raw = String(baseUrl.value || "").trim();
+        if (!raw) {
+          show(errorEl, "");
+          outEl.textContent = "Add a website URL to build a link.";
+          outEl.classList.add("empty");
+          openLink.setAttribute("aria-disabled", "true");
+          openLink.href = "#";
+          return;
+        }
+        var link = currentLink();
+        if (!link) {
+          outEl.textContent = "Fix the URL to see a tagged link.";
+          outEl.classList.add("empty");
+          openLink.setAttribute("aria-disabled", "true");
+          openLink.href = "#";
+          return;
+        }
+        outEl.textContent = link;
+        outEl.classList.remove("empty");
+        openLink.removeAttribute("aria-disabled");
+        openLink.href = link;
+      }
+
+      function persist() {
+        try {
+          var data = { url: baseUrl.value, normalize: $("normalize").checked };
+          KEYS.forEach(function (k) { data[k] = $(k).value; });
+          localStorage.setItem(STORE, JSON.stringify(data));
+        } catch (e) {}
+      }
+
+      function restore() {
+        try {
+          var data = JSON.parse(localStorage.getItem(STORE) || "null");
+          if (!data) return;
+          if (data.url) baseUrl.value = data.url;
+          if (typeof data.normalize === "boolean") $("normalize").checked = data.normalize;
+          KEYS.forEach(function (k) {
+            if (data[k] != null) $(k).value = data[k];
+          });
+        } catch (e) {}
+      }
+
+      function clearPresetPress() {
+        document.querySelectorAll(".chip").forEach(function (c) {
+          c.setAttribute("aria-pressed", "false");
+        });
+      }
+
+      function pullFromUrl() {
+        var url;
+        try {
+          url = parseHttpUrl(baseUrl.value);
+        } catch (err) {
+          show(errorEl, err.message || "That does not look like a URL.");
+          return;
+        }
+        var found = 0;
+        KEYS.forEach(function (k) {
+          var v = url.searchParams.get(k);
+          if (v != null && v !== "") {
+            $(k).value = v;
+            found += 1;
+          } else {
+            $(k).value = "";
+          }
+        });
+        clearPresetPress();
+        show(errorEl, found ? "" : "No utm_* tags on that URL.");
+        render();
+        persist();
+      }
+
+      function clearAll() {
+        baseUrl.value = "";
+        KEYS.forEach(function (k) { $(k).value = ""; });
+        $("normalize").checked = true;
+        $("bulkIn").value = "";
+        lastBulk = [];
+        $("bulkWrap").classList.add("hidden");
+        $("bulkBody").innerHTML = "";
+        show(copyLinkStatus, "");
+        show(bulkStatus, "");
+        clearPresetPress();
+        try { localStorage.removeItem(STORE); } catch (e) {}
+        render();
+      }
+
+      function csvCell(v) {
+        var s = v == null ? "" : String(v);
+        if (/[",\r\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+        return s;
+      }
+
+      function renderBulk(rows) {
+        lastBulk = rows;
+        var body = $("bulkBody");
+        body.innerHTML = "";
+        rows.forEach(function (r) {
+          var tr = document.createElement("tr");
+          var a = document.createElement("td");
+          var b = document.createElement("td");
+          a.textContent = r.in;
+          if (r.err) {
+            b.textContent = r.err;
+            b.className = "bad";
+          } else {
+            b.textContent = r.out;
+          }
+          tr.appendChild(a);
+          tr.appendChild(b);
+          body.appendChild(tr);
+        });
+        $("bulkWrap").classList.toggle("hidden", !rows.length);
+      }
+
+      function buildBulk() {
+        var lines = $("bulkIn").value.split(/\r\n|\n|\r/).map(function (s) { return s.trim(); }).filter(Boolean);
+        if (!lines.length) {
+          show(bulkStatus, "Paste at least one URL.");
+          renderBulk([]);
+          return;
+        }
+        var rows = lines.map(function (line) {
+          try {
+            return { in: line, out: buildTagged(line), err: "" };
+          } catch (err) {
+            return { in: line, out: "", err: err.message || "Invalid URL" };
+          }
+        });
+        renderBulk(rows);
+        var ok = rows.filter(function (r) { return r.out; }).length;
+        show(bulkStatus, ok + " of " + rows.length + " tagged.");
+      }
+
+      var payUrl = "solana:" + PAY_TO +
+        "?amount=" + encodeURIComponent(PRICE) +
+        "&spl-token=" + encodeURIComponent(USDC_MINT) +
+        "&label=" + encodeURIComponent("UTM Builder") +
+        "&message=" + encodeURIComponent("49 USDC for UTM Builder");
+      $("payLink").href = payUrl;
+      $("addr").textContent = PAY_TO;
+      var qrImg = document.createElement("img");
+      qrImg.alt = "QR of Solana Pay request for 49 USDC";
+      qrImg.width = 132;
+      qrImg.height = 132;
+      qrImg.src = "https://api.qrserver.com/v1/create-qr-code/?size=132x132&data=" + encodeURIComponent(payUrl);
+      $("qr").appendChild(qrImg);
+
+      var presetBox = $("presets");
+      PRESETS.forEach(function (p) {
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "chip";
+        btn.textContent = p.name;
+        btn.setAttribute("aria-pressed", "false");
+        btn.addEventListener("click", function () {
+          $("utm_source").value = p.source;
+          $("utm_medium").value = p.medium;
+          document.querySelectorAll(".chip").forEach(function (c) {
+            c.setAttribute("aria-pressed", c === btn ? "true" : "false");
+          });
+          render();
+          persist();
+        });
+        presetBox.appendChild(btn);
+      });
+
+      ["input", "change"].forEach(function (ev) {
+        baseUrl.addEventListener(ev, function () { render(); persist(); });
+        $("normalize").addEventListener(ev, function () { render(); persist(); });
+        KEYS.forEach(function (k) {
+          $(k).addEventListener(ev, function () {
+            if (k === "utm_source" || k === "utm_medium") clearPresetPress();
+            render();
+            persist();
+          });
+        });
+      });
+
+      $("copyAddr").addEventListener("click", function () {
+        copyText(PAY_TO, copyAddrStatus, "Address copied.");
+      });
+      $("addr").addEventListener("click", function () {
+        copyText(PAY_TO, copyAddrStatus, "Address copied.");
+      });
+      $("copyLink").addEventListener("click", function () {
+        var link = currentLink();
+        if (!link) return;
+        copyText(link, copyLinkStatus, "Link copied.");
+      });
+      $("pullBtn").addEventListener("click", pullFromUrl);
+      $("clearBtn").addEventListener("click", clearAll);
+      $("bulkBuild").addEventListener("click", buildBulk);
+      $("bulkCopy").addEventListener("click", function () {
+        var lines = lastBulk.filter(function (r) { return r.out; }).map(function (r) { return r.out; });
+        copyText(lines.join("\n"), bulkStatus, lines.length ? "Tagged URLs copied." : "Build a list first.");
+      });
+      $("bulkCsv").addEventListener("click", function () {
+        if (!lastBulk.length) {
+          show(bulkStatus, "Build a list first.");
+          return;
+        }
+        var lines = ["url,tagged"];
+        lastBulk.forEach(function (r) {
+          lines.push(csvCell(r.in) + "," + csvCell(r.out || r.err));
+        });
+        var blob = new Blob([lines.join("\r\n") + "\r\n"], { type: "text/csv;charset=utf-8" });
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "utm-links.csv";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+        show(bulkStatus, "CSV downloaded.");
+      });
+
+      restore();
+      render();
+    })();
+  </script>
+</body>
+</html>
