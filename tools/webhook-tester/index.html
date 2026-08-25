@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Webhook Tester</title>
+  <meta name="description" content="Paste a webhook URL, send JSON from this page, and see the HTTP status. One HTML file. 49 USDC on Solana." />
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f3ee;
+      --card: #ffffff;
+      --ink: #1b1a17;
+      --muted: #5e5a53;
+      --line: #d9d3c7;
+      --accent: #0c4a36;
+      --accent-ink: #f4fff9;
+      --soft: #e4f0ea;
+      --warn-bg: #fff6e8;
+      --warn-line: #ecd4a4;
+      --bad-bg: #fdeeee;
+      --bad-line: #e7b8b8;
+      --shadow: 0 14px 40px rgba(40, 32, 18, 0.07);
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+    }
+    main {
+      width: min(880px, 100%);
+      margin: 0 auto;
+      padding: 28px 16px 72px;
+    }
+    header h1 {
+      margin: 0 0 6px;
+      font-size: clamp(1.6rem, 4vw, 2.1rem);
+      letter-spacing: -0.03em;
+    }
+    .lead {
+      margin: 0 0 12px;
+      color: var(--muted);
+      max-width: 46rem;
+    }
+    .price {
+      display: inline-block;
+      margin: 0 0 22px;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--soft);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 650;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      margin: 0 0 14px;
+    }
+    h2 {
+      margin: 0 0 10px;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+    label.field { display: block; margin: 0 0 12px; }
+    label.field span {
+      display: block;
+      font-size: 13px;
+      font-weight: 650;
+      margin: 0 0 6px;
+    }
+    input[type="url"], input[type="text"], select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fcfaf6;
+      color: var(--ink);
+      border-radius: 10px;
+      padding: 11px 12px;
+      font: 15px/1.4 ui-sans-serif, system-ui, sans-serif;
+    }
+    textarea {
+      min-height: 180px;
+      resize: vertical;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+    }
+    textarea.headers { min-height: 88px; }
+    .row { display: grid; gap: 12px; }
+    @media (min-width: 640px) {
+      .row.two { grid-template-columns: 140px 1fr; }
+    }
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+    button, .btn {
+      font: 650 15px/1.2 ui-sans-serif, system-ui, sans-serif;
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 14px;
+      cursor: pointer;
+    }
+    .primary { background: var(--accent); color: var(--accent-ink); }
+    .ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+    button:disabled { opacity: 0.45; cursor: not-allowed; }
+    .error {
+      background: var(--warn-bg);
+      border: 1px solid var(--warn-line);
+      border-radius: 12px;
+      padding: 10px 12px;
+      color: #6b3d0c;
+      margin: 0 0 12px;
+    }
+    .error.bad {
+      background: var(--bad-bg);
+      border-color: var(--bad-line);
+      color: #6b1c1c;
+    }
+    .hidden { display: none !important; }
+    .ok { color: var(--accent); font-size: 14px; margin: 10px 0 0; }
+    .note { color: var(--muted); font-size: 13px; margin: 10px 0 0; }
+    footer { margin-top: 22px; color: var(--muted); font-size: 13px; }
+    .addr {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      word-break: break-all;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fcfaf6;
+      margin: 0 0 8px;
+    }
+    .net { color: var(--muted); font-size: 13px; margin: 0 0 10px; }
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin: 0 0 10px;
+    }
+    .stats b { color: var(--ink); }
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      background: var(--soft);
+      color: var(--accent);
+    }
+    .badge.warn { background: var(--warn-bg); color: #6b3d0c; }
+    .badge.bad { background: var(--bad-bg); color: #6b1c1c; }
+    .badge.muted { background: #eeeae3; color: var(--muted); }
+    pre.out {
+      margin: 0;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fcfaf6;
+      overflow: auto;
+      max-height: 320px;
+      font: 12.5px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .split { display: grid; gap: 12px; }
+    @media (min-width: 720px) {
+      .split { grid-template-columns: 1fr 1fr; }
+    }
+    .head-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .head-row h2 { margin: 0; }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Webhook Tester</h1>
+      <p class="lead">Paste a URL, send JSON, see the status. One file. Runs in this browser. No account, no upload, no wallet connect.</p>
+      <p class="price">49 USDC · Solana USDC only</p>
+    </header>
+
+    <section class="card" aria-labelledby="payTitle">
+      <h2 id="payTitle">Pay 49 USDC on Solana</h2>
+      <p class="note" style="margin-top:0">Send exactly 49 USDC. Not SOL. Not another chain.</p>
+      <p>Pay-to:</p>
+      <div class="addr" id="addr">96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</div>
+      <p class="net">Network: Solana · Token: USDC · mint EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v</p>
+      <div class="actions">
+        <button type="button" class="primary" id="copyAddrBtn">Copy address</button>
+      </div>
+      <p class="ok hidden" id="copyAddrStatus"></p>
+    </section>
+
+    <section class="card">
+      <h2>Request</h2>
+      <p class="error hidden" id="error"></p>
+      <div class="row two">
+        <label class="field">
+          <span>Method</span>
+          <select id="method">
+            <option value="POST" selected>POST</option>
+            <option value="PUT">PUT</option>
+            <option value="PATCH">PATCH</option>
+            <option value="GET">GET</option>
+            <option value="DELETE">DELETE</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Webhook URL</span>
+          <input id="url" type="url" placeholder="https://example.com/webhook" autocomplete="off" spellcheck="false" />
+        </label>
+      </div>
+      <label class="field">
+        <span>JSON body</span>
+        <textarea id="body" spellcheck="false">{
+  "event": "test.ping",
+  "source": "webhook-tester"
+}</textarea>
+      </label>
+      <label class="field">
+        <span>Extra headers (optional, one per line: Name: value)</span>
+        <textarea id="headers" class="headers" spellcheck="false" placeholder="X-Test: 1"></textarea>
+      </label>
+      <div class="actions">
+        <button type="button" class="primary" id="sendBtn">Send JSON</button>
+        <button type="button" class="ghost" id="formatBtn">Format JSON</button>
+        <button type="button" class="ghost" id="copyCurlBtn">Copy curl</button>
+      </div>
+      <p class="note">This page POSTs from your browser. Many webhook hosts block CORS. If Send fails, copy the curl command and run it on your machine.</p>
+    </section>
+
+    <section class="card hidden" id="resultCard">
+      <div class="head-row">
+        <h2>Status</h2>
+        <div class="actions" style="margin:0">
+          <button type="button" class="ghost" id="copyRespBtn">Copy response</button>
+        </div>
+      </div>
+      <div class="stats" id="stats"></div>
+      <div class="split">
+        <div>
+          <p class="note" style="margin:0 0 6px">Response headers</p>
+          <pre class="out" id="respHeaders">(none yet)</pre>
+        </div>
+        <div>
+          <p class="note" style="margin:0 0 6px">Response body</p>
+          <pre class="out" id="respBody">(none yet)</pre>
+        </div>
+      </div>
+      <p class="ok hidden" id="status"></p>
+      <pre class="out hidden" id="curlBox" style="margin-top:12px"></pre>
+    </section>
+
+    <footer>
+      Offline one-file tool. 49 USDC to 96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3 on Solana (USDC, not SOL). Your payload never leaves this device except to the URL you paste.
+    </footer>
+  </main>
+
+  <script>
+    (function () {
+      var PAY_TO = "96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3";
+      var TIMEOUT_MS = 20000;
+
+      var $ = function (id) { return document.getElementById(id); };
+      var errorEl = $("error");
+      var statusEl = $("status");
+      var curlBox = $("curlBox");
+      var sendBtn = $("sendBtn");
+
+      function showError(msg, bad) {
+        errorEl.textContent = msg || "";
+        errorEl.classList.toggle("hidden", !msg);
+        errorEl.classList.toggle("bad", !!bad && !!msg);
+      }
+      function showStatus(msg) {
+        statusEl.textContent = msg || "";
+        statusEl.classList.toggle("hidden", !msg);
+      }
+      function showCurl(text) {
+        curlBox.textContent = text || "";
+        curlBox.classList.toggle("hidden", !text);
+      }
+
+      function method() { return String($("method").value || "POST"); }
+      function urlValue() { return String($("url").value || "").trim(); }
+      function bodyValue() { return String($("body").value || ""); }
+
+      function isHttpUrl(s) {
+        try {
+          var u = new URL(s);
+          return u.protocol === "http:" || u.protocol === "https:";
+        } catch (e) {
+          return false;
+        }
+      }
+
+      function parseHeaders() {
+        var lines = String($("headers").value || "").split(/\r?\n/);
+        var out = {};
+        for (var i = 0; i < lines.length; i++) {
+          var line = lines[i].trim();
+          if (!line) continue;
+          var colon = line.indexOf(":");
+          if (colon < 1) throw new Error("Header line must look like Name: value.");
+          var name = line.slice(0, colon).trim();
+          var value = line.slice(colon + 1).trim();
+          if (!name) throw new Error("Header name is missing.");
+          if (/^(content-type|host|content-length)$/i.test(name)) continue;
+          out[name] = value;
+        }
+        return out;
+      }
+
+      function parseJsonBody() {
+        var raw = bodyValue().trim();
+        if (!raw) throw new Error("Paste a JSON body first.");
+        try {
+          return JSON.parse(raw);
+        } catch (e) {
+          throw new Error("JSON is not valid. Fix the body, or use Format JSON after it parses.");
+        }
+      }
+
+      function jsonText(obj) {
+        return JSON.stringify(obj, null, 2);
+      }
+
+      function shellQuote(s) {
+        return "'" + String(s).replace(/'/g, "'\\''") + "'";
+      }
+
+      function buildCurl() {
+        var obj = parseJsonBody();
+        var extra = parseHeaders();
+        var parts = ["curl", "-sS", "-D", "-", "-o", "-", "-X", method(), shellQuote(urlValue())];
+        parts.push("-H", shellQuote("Content-Type: application/json"));
+        Object.keys(extra).forEach(function (name) {
+          parts.push("-H", shellQuote(name + ": " + extra[name]));
+        });
+        parts.push("--data-binary", shellQuote(JSON.stringify(obj)));
+        return parts.join(" ");
+      }
+
+      function badgeFor(status, ok, cors) {
+        if (cors) return '<span class="badge warn">blocked</span>';
+        if (status == null) return '<span class="badge muted">no response</span>';
+        var cls = ok ? "badge" : (status >= 400 ? "badge bad" : "badge warn");
+        return '<span class="' + cls + '">' + status + "</span>";
+      }
+
+      function formatHeaders(headers) {
+        if (!headers) return "(none)";
+        var lines = [];
+        if (typeof headers.forEach === "function") {
+          headers.forEach(function (value, name) {
+            lines.push(name + ": " + value);
+          });
+        }
+        return lines.length ? lines.join("\n") : "(none)";
+      }
+
+      function prettyMaybe(text) {
+        if (!text) return "(empty)";
+        try {
+          return JSON.stringify(JSON.parse(text), null, 2);
+        } catch (e) {
+          return text;
+        }
+      }
+
+      function corsHint() {
+        return "Browser send was blocked (likely CORS). Copy the curl command and run it on your machine. The target still may have received nothing from this page.";
+      }
+
+      function renderResult(info) {
+        $("resultCard").classList.remove("hidden");
+        $("stats").innerHTML =
+          "<span>HTTP: " + badgeFor(info.status, info.ok, info.cors) + "</span>" +
+          "<span>Time: <b>" + (info.ms == null ? "—" : info.ms + " ms") + "</b></span>" +
+          "<span>Method: <b>" + info.method + "</b></span>" +
+          "<span>URL: <b>" + info.url + "</b></span>";
+        $("respHeaders").textContent = info.headersText || "(none)";
+        $("respBody").textContent = info.bodyText || "(none)";
+      }
+
+      async function copyText(text) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(text);
+          return;
+        }
+        var ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        ta.remove();
+      }
+
+      $("copyAddrBtn").addEventListener("click", function () {
+        copyText(PAY_TO).then(function () {
+          $("copyAddrStatus").textContent = "Address copied.";
+          $("copyAddrStatus").classList.remove("hidden");
+        }).catch(function () {
+          $("copyAddrStatus").textContent = "Copy failed. Select the address above.";
+          $("copyAddrStatus").classList.remove("hidden");
+        });
+      });
+
+      $("formatBtn").addEventListener("click", function () {
+        showError("");
+        showStatus("");
+        try {
+          $("body").value = jsonText(parseJsonBody()) + "\n";
+          showStatus("JSON formatted.");
+          $("resultCard").classList.remove("hidden");
+        } catch (err) {
+          showError(err.message || "Could not format JSON.");
+        }
+      });
+
+      $("copyCurlBtn").addEventListener("click", function () {
+        showError("");
+        showStatus("");
+        showCurl("");
+        try {
+          if (!isHttpUrl(urlValue())) throw new Error("Paste a valid http(s) webhook URL.");
+          var cmd = buildCurl();
+          $("resultCard").classList.remove("hidden");
+          showCurl(cmd);
+          return copyText(cmd).then(function () {
+            showStatus("curl copied.");
+          });
+        } catch (err) {
+          showError(err.message || "Could not build curl.");
+        }
+      });
+
+      $("copyRespBtn").addEventListener("click", function () {
+        var text = $("respBody").textContent || "";
+        copyText(text).then(function () {
+          showStatus("Response copied.");
+        }).catch(function () {
+          showError("Copy failed.");
+        });
+      });
+
+      $("sendBtn").addEventListener("click", function () {
+        sendJson();
+      });
+
+      async function sendJson() {
+        showError("");
+        showStatus("");
+        showCurl("");
+        var started = Date.now();
+        var reqUrl = urlValue();
+        var reqMethod = method();
+        try {
+          if (!isHttpUrl(reqUrl)) throw new Error("Paste a valid http(s) webhook URL.");
+          var payload = parseJsonBody();
+          var extra = parseHeaders();
+          var headers = { "Content-Type": "application/json" };
+          Object.keys(extra).forEach(function (name) { headers[name] = extra[name]; });
+          var body = JSON.stringify(payload);
+          sendBtn.disabled = true;
+
+          var ctrl = typeof AbortController === "function" ? new AbortController() : null;
+          var timer = null;
+          if (ctrl) {
+            timer = setTimeout(function () { ctrl.abort(); }, TIMEOUT_MS);
+          }
+
+          var res;
+          try {
+            res = await fetch(reqUrl, {
+              method: reqMethod,
+              headers: headers,
+              body: reqMethod === "GET" ? undefined : body,
+              credentials: "omit",
+              signal: ctrl ? ctrl.signal : undefined
+            });
+          } catch (err) {
+            var ms = Date.now() - started;
+            var blocked = !err || err.name !== "AbortError";
+            renderResult({
+              status: null,
+              ok: false,
+              cors: blocked,
+              ms: ms,
+              method: reqMethod,
+              url: reqUrl,
+              headersText: "(no response)",
+              bodyText: blocked ? corsHint() : "Timed out after " + TIMEOUT_MS + " ms."
+            });
+            showCurl(buildCurl());
+            throw new Error(err && err.name === "AbortError"
+              ? "Request timed out after " + TIMEOUT_MS + " ms."
+              : corsHint());
+          } finally {
+            if (timer) clearTimeout(timer);
+          }
+
+          var text = await res.text();
+          var msDone = Date.now() - started;
+          renderResult({
+            status: res.status,
+            ok: res.ok,
+            cors: false,
+            ms: msDone,
+            method: reqMethod,
+            url: reqUrl,
+            headersText: formatHeaders(res.headers),
+            bodyText: prettyMaybe(text)
+          });
+          if (!res.ok) {
+            showError("Webhook returned HTTP " + res.status + ".", res.status >= 500);
+          } else {
+            showStatus("Sent. HTTP " + res.status + " in " + msDone + " ms.");
+          }
+        } catch (err) {
+          $("resultCard").classList.remove("hidden");
+          showError(err.message || "Could not send.");
+          if (!curlBox.textContent && isHttpUrl(reqUrl)) {
+            try { showCurl(buildCurl()); } catch (e) { /* body may be invalid */ }
+          }
+        } finally {
+          sendBtn.disabled = false;
+        }
+      }
+    })();
+  </script>
+</body>
+</html>
