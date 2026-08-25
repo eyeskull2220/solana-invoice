@@ -193,18 +193,6 @@
       <p class="price">49 USDC · Solana USDC only</p>
     </header>
 
-    <section class="card" aria-labelledby="payTitle">
-      <h2 id="payTitle">Pay 49 USDC on Solana</h2>
-      <p class="note" style="margin-top:0">Send exactly 49 USDC. Not SOL. Not another chain.</p>
-      <p>Pay-to:</p>
-      <div class="addr" id="addr">96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</div>
-      <p class="net">Network: Solana · Token: USDC · mint EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v</p>
-      <div class="actions">
-        <button type="button" class="primary" id="copyAddrBtn">Copy address</button>
-      </div>
-      <p class="ok hidden" id="copyAddrStatus"></p>
-    </section>
-
     <section class="card">
       <h2>Request</h2>
       <p class="error hidden" id="error"></p>
@@ -240,6 +228,7 @@
         <button type="button" class="ghost" id="formatBtn">Format JSON</button>
         <button type="button" class="ghost" id="copyCurlBtn">Copy curl</button>
       </div>
+      <p class="ok hidden" id="inlineStatus"></p>
       <p class="note">This page POSTs from your browser. Many webhook hosts block CORS. If Send fails, copy the curl command and run it on your machine.</p>
     </section>
 
@@ -265,6 +254,18 @@
       <pre class="out hidden" id="curlBox" style="margin-top:12px"></pre>
     </section>
 
+    <section class="card" aria-labelledby="payTitle">
+      <h2 id="payTitle">Pay 49 USDC on Solana</h2>
+      <p class="note" style="margin-top:0">Send exactly 49 USDC. Not SOL. Not another chain.</p>
+      <p>Pay-to:</p>
+      <div class="addr" id="addr">96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</div>
+      <p class="net">Network: Solana · Token: USDC · mint EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v</p>
+      <div class="actions">
+        <button type="button" class="primary" id="copyAddrBtn">Copy address</button>
+      </div>
+      <p class="ok hidden" id="copyAddrStatus"></p>
+    </section>
+
     <footer>
       Offline one-file tool. 49 USDC to 96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3 on Solana (USDC, not SOL). Your payload never leaves this device except to the URL you paste.
     </footer>
@@ -278,6 +279,7 @@
       var $ = function (id) { return document.getElementById(id); };
       var errorEl = $("error");
       var statusEl = $("status");
+      var inlineStatus = $("inlineStatus");
       var curlBox = $("curlBox");
       var sendBtn = $("sendBtn");
 
@@ -289,6 +291,8 @@
       function showStatus(msg) {
         statusEl.textContent = msg || "";
         statusEl.classList.toggle("hidden", !msg);
+        inlineStatus.textContent = msg || "";
+        inlineStatus.classList.toggle("hidden", !msg);
       }
       function showCurl(text) {
         curlBox.textContent = text || "";
@@ -388,6 +392,7 @@
 
       function renderResult(info) {
         $("resultCard").classList.remove("hidden");
+        $("resultCard").scrollIntoView({ behavior: "smooth", block: "nearest" });
         $("stats").innerHTML =
           "<span>HTTP: " + badgeFor(info.status, info.ok, info.cors) + "</span>" +
           "<span>Time: <b>" + (info.ms == null ? "—" : info.ms + " ms") + "</b></span>" +
