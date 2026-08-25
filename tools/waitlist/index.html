@@ -258,7 +258,7 @@
         </div>
       </div>
       <div class="preview-frame">
-        <iframe id="preview" title="Waitlist page preview" sandbox="allow-scripts allow-forms allow-popups allow-top-navigation-by-user-activation"></iframe>
+        <iframe id="preview" title="Waitlist page preview" allow="clipboard-write" sandbox="allow-scripts allow-forms allow-popups allow-same-origin allow-top-navigation-by-user-activation"></iframe>
       </div>
       <p class="ok hidden" id="status"></p>
       <p class="note">The downloaded file is self-contained. Host it anywhere or send it as an attachment. Join never posts to a server.</p>
@@ -323,10 +323,12 @@
       }
 
       async function copyText(text) {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          await navigator.clipboard.writeText(text);
-          return;
-        }
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(text);
+            return;
+          }
+        } catch (err) {}
         const ta = document.createElement("textarea");
         ta.value = text;
         ta.setAttribute("readonly", "");
@@ -334,8 +336,9 @@
         ta.style.left = "-9999px";
         document.body.appendChild(ta);
         ta.select();
-        document.execCommand("copy");
+        const ok = document.execCommand("copy");
         ta.remove();
+        if (!ok) throw new Error("Could not copy.");
       }
 
       function landingCss(theme) {
@@ -415,10 +418,11 @@
           "  return 'mailto:'+CONFIG.email+'?subject='+encodeURIComponent(CONFIG.subject)+'&body='+encodeURIComponent(body);",
           "}",
           "async function copyText(text){",
-          "  if(navigator.clipboard&&navigator.clipboard.writeText){ await navigator.clipboard.writeText(text); return; }",
+          "  try { if(navigator.clipboard&&navigator.clipboard.writeText){ await navigator.clipboard.writeText(text); return; } } catch(err) {}",
           "  var ta=document.createElement('textarea'); ta.value=text; ta.setAttribute('readonly','');",
           "  ta.style.position='fixed'; ta.style.left='-9999px'; document.body.appendChild(ta); ta.select();",
-          "  document.execCommand('copy'); ta.remove();",
+          "  var ok=document.execCommand('copy'); ta.remove();",
+          "  if(!ok) throw new Error('Could not copy.');",
           "}",
           "document.getElementById('form').addEventListener('submit', function(e){",
           "  e.preventDefault();",
