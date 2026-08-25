@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quote Calc</title>
+  <meta name="description" content="Hours times rate. Download a self-contained USDC quote. One HTML file. No account." />
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f3ee;
+      --card: #ffffff;
+      --ink: #1b1a17;
+      --muted: #5e5a53;
+      --line: #d9d3c7;
+      --accent: #0c4a36;
+      --accent-ink: #f4fff9;
+      --soft: #e4f0ea;
+      --warn-bg: #fff6e8;
+      --warn-line: #ecd4a4;
+      --shadow: 0 14px 40px rgba(40, 32, 18, 0.07);
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+    }
+    main {
+      width: min(880px, 100%);
+      margin: 0 auto;
+      padding: 28px 16px 72px;
+    }
+    header h1 {
+      margin: 0 0 6px;
+      font-size: clamp(1.6rem, 4vw, 2.1rem);
+      letter-spacing: -0.03em;
+    }
+    .lead {
+      margin: 0 0 12px;
+      color: var(--muted);
+      max-width: 44rem;
+    }
+    .price {
+      display: inline-block;
+      margin: 0 0 22px;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--soft);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 650;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      margin: 0 0 14px;
+    }
+    h2 {
+      margin: 0 0 10px;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+    label.field {
+      display: block;
+      margin: 0 0 12px;
+    }
+    label.field span {
+      display: block;
+      font-size: 13px;
+      font-weight: 650;
+      margin: 0 0 6px;
+    }
+    input[type="text"], input[type="number"], textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fcfaf6;
+      color: var(--ink);
+      border-radius: 10px;
+      padding: 11px 12px;
+      font: 15px/1.4 ui-sans-serif, system-ui, sans-serif;
+    }
+    textarea { min-height: 84px; resize: vertical; }
+    .row {
+      display: grid;
+      gap: 12px;
+    }
+    @media (min-width: 640px) {
+      .row.two { grid-template-columns: 1fr 1fr; }
+      .row.three { grid-template-columns: 1fr 1fr 1fr; }
+    }
+    .total-box {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--soft);
+    }
+    .total-box .label {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 650;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .total-box .sum {
+      font-size: 1.45rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      font-variant-numeric: tabular-nums;
+    }
+    .pay-meta {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 0 0 10px;
+    }
+    .addr {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: stretch;
+    }
+    .addr code {
+      flex: 1 1 220px;
+      display: block;
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fcfaf6;
+      font: 13px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+      word-break: break-all;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    button, .btn {
+      font: 650 15px/1.2 ui-sans-serif, system-ui, sans-serif;
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 14px;
+      cursor: pointer;
+    }
+    .primary { background: var(--accent); color: var(--accent-ink); }
+    .ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+    button:disabled { opacity: 0.45; cursor: not-allowed; }
+    .error {
+      background: var(--warn-bg);
+      border: 1px solid var(--warn-line);
+      border-radius: 12px;
+      padding: 10px 12px;
+      color: #6b3d0c;
+      margin: 0 0 12px;
+    }
+    .hidden { display: none !important; }
+    .ok { color: var(--accent); font-size: 14px; margin: 10px 0 0; }
+    .note { color: var(--muted); font-size: 13px; margin: 10px 0 0; }
+    .preview-box {
+      border: 1px dashed var(--line);
+      border-radius: 12px;
+      padding: 16px;
+      background: #fcfaf6;
+    }
+    .preview-box h3 {
+      margin: 0 0 4px;
+      font-size: 1.15rem;
+      letter-spacing: -0.02em;
+    }
+    .preview-kicker {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+    .preview-grid {
+      display: grid;
+      gap: 12px;
+      margin: 0 0 14px;
+    }
+    @media (min-width: 640px) {
+      .preview-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .preview-grid .k { color: var(--muted); font-size: 12px; font-weight: 650; text-transform: uppercase; letter-spacing: 0.04em; }
+    .preview-grid .v { white-space: pre-wrap; word-break: break-word; }
+    table.line {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      margin: 0 0 12px;
+    }
+    table.line th, table.line td {
+      text-align: left;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    table.line th {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      font-weight: 650;
+    }
+    table.line td.num, table.line th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .preview-total {
+      text-align: right;
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .preview-pay {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+      font-size: 13px;
+    }
+    .preview-pay code {
+      display: block;
+      margin-top: 6px;
+      word-break: break-all;
+      font: 12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    footer {
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Quote Calc</h1>
+      <p class="lead">Hours times rate. Preview the quote, then download one HTML file you can send. No account, no upload, no wallet connect.</p>
+      <p class="price">49 USDC · Solana USDC</p>
+    </header>
+
+    <section class="card">
+      <h2>Pay 49 USDC on Solana</h2>
+      <p class="pay-meta">Send exactly 49 USDC. Network: Solana · Token: USDC — not SOL.</p>
+      <div class="addr">
+        <code id="payAddress">96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</code>
+        <button type="button" class="ghost" id="copyPayBtn">Copy address</button>
+      </div>
+      <p class="ok hidden" id="copyPayStatus"></p>
+    </section>
+
+    <section class="card">
+      <h2>Quote</h2>
+      <p class="error hidden" id="error"></p>
+      <div class="row two">
+        <label class="field">
+          <span>From</span>
+          <input id="fromName" type="text" autocomplete="organization" placeholder="Your studio" />
+        </label>
+        <label class="field">
+          <span>Bill to</span>
+          <input id="clientName" type="text" autocomplete="organization" placeholder="Client name" />
+        </label>
+      </div>
+      <div class="row two">
+        <label class="field">
+          <span>Quote number</span>
+          <input id="quoteNo" type="text" />
+        </label>
+        <label class="field">
+          <span>Date</span>
+          <input id="quoteDate" type="text" />
+        </label>
+      </div>
+      <label class="field">
+        <span>Work</span>
+        <textarea id="work" placeholder="What this quote covers"></textarea>
+      </label>
+      <div class="row two">
+        <label class="field">
+          <span>Hours</span>
+          <input id="hours" type="number" min="0" step="0.25" value="1" />
+        </label>
+        <label class="field">
+          <span>Rate (USDC / hour)</span>
+          <input id="rate" type="number" min="0" step="0.01" value="49" />
+        </label>
+      </div>
+      <div class="total-box">
+        <span class="label">Total</span>
+        <span class="sum" id="totalDisplay">49.00 USDC</span>
+      </div>
+    </section>
+
+    <section class="card">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px">
+        <h2 style="margin:0">Preview</h2>
+        <div class="actions" style="margin:0">
+          <button type="button" class="primary" id="downloadBtn">Download quote.html</button>
+        </div>
+      </div>
+      <div class="preview-box" id="preview"></div>
+      <p class="ok hidden" id="status"></p>
+      <p class="note">The downloaded file is self-contained. Send it or host it anywhere. The quote total is hours × rate. Payment is USDC on Solana to the address above.</p>
+    </section>
+
+    <footer>
+      Offline one-file tool. 49 USDC on Solana. Pay-to 96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3.
+    </footer>
+  </main>
+
+  <script>
+    (function () {
+      const PAY_TO = "96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3";
+      const USDC_MINT = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
+      const TOOL_PRICE = 49;
+
+      const $ = (id) => document.getElementById(id);
+      const errorEl = $("error");
+      const statusEl = $("status");
+      const previewEl = $("preview");
+      const copyPayStatus = $("copyPayStatus");
+
+      function todayIso() {
+        const d = new Date();
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, "0");
+        const day = String(d.getDate()).padStart(2, "0");
+        return y + "-" + m + "-" + day;
+      }
+
+      function defaultQuoteNo() {
+        const d = todayIso().replace(/-/g, "");
+        const n = String(Math.floor(Math.random() * 9000) + 1000);
+        return "Q-" + d + "-" + n;
+      }
+
+      $("quoteNo").value = defaultQuoteNo();
+      $("quoteDate").value = todayIso();
+
+      function escapeHtml(value) {
+        return String(value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      function parseAmount(raw) {
+        const n = Number(raw);
+        if (!Number.isFinite(n) || n < 0) return null;
+        return n;
+      }
+
+      function money(n) {
+        return n.toFixed(2);
+      }
+
+      function readQuote() {
+        const hours = parseAmount($("hours").value);
+        const rate = parseAmount($("rate").value);
+        return {
+          fromName: $("fromName").value.trim(),
+          clientName: $("clientName").value.trim(),
+          quoteNo: $("quoteNo").value.trim() || defaultQuoteNo(),
+          quoteDate: $("quoteDate").value.trim() || todayIso(),
+          work: $("work").value.trim(),
+          hours: hours,
+          rate: rate
+        };
+      }
+
+      function validate(q) {
+        if (q.hours === null) return "Hours must be a number 0 or greater.";
+        if (q.rate === null) return "Rate must be a number 0 or greater.";
+        return "";
+      }
+
+      function totalOf(q) {
+        return Math.round(q.hours * q.rate * 100) / 100;
+      }
+
+      function solanaPayUri(amount) {
+        return (
+          "solana:" + PAY_TO +
+          "?amount=" + encodeURIComponent(money(amount)) +
+          "&spl-token=" + USDC_MINT +
+          "&label=" + encodeURIComponent("Quote Calc")
+        );
+      }
+
+      function quoteModel(q) {
+        const total = totalOf(q);
+        return {
+          fromName: q.fromName || "—",
+          clientName: q.clientName || "—",
+          quoteNo: q.quoteNo,
+          quoteDate: q.quoteDate,
+          work: q.work || "Hours × rate",
+          hours: q.hours,
+          rate: q.rate,
+          total: total
+        };
+      }
+
+      function renderPreview(q) {
+        const err = validate(q);
+        errorEl.classList.toggle("hidden", !err);
+        errorEl.textContent = err;
+        $("downloadBtn").disabled = Boolean(err);
+        if (err) {
+          $("totalDisplay").textContent = "—";
+          previewEl.innerHTML = "<p class=\"preview-kicker\">Fix the hours and rate to preview.</p>";
+          return;
+        }
+        const m = quoteModel(q);
+        $("totalDisplay").textContent = money(m.total) + " USDC";
+        previewEl.innerHTML =
+          "<h3>Quote " + escapeHtml(m.quoteNo) + "</h3>" +
+          "<p class=\"preview-kicker\">" + escapeHtml(m.quoteDate) + " · due on receipt · USDC on Solana</p>" +
+          "<div class=\"preview-grid\">" +
+            "<div><div class=\"k\">From</div><div class=\"v\">" + escapeHtml(m.fromName) + "</div></div>" +
+            "<div><div class=\"k\">Bill to</div><div class=\"v\">" + escapeHtml(m.clientName) + "</div></div>" +
+          "</div>" +
+          "<table class=\"line\">" +
+            "<thead><tr><th>Work</th><th class=\"num\">Hours</th><th class=\"num\">Rate</th><th class=\"num\">Amount</th></tr></thead>" +
+            "<tbody><tr>" +
+              "<td>" + escapeHtml(m.work) + "</td>" +
+              "<td class=\"num\">" + escapeHtml(String(m.hours)) + "</td>" +
+              "<td class=\"num\">" + escapeHtml(money(m.rate)) + "</td>" +
+              "<td class=\"num\">" + escapeHtml(money(m.total)) + "</td>" +
+            "</tr></tbody>" +
+          "</table>" +
+          "<div class=\"preview-total\">" + escapeHtml(money(m.total)) + " USDC</div>" +
+          "<div class=\"preview-pay\">Pay USDC on Solana to" +
+            "<code>" + PAY_TO + "</code>" +
+          "</div>";
+      }
+
+      function buildQuoteHtml(q) {
+        const m = quoteModel(q);
+        const payUri = solanaPayUri(m.total);
+        return "<!doctype html>\n" +
+          "<html lang=\"en\">\n<head>\n" +
+          "<meta charset=\"utf-8\" />\n" +
+          "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n" +
+          "<title>Quote " + escapeHtml(m.quoteNo) + "</title>\n" +
+          "<style>\n" +
+          ":root{color-scheme:light}*{box-sizing:border-box}body{margin:0;background:#f6f3ee;color:#1b1a17;font:16px/1.5 ui-sans-serif,system-ui,-apple-system,sans-serif}main{width:min(720px,100%);margin:0 auto;padding:32px 16px 64px}.sheet{background:#fff;border:1px solid #d9d3c7;border-radius:14px;padding:28px 24px;box-shadow:0 14px 40px rgba(40,32,18,.07)}h1{margin:0 0 4px;font-size:1.6rem;letter-spacing:-.03em}.meta{color:#5e5a53;margin:0 0 22px}.grid{display:grid;gap:14px;margin:0 0 18px}@media(min-width:560px){.grid{grid-template-columns:1fr 1fr}}.k{color:#5e5a53;font-size:12px;font-weight:650;text-transform:uppercase;letter-spacing:.04em}.v{white-space:pre-wrap;word-break:break-word}table{width:100%;border-collapse:collapse;margin:0 0 16px}th,td{text-align:left;padding:10px 0;border-bottom:1px solid #d9d3c7}th{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:#5e5a53}td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}.total{text-align:right;font-size:1.35rem;font-weight:700;letter-spacing:-.02em;margin:0 0 18px}.pay{padding-top:14px;border-top:1px solid #d9d3c7}code{display:block;margin:8px 0;padding:10px 12px;background:#fcfaf6;border:1px solid #d9d3c7;border-radius:10px;word-break:break-all;font:13px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace}button{font:650 15px/1.2 ui-sans-serif,system-ui,sans-serif;border:1px solid #d9d3c7;background:transparent;border-radius:10px;padding:10px 12px;cursor:pointer}.ok{color:#0c4a36;font-size:13px}.note{color:#5e5a53;font-size:13px}\n" +
+          "</style>\n</head>\n<body>\n<main>\n<div class=\"sheet\">\n" +
+          "<h1>Quote " + escapeHtml(m.quoteNo) + "</h1>\n" +
+          "<p class=\"meta\">" + escapeHtml(m.quoteDate) + " · due on receipt · USDC on Solana</p>\n" +
+          "<div class=\"grid\">\n" +
+          "<div><div class=\"k\">From</div><div class=\"v\">" + escapeHtml(m.fromName) + "</div></div>\n" +
+          "<div><div class=\"k\">Bill to</div><div class=\"v\">" + escapeHtml(m.clientName) + "</div></div>\n" +
+          "</div>\n" +
+          "<table><thead><tr><th>Work</th><th class=\"num\">Hours</th><th class=\"num\">Rate</th><th class=\"num\">Amount</th></tr></thead><tbody><tr>" +
+          "<td>" + escapeHtml(m.work) + "</td>" +
+          "<td class=\"num\">" + escapeHtml(String(m.hours)) + "</td>" +
+          "<td class=\"num\">" + escapeHtml(money(m.rate)) + " USDC</td>" +
+          "<td class=\"num\">" + escapeHtml(money(m.total)) + " USDC</td>" +
+          "</tr></tbody></table>\n" +
+          "<p class=\"total\">" + escapeHtml(money(m.total)) + " USDC</p>\n" +
+          "<div class=\"pay\">\n" +
+          "<div class=\"k\">Pay USDC on Solana</div>\n" +
+          "<p class=\"note\">Send exactly " + escapeHtml(money(m.total)) + " USDC. Network: Solana · Token: USDC — not SOL.</p>\n" +
+          "<code id=\"addr\">" + PAY_TO + "</code>\n" +
+          "<button type=\"button\" id=\"copy\">Copy address</button>\n" +
+          "<p class=\"ok\" id=\"copied\" hidden>Copied.</p>\n" +
+          "<p class=\"note\">USDC mint: " + USDC_MINT + "</p>\n" +
+          "<p class=\"note\"><a href=\"" + escapeHtml(payUri) + "\">Solana Pay link</a></p>\n" +
+          "</div>\n</div>\n</main>\n" +
+          "<script>\n" +
+          "document.getElementById(\"copy\").onclick=function(){" +
+          "navigator.clipboard.writeText(" + JSON.stringify(PAY_TO) + ").then(function(){" +
+          "var n=document.getElementById(\"copied\");n.hidden=false;" +
+          "},function(){var n=document.getElementById(\"copied\");n.hidden=false;n.textContent=\"Copy failed. Select the address.\";});" +
+          "};\n" +
+          "<\/script>\n</body>\n</html>\n";
+      }
+
+      function filenameFor(q) {
+        const slug = (q.quoteNo || "quote").replace(/[^A-Za-z0-9._-]+/g, "-");
+        return slug + ".html";
+      }
+
+      function refresh() {
+        statusEl.classList.add("hidden");
+        renderPreview(readQuote());
+      }
+
+      ["fromName", "clientName", "quoteNo", "quoteDate", "work", "hours", "rate"].forEach(function (id) {
+        $(id).addEventListener("input", refresh);
+      });
+
+      $("copyPayBtn").addEventListener("click", function () {
+        navigator.clipboard.writeText(PAY_TO).then(function () {
+          copyPayStatus.textContent = "Copied. Send exactly " + TOOL_PRICE + " USDC.";
+          copyPayStatus.classList.remove("hidden");
+        }, function () {
+          copyPayStatus.textContent = "Copy failed. Select the address.";
+          copyPayStatus.classList.remove("hidden");
+        });
+      });
+
+      $("downloadBtn").addEventListener("click", function () {
+        const q = readQuote();
+        const err = validate(q);
+        if (err) {
+          errorEl.textContent = err;
+          errorEl.classList.remove("hidden");
+          return;
+        }
+        const html = buildQuoteHtml(q);
+        const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filenameFor(q);
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        statusEl.textContent = "Downloaded " + filenameFor(q) + ".";
+        statusEl.classList.remove("hidden");
+      });
+
+      refresh();
+    })();
+  </script>
+</body>
+</html>
