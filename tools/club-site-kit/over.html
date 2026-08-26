@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Over — Voorbeeldclub vzw (demo)</title>
+  <meta name="description" content="Over de fictieve Voorbeeldclub vzw. Publieke demo van de club-site kit.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="skip" href="#inhoud">Naar inhoud</a>
+    <p class="demo-banner">Publieke demo · geen echte vzw · geen echte inbox</p>
+    <div class="bar">
+      <a class="brand" href="index.html">
+        <span class="mark" aria-hidden="true"></span>
+        <span class="brand-text">
+          <strong data-club="name">Voorbeeldclub vzw</strong>
+          <span><span data-club="sport">Sport en ontspanning</span> · <span data-club="city">Voorbeeldstad</span></span>
+        </span>
+      </a>
+      <button type="button" class="nav-toggle" data-nav-toggle aria-expanded="false" aria-controls="menu">Menu</button>
+      <nav id="menu" class="menu" data-nav>
+        <a href="index.html">Home</a>
+        <a href="over.html" aria-current="page">Over</a>
+        <a href="agenda.html">Agenda</a>
+        <a href="lidworden.html">Lid worden</a>
+        <a href="contact.html">Contact</a>
+        <a href="privacy.html">Privacy</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="inhoud">
+    <div class="wrap page-hero-mini">
+      <p class="kicker">Over</p>
+      <h1>Klein bestuur. Duidelijke uren. Geen mega-club.</h1>
+      <p class="lead">Dit is invultekst voor de kit. Vervang hem privé door het echte clubverhaal — niet in deze publieke map.</p>
+    </div>
+
+    <section class="section">
+      <div class="wrap grid grid-2">
+        <div class="prose">
+          <p><span data-club="name">Voorbeeldclub vzw</span> bestaat alleen als demonstratie: een amateurclub in <span data-club="city">Voorbeeldstad</span> die <span data-club="sport">sport en ontspanning</span> organiseert voor recreanten en jeugd.</p>
+          <p>In een echte levering staat hier wie de vzw oprichtte, voor welke leeftijden jullie trainen, en wat er naast de training gebeurt (feest, kamp, vrijwilligers).</p>
+          <p>Geen identiteitsplatform, geen SharePoint-login, geen ledenportaal. De site is HTML die je op elke static host zet.</p>
+        </div>
+        <aside class="card">
+          <h2>Bestuur (demo)</h2>
+          <ul class="muted">
+            <li>Voorzitter — rol, geen persoonsnaam op de demo</li>
+            <li>Secretaris — zelfde regel</li>
+            <li>Penningmeester — zelfde regel</li>
+          </ul>
+          <p class="muted" style="margin-top:12px">Geen foto’s van echte mensen, geen privé-mail, geen telefoon.</p>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div>
+        <strong data-club="name">Voorbeeldclub vzw</strong>
+        Demonstratie. Geen echte vzw.
+        <p style="margin:12px 0 0">© <span data-year>2026</span> · <a href="privacy.html">Privacy</a></p>
+      </div>
+      <div class="foot-pay">
+        <p class="kicker" style="color:var(--moss)">Deze kit · 900 USDC · Solana</p>
+        <code class="addr" id="pay-addr-foot">96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</code>
+        <button type="button" class="btn btn-primary" data-copy="#pay-addr-foot" data-copy-status="#copy-status-foot">Kopieer adres</button>
+        <p class="copy-status" id="copy-status-foot" role="status"></p>
+      </div>
+    </div>
+  </footer>
+  <script src="club.js"></script>
+  <script src="site.js"></script>
+</body>
+</html>

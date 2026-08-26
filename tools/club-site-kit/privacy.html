@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Privacy — Voorbeeldclub vzw (demo)</title>
+  <meta name="description" content="Privacyverklaring van de demo-site Voorbeeldclub vzw. Geen tracking, geen serverformulier.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="skip" href="#inhoud">Naar inhoud</a>
+    <p class="demo-banner">Publieke demo · geen echte vzw · geen echte inbox</p>
+    <div class="bar">
+      <a class="brand" href="index.html">
+        <span class="mark" aria-hidden="true"></span>
+        <span class="brand-text">
+          <strong data-club="name">Voorbeeldclub vzw</strong>
+          <span><span data-club="sport">Sport en ontspanning</span> · <span data-club="city">Voorbeeldstad</span></span>
+        </span>
+      </a>
+      <button type="button" class="nav-toggle" data-nav-toggle aria-expanded="false" aria-controls="menu">Menu</button>
+      <nav id="menu" class="menu" data-nav>
+        <a href="index.html">Home</a>
+        <a href="over.html">Over</a>
+        <a href="agenda.html">Agenda</a>
+        <a href="lidworden.html">Lid worden</a>
+        <a href="contact.html">Contact</a>
+        <a href="privacy.html" aria-current="page">Privacy</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="inhoud">
+    <div class="wrap page-hero-mini">
+      <p class="kicker">Privacy</p>
+      <h1>AVG-tekst voor een statische clubsite.</h1>
+      <p class="lead">Deze pagina is een demo-verklaring. In een private levering wordt de vzw als verwerkingsverantwoordelijke ingevuld. Dit is geen juridisch advies.</p>
+    </div>
+
+    <section class="section">
+      <div class="wrap prose">
+        <h2>Verwerkingsverantwoordelijke</h2>
+        <p>Voor deze publieke demo: <strong data-club="name">Voorbeeldclub vzw</strong>, <span data-club="city">Voorbeeldstad</span> — een fictieve club. Contact: <a data-club-mail href="mailto:info@voorbeeldclub.example"><span data-club="email">info@voorbeeldclub.example</span></a> (RFC 2606, geen echte inbox).</p>
+        <p>Een named club krijgt later privé haar eigen naam, stad en clubmailbox op deze plaats. Die copy blijft buiten deze publieke repository.</p>
+
+        <h2>Welke gegevens</h2>
+        <ul class="rules">
+          <li>Deze site plaatst geen trackingcookies en heeft geen analytics.</li>
+          <li>Het contact- en lidmaatschapsformulier stuurt niets naar een server. Het opent jouw eigen mailprogramma (<code>mailto:</code>).</li>
+          <li>Wat jij in dat bericht typt (naam, antwoordadres, tekst) blijft bij jou tot je het zelf verstuurt. Daarna leeft het in de mailbox van de club — in deze demo is dat geen echte mailbox.</li>
+          <li>We vragen geen rijksregisternummer, geen identiteitskaart, geen login.</li>
+        </ul>
+
+        <h2>Doel en grondslag</h2>
+        <p>Antwoorden op een vraag of een lidmaatschapsaanvraag (gerechtvaardigd belang / uitvoering van een aanvraag). Geen nieuwsbrief-backend, geen ledenbestand in deze kit.</p>
+
+        <h2>Bewaartermijn en rechten</h2>
+        <p>De kit bewaart zelf niets. Een echte vzw bewaart mails volgens haar eigen beleid. Je kunt inzage of wissing vragen via hetzelfde clubadres.</p>
+
+        <h2>Wat deze kit niet doet</h2>
+        <ul class="rules">
+          <li>Geen identiteitslogin, geen ledenportaal.</li>
+          <li>Geen betaling van lidgeld via crypto of kaart op deze pagina’s. Het kit-tarief (900 USDC op Solana) staat enkel op de demopagina’s van de kit zelf.</li>
+          <li>Geen doorgifte van persoonsgegevens naar een derde land via deze statische bestanden.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div>
+        <strong data-club="name">Voorbeeldclub vzw</strong>
+        Demonstratie. Geen echte verwerking.
+        <p style="margin:12px 0 0">© <span data-year>2026</span></p>
+      </div>
+      <div class="foot-pay">
+        <p class="kicker" style="color:var(--moss)">Deze kit · 900 USDC · Solana</p>
+        <code class="addr" id="pay-addr-foot">96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</code>
+        <button type="button" class="btn btn-primary" data-copy="#pay-addr-foot" data-copy-status="#copy-status-foot">Kopieer adres</button>
+        <p class="copy-status" id="copy-status-foot" role="status"></p>
+      </div>
+    </div>
+  </footer>
+  <script src="club.js"></script>
+  <script src="site.js"></script>
+</body>
+</html>

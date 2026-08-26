@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Voorbeeldclub vzw — sport en ontspanning (demo)</title>
+  <meta name="description" content="Publieke demo van de Belgische club/vzw site kit. Voorbeeldclub is geen echte vzw.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="skip" href="#inhoud">Naar inhoud</a>
+    <p class="demo-banner">Publieke demo · geen echte vzw · geen echte inbox</p>
+    <div class="bar">
+      <a class="brand" href="index.html">
+        <span class="mark" aria-hidden="true"></span>
+        <span class="brand-text">
+          <strong data-club="name">Voorbeeldclub vzw</strong>
+          <span><span data-club="sport">Sport en ontspanning</span> · <span data-club="city">Voorbeeldstad</span></span>
+        </span>
+      </a>
+      <button type="button" class="nav-toggle" data-nav-toggle aria-expanded="false" aria-controls="menu">Menu</button>
+      <nav id="menu" class="menu" data-nav>
+        <a href="index.html" aria-current="page">Home</a>
+        <a href="over.html">Over</a>
+        <a href="agenda.html">Agenda</a>
+        <a href="lidworden.html">Lid worden</a>
+        <a href="contact.html">Contact</a>
+        <a href="privacy.html">Privacy</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="inhoud">
+    <section class="hero">
+      <div class="wrap">
+        <p class="kicker" style="color: var(--moss);">Belgische club / vzw · demo</p>
+        <h1>Een rustige clubsite. Zes pagina’s. Geen account.</h1>
+        <p class="lead"><span data-club="name">Voorbeeldclub vzw</span> is een verzonnen sport- en ontspanningsclub in <span data-club="city">Voorbeeldstad</span>. Deze kit toont wat een Belgische club of vzw krijgt: home, over, agenda, lid worden, contact en privacy — statisch, zonder backend.</p>
+        <div class="chips">
+          <span class="chip">Nederlands</span>
+          <span class="chip">Statisch</span>
+          <span class="chip">Mailto, geen server</span>
+        </div>
+        <div class="actions">
+          <a class="btn btn-primary" href="lidworden.html">Lid worden</a>
+          <a class="btn btn-ghost" href="agenda.html">Agenda</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="over">
+      <div class="wrap">
+        <p class="kicker">Over</p>
+        <h2>Een vzw-pagina die een secretaris zelf kan hosten.</h2>
+        <div class="grid grid-2">
+          <div class="prose">
+            <p>De demo beschrijft een kleine amateurclub: wekelijkse training, een clubavond, een algemene vergadering. Geen echte federatie, geen zaalhuurcontract, wel de structuur die later privé op één named club wordt gezet.</p>
+            <p>Deze publieke map blijft generiek. Een echte clubnaam, zaal of mailbox hoort hier niet thuis.</p>
+            <p><a href="over.html">Lees het demo-verhaal</a></p>
+          </div>
+          <aside class="card">
+            <h3>Praktisch (demo)</h3>
+            <ul class="muted">
+              <li>Stad: <span data-club="city">Voorbeeldstad</span></li>
+              <li>Activiteit: <span data-club="sport">Sport en ontspanning</span></li>
+              <li>Taal: Nederlands</li>
+              <li>Contact: <a data-club-mail href="mailto:info@voorbeeldclub.example"><span data-club="email">info@voorbeeldclub.example</span></a></li>
+            </ul>
+            <p class="muted" style="margin-top:12px">Geen telefoon, geen huisadres, geen ondernemingsnummer. RFC 2606-mail only.</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="agenda">
+      <div class="wrap">
+        <p class="kicker">Agenda</p>
+        <h2>Volgende vier momenten</h2>
+        <p class="lead">Voorbeeldrijen. Een latere private build vervangt ze door de kalender van de betalende club.</p>
+        <div class="grid grid-2">
+          <article class="card event">
+            <div class="dateblock"><span class="d">05</span><span class="m">sep</span></div>
+            <div>
+              <h3>Start seizoen</h3>
+              <p>Zaterdag 5 september · 10:00 · sporthal (demo-locatie)</p>
+            </div>
+          </article>
+          <article class="card event">
+            <div class="dateblock"><span class="d">19</span><span class="m">sep</span></div>
+            <div>
+              <h3>Clubavond</h3>
+              <p>Zaterdag 19 september · 19:30 · clubhuis (demo)</p>
+            </div>
+          </article>
+          <article class="card event">
+            <div class="dateblock"><span class="d">03</span><span class="m">okt</span></div>
+            <div>
+              <h3>Algemene vergadering</h3>
+              <p>Zaterdag 3 oktober · 14:00 · zaal (demo)</p>
+            </div>
+          </article>
+          <article class="card event">
+            <div class="dateblock"><span class="d">18</span><span class="m">okt</span></div>
+            <div>
+              <h3>Familiedag</h3>
+              <p>Zondag 18 oktober · 11:00 · terrein (demo)</p>
+            </div>
+          </article>
+        </div>
+        <p style="margin:16px 0 0"><a href="agenda.html">Trainingstijden en de volle agenda</a></p>
+      </div>
+    </section>
+
+    <section class="section" id="lidworden">
+      <div class="wrap">
+        <p class="kicker">Lid worden</p>
+        <h2>Prijs op de pagina. Aanvraag via mail.</h2>
+        <div class="grid grid-2">
+          <div class="card">
+            <p class="kicker">Lidgeld (demo)</p>
+            <p class="price-hero"><span data-club="feeAdult">€ 40</span> <span>/ jaar · volwassene</span></p>
+            <p class="muted">Jeugd <span data-club="feeYouth">€ 25</span> · gezin <span data-club="feeFamily">€ 90</span>. Voorbeeldbedragen, geen echte tarieven.</p>
+            <p style="margin-top:16px">
+              <a class="btn btn-ink" data-club-mail href="mailto:info@voorbeeldclub.example?subject=Lid%20worden%20Voorbeeldclub%20vzw">Mail naar <span data-club="email">info@voorbeeldclub.example</span></a>
+            </p>
+          </div>
+          <div class="prose">
+            <p>Geen webshop, geen wallet, geen identiteitslogin. Het lidmaatschap loopt via mailto. De club zet haar eigen mailbox in een private copy — nooit een privé-webmail in deze publieke demo.</p>
+            <p><a href="lidworden.html">Hoe inschrijven werkt</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="contact">
+      <div class="wrap">
+        <p class="kicker">Contact + kit</p>
+        <h2>Schrijf de club, niet een privé-inbox.</h2>
+        <div class="grid grid-2">
+          <div class="card">
+            <h3 data-club="name">Voorbeeldclub vzw</h3>
+            <p class="muted"><span data-club="sport">Sport en ontspanning</span> · <span data-club="city">Voorbeeldstad</span> (fictief)<br>
+              E-mail: <a data-club-mail href="mailto:info@voorbeeldclub.example"><span data-club="email">info@voorbeeldclub.example</span></a></p>
+            <p class="muted">Geen telefoonnummer, geen straatadres.</p>
+            <p style="margin-top:14px"><a class="btn btn-ink" href="contact.html">Contactpagina</a></p>
+          </div>
+          <aside class="paybox" id="kit-pay">
+            <p class="kicker">Deze kit · 900 USDC</p>
+            <h2>Club-site kit voor Belgische clubs en vzw’s</h2>
+            <p>Betaal in USDC op Solana. Alleen USDC — geen SOL, geen andere chain.</p>
+            <p>Stuur exact 900 USDC naar:</p>
+            <code class="addr" id="pay-addr">96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</code>
+            <button type="button" class="btn btn-primary btn-full" data-copy="#pay-addr" data-copy-status="#copy-status">Kopieer adres</button>
+            <p class="copy-status" id="copy-status" role="status"></p>
+            <p class="fine">Mint: EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v · copy-address only · USDC on Solana</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div>
+        <strong data-club="name">Voorbeeldclub vzw</strong>
+        Publieke demo van de club-site kit. Geen echte vzw, geen echte leden, geen echte inbox. Builder levert later privé een herschreven kopie voor één named club.
+        <p class="muted" style="margin:12px 0 0;color:#9bb0a4">© <span data-year>2026</span> · kit · <a href="privacy.html">Privacy</a> · <a href="README.md">README</a></p>
+      </div>
+      <div class="foot-pay">
+        <p class="kicker" style="color:var(--moss)">Pay-to · 900 USDC · Solana</p>
+        <code class="addr" id="pay-addr-foot">96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</code>
+        <button type="button" class="btn btn-primary" data-copy="#pay-addr-foot" data-copy-status="#copy-status-foot">Kopieer adres</button>
+        <p class="copy-status" id="copy-status-foot" role="status"></p>
+      </div>
+    </div>
+  </footer>
+  <script src="club.js"></script>
+  <script src="site.js"></script>
+</body>
+</html>

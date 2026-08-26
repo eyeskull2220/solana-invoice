@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agenda — Voorbeeldclub vzw (demo)</title>
+  <meta name="description" content="Voorbeeldagenda en trainingstijden van de fictieve Voorbeeldclub vzw.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="skip" href="#inhoud">Naar inhoud</a>
+    <p class="demo-banner">Publieke demo · geen echte vzw · geen echte inbox</p>
+    <div class="bar">
+      <a class="brand" href="index.html">
+        <span class="mark" aria-hidden="true"></span>
+        <span class="brand-text">
+          <strong data-club="name">Voorbeeldclub vzw</strong>
+          <span><span data-club="sport">Sport en ontspanning</span> · <span data-club="city">Voorbeeldstad</span></span>
+        </span>
+      </a>
+      <button type="button" class="nav-toggle" data-nav-toggle aria-expanded="false" aria-controls="menu">Menu</button>
+      <nav id="menu" class="menu" data-nav>
+        <a href="index.html">Home</a>
+        <a href="over.html">Over</a>
+        <a href="agenda.html" aria-current="page">Agenda</a>
+        <a href="lidworden.html">Lid worden</a>
+        <a href="contact.html">Contact</a>
+        <a href="privacy.html">Privacy</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="inhoud">
+    <div class="wrap page-hero-mini">
+      <p class="kicker">Agenda</p>
+      <h1>Vier data op de home. Hier de uren erbij.</h1>
+      <p class="lead">Demo-locaties alleen. Geen echte zaal, geen wegbeschrijving naar een huisadres.</p>
+    </div>
+
+    <section class="section">
+      <div class="wrap">
+        <div class="grid grid-2">
+          <article class="card event">
+            <div class="dateblock"><span class="d">05</span><span class="m">sep</span></div>
+            <div>
+              <h3>Start seizoen</h3>
+              <p>Zaterdag 5 september · 10:00 · sporthal (demo-locatie)</p>
+            </div>
+          </article>
+          <article class="card event">
+            <div class="dateblock"><span class="d">19</span><span class="m">sep</span></div>
+            <div>
+              <h3>Clubavond</h3>
+              <p>Zaterdag 19 september · 19:30 · clubhuis (demo)</p>
+            </div>
+          </article>
+          <article class="card event">
+            <div class="dateblock"><span class="d">03</span><span class="m">okt</span></div>
+            <div>
+              <h3>Algemene vergadering</h3>
+              <p>Zaterdag 3 oktober · 14:00 · zaal (demo)</p>
+            </div>
+          </article>
+          <article class="card event">
+            <div class="dateblock"><span class="d">18</span><span class="m">okt</span></div>
+            <div>
+              <h3>Familiedag</h3>
+              <p>Zondag 18 oktober · 11:00 · terrein (demo)</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <p class="kicker">Wekelijks</p>
+        <h2>Trainingstijden (demo)</h2>
+        <div class="card" style="overflow-x:auto">
+          <table class="train">
+            <thead>
+              <tr>
+                <th>Dag</th>
+                <th>Uur</th>
+                <th>Groep</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Dinsdag</td>
+                <td>19:30–21:00</td>
+                <td>Volwassenen</td>
+              </tr>
+              <tr>
+                <td>Donderdag</td>
+                <td>18:00–19:15</td>
+                <td>Jeugd</td>
+              </tr>
+              <tr>
+                <td>Zaterdag</td>
+                <td>10:00–11:30</td>
+                <td>Iedereen / recreant</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div>
+        <strong data-club="name">Voorbeeldclub vzw</strong>
+        Demonstratie. Geen echte kalender.
+        <p style="margin:12px 0 0">© <span data-year>2026</span> · <a href="privacy.html">Privacy</a></p>
+      </div>
+      <div class="foot-pay">
+        <p class="kicker" style="color:var(--moss)">Deze kit · 900 USDC · Solana</p>
+        <code class="addr" id="pay-addr-foot">96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</code>
+        <button type="button" class="btn btn-primary" data-copy="#pay-addr-foot" data-copy-status="#copy-status-foot">Kopieer adres</button>
+        <p class="copy-status" id="copy-status-foot" role="status"></p>
+      </div>
+    </div>
+  </footer>
+  <script src="club.js"></script>
+  <script src="site.js"></script>
+</body>
+</html>
