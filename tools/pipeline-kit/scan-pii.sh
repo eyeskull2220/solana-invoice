@@ -24,11 +24,22 @@ scan 'hotmail\.com' "Hotmail inbox"
 scan 'telenet\.be' "Telenet inbox"
 scan 'skynet\.be' "Skynet inbox"
 scan '0x9eb954b567ef3616424a6e1bf42c63724930aa54' "Base pay-to (wrong chain)"
+scan '0999\.999\.992' "placeholder seller VAT/KBO"
+scan '0888\.888\.888' "placeholder client VAT/KBO"
+scan 'BE[[:space:]]*0[0-9]{3}[.\s]?[0-9]{3}[.\s]?[0-9]{3}' "any BE VAT/KBO number in kit files"
+
+# Printed stamp must be VOORBEELD (all-caps). Case-sensitive, HTML only —
+# Peppol notes may say lowercase "factuur"; README may name the banned stamp.
+if grep -nE 'FACTUUR' "$ROOT/index.html" >/dev/null 2>&1; then
+  echo "PII FAIL (printed FACTUUR stamp in index.html; use VOORBEELD):"
+  grep -nE 'FACTUUR' "$ROOT/index.html" || true
+  FAIL=1
+fi
 
 if [ "$FAIL" -ne 0 ]; then
   echo "PII scan failed."
   exit 1
 fi
 
-echo "PII scan clean: no De Meutter/Meeussen, no live inboxes, no Base pay-to."
-echo "Demo allowlist: Studio Noord, Client BV, RFC 2606 (.example)."
+echo "PII scan clean: no De Meutter/Meeussen, no live inboxes, no placeholder KBO, no FACTUUR stamp."
+echo "Demo allowlist: Studio Noord, Client BV, RFC 2606 (.example), KBO/BTW: nog niet toegekend."

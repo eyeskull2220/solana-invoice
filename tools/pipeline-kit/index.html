@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Lead-to-invoice pipeline — 399 USDC</title>
-  <meta name="description" content="One offline flow: form to Dutch offerte to invoice to reminder. 399 USDC on Solana." />
+  <meta name="description" content="One offline flow: form to Dutch offerte to voorbeeld to reminder. 399 USDC on Solana." />
   <style>
     :root {
       color-scheme: light;
@@ -321,7 +321,7 @@
   <div class="wrap">
     <header>
       <h1>Lead to invoice. One pipeline.</h1>
-      <p class="lead">One offline flow: form → Dutch offerte → factuur → herinnering. Line items travel with the job. No account. No wallet connect. Works offline after you open this file.</p>
+      <p class="lead">One offline flow: form → Dutch offerte → voorbeeld → herinnering. Printed voorbeeld is not a factuur. No account. No wallet connect. Works offline after you open this file.</p>
       <p class="price">399 USDC · Solana USDC</p>
     </header>
 
@@ -346,7 +346,7 @@
           <div class="steps" role="tablist" aria-label="Pipeline">
             <button type="button" id="gotoForm" aria-current="step">1 Form</button>
             <button type="button" id="gotoOfferte">2 Offerte</button>
-            <button type="button" id="gotoInvoice">3 Factuur</button>
+            <button type="button" id="gotoInvoice">3 Voorbeeld</button>
             <button type="button" id="gotoReminder">4 Herinnering</button>
           </div>
           <p class="error hidden" id="error"></p>
@@ -364,14 +364,14 @@
             <label class="field"><span>Name</span><input id="sellerName" type="text" autocomplete="off" placeholder="Studio Noord" /></label>
             <label class="field"><span>Address</span><textarea id="sellerAddress" autocomplete="off" placeholder="Voorbeeldlaan 1&#10;2000 Antwerpen"></textarea></label>
             <div class="row two">
-              <label class="field"><span>BE BTW / KBO</span><input id="sellerVat" type="text" autocomplete="off" spellcheck="false" placeholder="BE 0999.999.992" /></label>
+              <label class="field"><span>KBO/BTW</span><input id="sellerVat" type="text" autocomplete="off" spellcheck="false" placeholder="KBO/BTW: nog niet toegekend" /></label>
               <label class="field"><span>Mail</span><input id="sellerMail" type="email" autocomplete="off" placeholder="hello@studio.example" /></label>
             </div>
             <h2>Klant</h2>
             <label class="field"><span>Name</span><input id="clientName" type="text" autocomplete="off" placeholder="Client BV" /></label>
             <label class="field"><span>Address</span><textarea id="clientAddress" autocomplete="off" placeholder="Klantplein 8&#10;1000 Brussel"></textarea></label>
             <div class="row two">
-              <label class="field"><span>BE BTW / KBO</span><input id="clientVat" type="text" autocomplete="off" spellcheck="false" placeholder="BE 0888.888.888" /></label>
+              <label class="field"><span>KBO/BTW</span><input id="clientVat" type="text" autocomplete="off" spellcheck="false" placeholder="KBO/BTW: nog niet toegekend" /></label>
               <label class="field"><span>Mail</span><input id="clientMail" type="email" autocomplete="off" placeholder="billing@client.example" /></label>
             </div>
             <div id="offerteMeta">
@@ -383,7 +383,7 @@
               <label class="field"><span>Valid until</span><input id="offerteValid" type="date" /></label>
             </div>
             <div id="invoiceMeta" class="hidden">
-              <h2>Factuur</h2>
+              <h2>Voorbeeld</h2>
               <div class="row two">
                 <label class="field"><span>Number</span><input id="invoiceNo" type="text" autocomplete="off" /></label>
                 <label class="field"><span>Date</span><input id="invoiceDate" type="date" /></label>
@@ -410,7 +410,7 @@
             <label class="field"><span>Aan</span><input id="remToName" type="text" autocomplete="off" /></label>
             <label class="field"><span>Aan-mail</span><input id="remToMail" type="email" autocomplete="off" /></label>
             <div class="row two">
-              <label class="field"><span>Factuurnummer</span><input id="remInvoiceNo" type="text" autocomplete="off" /></label>
+              <label class="field"><span>Documentnummer</span><input id="remInvoiceNo" type="text" autocomplete="off" /></label>
               <label class="field"><span>Vervaldatum</span><input id="remDueDate" type="date" /></label>
             </div>
             <label class="field"><span>Bedrag incl. BTW (EUR)</span><input id="remAmount" type="text" inputmode="decimal" autocomplete="off" /></label>
@@ -445,6 +445,7 @@
     (function () {
       var PAY_TO = "96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3";
       var TOOL_PRICE = 399;
+      var KBO_PENDING = "KBO/BTW: nog niet toegekend";
       var MONTHS_NL = ["januari", "februari", "maart", "april", "mei", "juni", "juli", "augustus", "september", "oktober", "november", "december"];
       var STEPS = ["form", "offerte", "invoice", "reminder"];
       var DEMO = {
@@ -454,11 +455,11 @@
         leadProject: "Website-onderhoud voor de shop",
         sellerName: "Studio Noord",
         sellerAddress: "Voorbeeldlaan 1\n2000 Antwerpen",
-        sellerVat: "BE 0999.999.992",
+        sellerVat: "KBO/BTW: nog niet toegekend",
         sellerMail: "hello@studio.example",
         clientName: "Client BV",
         clientAddress: "Klantplein 8\n1000 Brussel",
-        clientVat: "BE 0888.888.888",
+        clientVat: "KBO/BTW: nog niet toegekend",
         clientMail: "billing@client.example",
         lineDesc: "Website-onderhoud",
         lineQty: "8",
@@ -676,7 +677,7 @@
         }
         if (filled < 1) return "Add at least one line item.";
         if (kind === "offerte" && !job.offerteNo) return "Vul een offertenummer in.";
-        if (kind === "invoice" && !job.invoiceNo) return "Vul een factuurnummer in.";
+        if (kind === "invoice" && !job.invoiceNo) return "Vul een documentnummer in.";
         return "";
       }
 
@@ -699,7 +700,7 @@
         if (!d.toMail) return "Vul het klant-mailadres in.";
         if (!looksLikeEmail(d.toMail)) return "Klant-mail ziet er niet geldig uit.";
         if (d.fromMail && !looksLikeEmail(d.fromMail)) return "Afzender-mail ziet er niet geldig uit.";
-        if (!d.invoiceNo) return "Vul een factuurnummer in.";
+        if (!d.invoiceNo) return "Vul een documentnummer in.";
         if (!d.dueDate) return "Vul een vervaldatum in.";
         if (d.amount === null) return "Bedrag moet een getal 0 of groter zijn.";
         if (!d.body) return "Schrijf de brief.";
@@ -708,9 +709,10 @@
 
       function partyHtml(name, address, vat, mail, emptyName) {
         var parts = [];
+        var kbo = vat || KBO_PENDING;
         parts.push(name ? escapeHtml(name) : "<span class=\"empty\">" + emptyName + "</span>");
         if (address) parts.push(escapeHtml(address));
-        if (vat) parts.push("BTW/KBO " + escapeHtml(vat));
+        parts.push(escapeHtml(kbo.indexOf("KBO/BTW") === 0 ? kbo : "KBO/BTW: " + kbo));
         if (mail) parts.push(escapeHtml(mail));
         return parts.join("\n");
       }
@@ -752,17 +754,17 @@
           : totalsOf(job);
         var rateLabel = (job.vatRate == null ? "—" : String(job.vatRate).replace(".", ",")) + "%";
         var isOff = kind === "offerte";
-        var number = isOff ? (job.offerteNo || "OFF-") : (job.invoiceNo || "F-");
+        var number = isOff ? (job.offerteNo || "OFF-") : (job.invoiceNo || "VB-");
         var dateIso = isOff ? job.offerteDate : job.invoiceDate;
         var extraIso = isOff ? job.offerteValid : job.dueDate;
         var extraLabel = isOff ? "Geldig tot" : "Vervaldatum";
-        var title = isOff ? "OFFERTE" : "FACTUUR";
-        var kicker = isOff ? "Offerte" : "Factuur";
+        var title = isOff ? "OFFERTE" : "VOORBEELD";
+        var kicker = isOff ? "Offerte" : "Voorbeeld";
         var extra = extraIso
           ? "<div>" + extraLabel + " <strong>" + escapeHtml(formatDateNl(extraIso)) + "</strong></div>"
           : "";
         var peppol = isOff ? "" :
-          "<p class=\"note\">B2C: PDF per mail is nog toegelaten. B2B: sinds 1 januari 2026 is een PDF geen wettelijke factuur in België (Peppol). Dit bestand is geen Peppol-document.</p>";
+          "<p class=\"note\">VOORBEELD — geen wettelijke factuur. B2C: PDF per mail is nog toegelaten. B2B: sinds 1 januari 2026 is een PDF geen wettelijke factuur in België (Peppol). Dit bestand is geen Peppol-document.</p>";
         return "" +
           "<div class=\"sheet-top\">" +
             "<div><div class=\"brand\">" + kicker + "</div><div class=\"word\">" + title + "</div></div>" +
@@ -822,7 +824,7 @@
           badge +
           "<div class=\"letter-meta\">" +
           "<div><span>Aan</span><strong>" + escapeHtml(d.toName || "—") + "</strong></div>" +
-          "<div><span>Factuur</span><strong>" + escapeHtml(d.invoiceNo || "—") + "</strong></div>" +
+          "<div><span>Document</span><strong>" + escapeHtml(d.invoiceNo || "—") + "</strong></div>" +
           "<div><span>Vervaldatum</span><strong>" + escapeHtml(formatDateNl(d.dueDate) || "—") + "</strong></div>" +
           "<div><span>Van</span><strong>" + escapeHtml(d.fromMail || "hello@studio.example") + "</strong></div>" +
           "</div>" +
@@ -832,7 +834,7 @@
 
       function defaultReminderBody(job, tot) {
         var client = job.clientName || "Client BV";
-        var no = job.invoiceNo || "F-";
+        var no = job.invoiceNo || "VB-";
         var issued = formatDateNl(job.invoiceDate || todayIso());
         var due = formatDateNl(job.dueDate || todayIso());
         var amt = formatEurFromCents(tot.inclCents);
@@ -840,9 +842,9 @@
         var from = job.sellerName || "Studio Noord";
         var mail = job.sellerMail || "hello@studio.example";
         return "Beste " + client + ",\n\n" +
-          "Onze factuur " + no + " van " + issued + " is vervallen op " + due +
+          "Ons voorbeeld " + no + " van " + issued + " is vervallen op " + due +
           ". Het openstaande bedrag is " + amt + " incl. " + rate + "% BTW.\n\n" +
-          "Gelieve te betalen met vermelding van het factuurnummer. Vragen? Gebruik " + mail + ".\n\n" +
+          "Dit is een VOORBEELD, geen wettelijke factuur. Gelieve te betalen met vermelding van het documentnummer. Vragen? Gebruik " + mail + ".\n\n" +
           "Met vriendelijke groeten,\n" + from;
       }
 
@@ -882,7 +884,7 @@
       function carryOfferteToInvoice() {
         var job = readJob();
         if (!$("invoiceNo").value.trim()) {
-          $("invoiceNo").value = "F-" + yyyymm(job.offerteDate || todayIso()) + "-001";
+          $("invoiceNo").value = "VB-" + yyyymm(job.offerteDate || todayIso()) + "-001";
         }
         if (!$("invoiceDate").value.trim()) $("invoiceDate").value = job.offerteDate || todayIso();
         if (!$("dueDate").value.trim()) $("dueDate").value = job.offerteValid || addDays($("invoiceDate").value, 14);
@@ -928,12 +930,12 @@
           $("previewTitle").textContent = "Brief";
         } else if (step === "offerte") {
           $("downloadBtn").textContent = "Download offerte";
-          $("nextBtn").textContent = "Naar factuur";
+          $("nextBtn").textContent = "Naar voorbeeld";
           $("previewTitle").textContent = "Offerte";
         } else if (step === "invoice") {
-          $("downloadBtn").textContent = "Download factuur";
+          $("downloadBtn").textContent = "Download voorbeeld";
           $("nextBtn").textContent = "Naar herinnering";
-          $("previewTitle").textContent = "Factuur";
+          $("previewTitle").textContent = "Voorbeeld";
         } else {
           $("downloadBtn").textContent = "Download herinnering";
           $("previewTitle").textContent = "Herinnering";
@@ -1022,7 +1024,7 @@
           return;
         }
         if (step === "invoice") {
-          saveHtml(job.invoiceNo.replace(/[^A-Za-z0-9._-]+/g, "-") + ".html", wrapDownload("Factuur " + job.invoiceNo, docSheetHtml(job, "invoice")));
+          saveHtml(job.invoiceNo.replace(/[^A-Za-z0-9._-]+/g, "-") + ".html", wrapDownload("Voorbeeld " + job.invoiceNo, docSheetHtml(job, "invoice")));
           return;
         }
         var rem = readReminder();
@@ -1034,10 +1036,12 @@
         $("offerteNo").value = "OFF-" + yyyymm(today) + "-001";
         $("offerteDate").value = today;
         $("offerteValid").value = addDays(today, 14);
-        $("invoiceNo").value = "F-" + yyyymm(today) + "-001";
+        $("invoiceNo").value = "VB-" + yyyymm(today) + "-001";
         $("invoiceDate").value = today;
         $("dueDate").value = addDays(today, 14);
         $("vatRate").value = "21";
+        $("sellerVat").value = KBO_PENDING;
+        $("clientVat").value = KBO_PENDING;
       }
 
       function clearLines() {
