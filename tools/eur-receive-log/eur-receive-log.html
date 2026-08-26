@@ -450,8 +450,14 @@
         document.getElementById("previewTx").textContent = tx || "—";
         var usdc = parseAmount(usdcEl.value, 6);
         var mid = parseAmount(eurMidEl.value, 8);
-        var eur = usdc && mid ? eurAmount(usdc, mid) : "";
-        document.getElementById("previewEur").textContent = eur ? (eur + " EUR") : "— (needs your mid)";
+        var previewEur = document.getElementById("previewEur");
+        if (usdc && mid) {
+          previewEur.textContent = eurAmount(usdc, mid) + " EUR";
+        } else if (usdc && !mid) {
+          previewEur.textContent = "— (needs your mid)";
+        } else {
+          previewEur.textContent = "—";
+        }
       }
 
       function escapeHtml(s) {
