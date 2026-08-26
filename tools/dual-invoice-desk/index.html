@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dual-chain USDC invoice — INV-20260826 — 490 USDC</title>
-  <meta name="description" content="One invoice. Pay 490 USDC on Solana or Base. Solana Pay QR or Base copy card. No wallet connect.">
+  <title>Dual-chain USDC offerte — INV-20260826 — 490 USDC</title>
+  <meta name="description" content="Offerte INV-20260826. Pay 490 USDC on Solana or Base. Solana Pay QR or Base copy card. No wallet connect. Not Peppol. Not an Access Point.">
   <style>
     :root {
       --paper: #f6f3ee;
@@ -58,6 +58,13 @@
       color: var(--muted);
     }
     .word { font-size: 2rem; letter-spacing: 0.12em; margin-top: 4px; }
+    .kbo {
+      margin-top: 10px;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 13px;
+      color: var(--ink);
+      font-weight: 650;
+    }
     .meta {
       text-align: right;
       font-family: ui-sans-serif, system-ui, sans-serif;
@@ -217,6 +224,7 @@
     </div>
     <article class="sheet" id="invoice"
       data-invoice-number="INV-20260826"
+      data-doc-stamp="OFFERTE"
       data-issued="2026-08-26"
       data-amount="490"
       data-asset="USDC"
@@ -228,10 +236,11 @@
       <header class="top">
         <div>
           <div class="brand">Dual-chain USDC desk</div>
-          <div class="word">INVOICE</div>
+          <div class="word">OFFERTE</div>
+          <div class="kbo">KBO/BTW: nog niet toegekend</div>
         </div>
         <div class="meta">
-          <div>Invoice <strong id="invoiceNumber">INV-20260826</strong></div>
+          <div>Offerte <strong id="invoiceNumber">INV-20260826</strong></div>
           <div>Issued <strong>August 26, 2026</strong></div>
           <div>Due <strong>On receipt</strong></div>
         </div>
@@ -240,11 +249,11 @@
         <div class="kicker">Amount due</div>
         <div class="amount">490.00 <span>USDC</span></div>
       </div>
-      <p class="once">Pay <strong>490 USDC once</strong>, on Solana <em>or</em> Base — not both. Same invoice number on either rail.</p>
+      <p class="once">Pay <strong>490 USDC once</strong>, on Solana <em>or</em> Base — not both. Same offerte number on either rail. This is an offerte, not a Belgian legal invoice.</p>
       <div class="rails">
         <section class="rail solana" aria-labelledby="solanaHead">
           <h2 id="solanaHead">Solana Pay</h2>
-          <p class="lead">Scan the QR with Phantom or any Solana Pay wallet. USDC only — not SOL.</p>
+          <p class="lead">Scan the QR with any Solana Pay wallet. USDC only — not SOL. No IBAN.</p>
           <div id="qr" aria-label="Solana Pay QR for 490 USDC"></div>
           <div class="label">Pay USDC on Solana to</div>
           <div class="addr" id="solanaAddr">96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</div>
@@ -277,13 +286,13 @@
           <thead>
             <tr>
               <th>Description</th>
-              <th>Invoice</th>
+              <th>Offerte</th>
               <th class="num">Amount</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>Dual-chain USDC invoice desk</td>
+              <td>Dual-chain USDC desk</td>
               <td>INV-20260826</td>
               <td class="num">490.00 USDC</td>
             </tr>
@@ -291,7 +300,7 @@
         </table>
       </section>
       <footer class="foot">
-        <p>Two receive addresses only: Solana <code>96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</code> and Base <code>0x9eb954b567ef3616424a6e1bf42c63724930aa54</code>. Token contracts above are Circle native USDC identifiers, not extra wallets. No Solana Pay <code>reference</code> keypair. No wallet connect. No SIWE.</p>
+        <p>KBO/BTW: nog niet toegekend. Not Peppol. Not an Access Point. No IBAN — pay USDC on Solana to <code>96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</code> or USDC on Base to <code>0x9eb954b567ef3616424a6e1bf42c63724930aa54</code>. Token contracts above are Circle native USDC identifiers, not extra wallets. No Solana Pay <code>reference</code> keypair. No wallet connect. No SIWE.</p>
       </footer>
     </article>
   </div>
@@ -304,7 +313,7 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
       var BASE = "0x9eb954b567ef3616424a6e1bf42c63724930aa54";
       var USDC_MINT = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
       var INVOICE = "INV-20260826";
-      var PAY_URL = "solana:96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3?amount=490&spl-token=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v&memo=INV-20260826&label=Dual-chain%20USDC%20invoice";
+      var PAY_URL = "solana:96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3?amount=490&spl-token=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v&memo=INV-20260826&label=Dual-chain%20USDC%20offerte";
 
       function setStatus(id, msg) {
         document.getElementById(id).textContent = msg || "";
