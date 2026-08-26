@@ -1,0 +1,939 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Split Bill — 9 USDC</title>
+  <meta name="description" content="Split a total with optional tip and tax. Even or custom shares. Copy a summary. Download a standalone HTML receipt. Offline. No account." />
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f3ee;
+      --card: #ffffff;
+      --ink: #1b1a17;
+      --muted: #5e5a53;
+      --line: #d9d3c7;
+      --accent: #0c4a36;
+      --accent-ink: #f4fff9;
+      --soft: #e4f0ea;
+      --warn-bg: #fff6e8;
+      --warn-line: #ecd4a4;
+      --danger: #8a2f1a;
+      --shadow: 0 14px 40px rgba(40, 32, 18, 0.07);
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+    }
+    main {
+      width: min(960px, 100%);
+      margin: 0 auto;
+      padding: 28px 16px 72px;
+    }
+    header h1 {
+      margin: 0 0 6px;
+      font-size: clamp(1.6rem, 4vw, 2.1rem);
+      letter-spacing: -0.03em;
+    }
+    .lead {
+      margin: 0 0 12px;
+      color: var(--muted);
+      max-width: 44rem;
+    }
+    .price {
+      display: inline-block;
+      margin: 0 0 22px;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--soft);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 650;
+    }
+    .layout {
+      display: grid;
+      gap: 14px;
+    }
+    @media (min-width: 880px) {
+      .layout { grid-template-columns: 1fr 1fr; align-items: start; }
+      .span-2 { grid-column: 1 / -1; }
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+    h2 {
+      margin: 0 0 10px;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+    label.field {
+      display: block;
+      margin: 0 0 12px;
+    }
+    label.field span,
+    .field-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 650;
+      margin: 0 0 6px;
+    }
+    input[type="text"],
+    input[type="number"],
+    select {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fcfaf6;
+      color: var(--ink);
+      border-radius: 10px;
+      padding: 11px 12px;
+      font: 15px/1.4 ui-sans-serif, system-ui, sans-serif;
+    }
+    input:focus, select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+    .row {
+      display: grid;
+      gap: 12px;
+    }
+    @media (min-width: 560px) {
+      .row.two { grid-template-columns: 1fr 1fr; }
+      .row.three { grid-template-columns: 1fr 1fr 1fr; }
+      .row.kind { grid-template-columns: 1fr 140px; }
+    }
+    .check {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      font-size: 14px;
+      color: var(--muted);
+      margin: 0 0 12px;
+    }
+    .check input { margin-top: 3px; }
+    .seg {
+      display: flex;
+      gap: 6px;
+      margin: 0 0 12px;
+    }
+    .seg button {
+      flex: 1;
+      border: 1px solid var(--line);
+      background: #fcfaf6;
+      color: var(--ink);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font: 650 14px/1.2 ui-sans-serif, system-ui, sans-serif;
+      cursor: pointer;
+    }
+    .seg button[aria-pressed="true"] {
+      background: var(--accent);
+      color: var(--accent-ink);
+      border-color: var(--accent);
+    }
+    .totals {
+      display: grid;
+      gap: 6px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--soft);
+      font-variant-numeric: tabular-nums;
+    }
+    .totals div {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .totals .grand {
+      margin-top: 4px;
+      padding-top: 8px;
+      border-top: 1px solid var(--line);
+      font-weight: 700;
+      font-size: 1.15rem;
+      letter-spacing: -0.02em;
+    }
+    .muted { color: var(--muted); }
+    .pay-meta, .note {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 0 0 10px;
+    }
+    .addr {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: stretch;
+    }
+    .addr code {
+      flex: 1 1 220px;
+      display: block;
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fcfaf6;
+      font: 13px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+      word-break: break-all;
+    }
+    .people { display: grid; gap: 8px; margin: 0 0 10px; }
+    .person {
+      display: grid;
+      gap: 8px;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+    }
+    .person.custom { grid-template-columns: 1fr 110px auto; }
+    .person input { margin: 0; }
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--line);
+      background: transparent;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    button, .btn {
+      font: 650 15px/1.2 ui-sans-serif, system-ui, sans-serif;
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 14px;
+      cursor: pointer;
+    }
+    .primary { background: var(--accent); color: var(--accent-ink); }
+    .ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+    button:disabled { opacity: 0.45; cursor: not-allowed; }
+    .error, .warn {
+      background: var(--warn-bg);
+      border: 1px solid var(--warn-line);
+      border-radius: 12px;
+      padding: 10px 12px;
+      color: #6b3d0c;
+      margin: 0 0 12px;
+    }
+    .hidden { display: none !important; }
+    .ok { color: var(--accent); font-size: 14px; margin: 10px 0 0; }
+    table.shares {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      font-variant-numeric: tabular-nums;
+    }
+    table.shares th, table.shares td {
+      text-align: left;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    table.shares th {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      font-weight: 650;
+    }
+    table.shares td.num, table.shares th.num { text-align: right; }
+    .preview-box {
+      border: 1px dashed var(--line);
+      border-radius: 12px;
+      padding: 16px;
+      background: #fcfaf6;
+    }
+    .preview-box h3 {
+      margin: 0 0 4px;
+      font-size: 1.15rem;
+      letter-spacing: -0.02em;
+    }
+    footer {
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    footer code { font-size: 0.92em; word-break: break-all; }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Split Bill</h1>
+      <p class="lead">Enter a total, optional tip and tax, and who is in. See each share — even split or custom amounts — then copy a summary or download a standalone HTML receipt. Works offline. No account. No wallet connect.</p>
+      <p class="price">9 USDC · Solana USDC</p>
+    </header>
+
+    <section class="card span-2">
+      <h2>Pay 9 USDC on Solana</h2>
+      <p class="pay-meta">Send exactly 9 USDC. Network: Solana · Token: USDC — not SOL, not Base, not ETH.</p>
+      <div class="addr">
+        <code id="payAddress">96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</code>
+        <button type="button" class="ghost" id="copyPayBtn">Copy address</button>
+      </div>
+      <p class="ok hidden" id="copyPayStatus"></p>
+      <p class="note">USDC mint: EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v</p>
+    </section>
+
+    <div class="layout">
+      <section class="card">
+        <h2>Bill</h2>
+        <p class="error hidden" id="error"></p>
+        <label class="field">
+          <span>Title</span>
+          <input id="title" type="text" maxlength="80" placeholder="Friday dinner" autocomplete="off" />
+        </label>
+        <div class="row two">
+          <label class="field">
+            <span>Date</span>
+            <input id="billDate" type="text" autocomplete="off" />
+          </label>
+          <label class="field">
+            <span>Currency label</span>
+            <input id="currency" type="text" maxlength="8" value="USD" autocomplete="off" />
+          </label>
+        </div>
+        <label class="field">
+          <span>Subtotal</span>
+          <input id="subtotal" type="text" inputmode="decimal" value="120.00" autocomplete="off" />
+        </label>
+        <div class="row kind">
+          <label class="field">
+            <span>Tax</span>
+            <input id="taxValue" type="text" inputmode="decimal" value="10" autocomplete="off" />
+          </label>
+          <label class="field">
+            <span>Tax as</span>
+            <select id="taxKind">
+              <option value="pct" selected>Percent</option>
+              <option value="amount">Amount</option>
+            </select>
+          </label>
+        </div>
+        <div class="row kind">
+          <label class="field">
+            <span>Tip</span>
+            <input id="tipValue" type="text" inputmode="decimal" value="18" autocomplete="off" />
+          </label>
+          <label class="field">
+            <span>Tip as</span>
+            <select id="tipKind">
+              <option value="pct" selected>Percent</option>
+              <option value="amount">Amount</option>
+            </select>
+          </label>
+        </div>
+        <label class="check">
+          <input id="tipOnPretax" type="checkbox" checked />
+          <span>Tip on pre-tax subtotal (uncheck to tip on subtotal + tax)</span>
+        </label>
+        <div class="totals" id="totals"></div>
+      </section>
+
+      <section class="card">
+        <h2>People</h2>
+        <div class="row two">
+          <label class="field">
+            <span>How many</span>
+            <input id="count" type="number" min="1" max="30" step="1" value="3" />
+          </label>
+          <label class="field">
+            <span>Paid by (optional)</span>
+            <select id="paidBy"></select>
+          </label>
+        </div>
+        <div class="seg" role="group" aria-label="Split mode">
+          <button type="button" id="modeEven" aria-pressed="true">Even split</button>
+          <button type="button" id="modeCustom" aria-pressed="false">Custom amounts</button>
+        </div>
+        <div class="people" id="people"></div>
+        <div class="actions">
+          <button type="button" class="ghost" id="addPersonBtn">Add person</button>
+          <button type="button" class="ghost hidden" id="evenFillBtn">Fill even amounts</button>
+          <button type="button" class="ghost hidden" id="fixRemainderBtn">Assign leftover to first</button>
+        </div>
+        <p class="note">Names stay on this device. Example names only — nothing is uploaded.</p>
+      </section>
+    </div>
+
+    <section class="card span-2" style="margin-top:14px">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px">
+        <h2 style="margin:0">Shares</h2>
+        <div class="actions" style="margin:0">
+          <button type="button" class="ghost" id="copySummaryBtn">Copy summary</button>
+          <button type="button" class="primary" id="downloadBtn">Download receipt</button>
+        </div>
+      </div>
+      <p class="warn hidden" id="balanceWarn"></p>
+      <div class="preview-box" id="preview"></div>
+      <p class="ok hidden" id="status"></p>
+      <p class="note">The downloaded file is self-contained. Send it, print it, or keep it. Shares always use whole cents so they sum to the total.</p>
+    </section>
+
+    <footer>
+      Offline one-file tool. 9 USDC on Solana. Pay-to <code>96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</code>. USDC only.
+    </footer>
+  </main>
+
+  <script>
+    (function () {
+      var PAY_TO = "96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3";
+      var USDC_MINT = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
+      var TOOL_PRICE = 9;
+      var SAMPLE_NAMES = ["Alex", "Jordan", "Sam", "Riley", "Casey", "Morgan", "Quinn", "Avery", "Taylor", "Jamie"];
+      var MAX_PEOPLE = 30;
+
+      var people = [
+        { id: 1, name: "Alex", custom: "40.00" },
+        { id: 2, name: "Jordan", custom: "40.00" },
+        { id: 3, name: "Sam", custom: "40.00" }
+      ];
+      var nextId = 4;
+      var mode = "even";
+
+      var $ = function (id) { return document.getElementById(id); };
+      var errorEl = $("error");
+      var statusEl = $("status");
+      var balanceWarn = $("balanceWarn");
+      var copyPayStatus = $("copyPayStatus");
+
+      function todayIso() {
+        var d = new Date();
+        var m = String(d.getMonth() + 1);
+        var day = String(d.getDate());
+        if (m.length < 2) m = "0" + m;
+        if (day.length < 2) day = "0" + day;
+        return d.getFullYear() + "-" + m + "-" + day;
+      }
+
+      $("billDate").value = todayIso();
+
+      function escapeHtml(value) {
+        return String(value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      function parseNumber(raw) {
+        var s = String(raw == null ? "" : raw).trim().replace(",", ".");
+        if (s === "") return 0;
+        if (!/^\d+(\.\d+)?$/.test(s)) return null;
+        var n = Number(s);
+        if (!isFinite(n) || n < 0) return null;
+        return n;
+      }
+
+      function toCents(n) {
+        return Math.round(n * 100);
+      }
+
+      function money(cents) {
+        var sign = cents < 0 ? "-" : "";
+        var abs = Math.abs(cents);
+        var whole = String(Math.floor(abs / 100));
+        var frac = String(abs % 100);
+        if (frac.length < 2) frac = "0" + frac;
+        return sign + whole + "." + frac;
+      }
+
+      function percentOf(cents, pct) {
+        return Math.round(cents * pct / 100);
+      }
+
+      function evenSplit(totalCents, n) {
+        var out = [];
+        if (n <= 0) return out;
+        var base = Math.floor(totalCents / n);
+        var rem = totalCents % n;
+        var i;
+        for (i = 0; i < n; i++) out.push(base + (i < rem ? 1 : 0));
+        return out;
+      }
+
+      function defaultName(index) {
+        if (index < SAMPLE_NAMES.length) return SAMPLE_NAMES[index];
+        return "Person " + (index + 1);
+      }
+
+      function computeBill() {
+        var subtotalN = parseNumber($("subtotal").value);
+        var taxN = parseNumber($("taxValue").value);
+        var tipN = parseNumber($("tipValue").value);
+        var currency = $("currency").value.trim() || "USD";
+        var title = $("title").value.trim() || "Split";
+        var billDate = $("billDate").value.trim() || todayIso();
+        var taxKind = $("taxKind").value;
+        var tipKind = $("tipKind").value;
+        var tipOnPretax = $("tipOnPretax").checked;
+        var err = "";
+
+        if (subtotalN === null) err = "Subtotal must be a number 0 or greater.";
+        else if (taxN === null) err = "Tax must be a number 0 or greater.";
+        else if (tipN === null) err = "Tip must be a number 0 or greater.";
+        else if (people.length < 1) err = "Add at least one person.";
+        else if (people.length > MAX_PEOPLE) err = "Keep the group at 30 people or fewer.";
+
+        if (err) {
+          return { error: err, currency: currency, title: title, billDate: billDate };
+        }
+
+        var subtotal = toCents(subtotalN);
+        var tax = taxKind === "pct" ? percentOf(subtotal, taxN) : toCents(taxN);
+        var tipBase = tipOnPretax ? subtotal : subtotal + tax;
+        var tip = tipKind === "pct" ? percentOf(tipBase, tipN) : toCents(tipN);
+        var total = subtotal + tax + tip;
+        var even = evenSplit(total, people.length);
+        var shares = [];
+        var allocated = 0;
+        var i;
+        var cents;
+
+        for (i = 0; i < people.length; i++) {
+          if (mode === "even") {
+            cents = even[i];
+          } else {
+            var customN = parseNumber(people[i].custom);
+            if (customN === null) {
+              return { error: "Custom amount for " + (people[i].name || defaultName(i)) + " must be a number 0 or greater.", currency: currency, title: title, billDate: billDate };
+            }
+            cents = toCents(customN);
+          }
+          allocated += cents;
+          shares.push({
+            id: people[i].id,
+            name: people[i].name.trim() || defaultName(i),
+            cents: cents,
+            evenCents: even[i]
+          });
+        }
+
+        var remaining = total - allocated;
+        var paidById = $("paidBy").value;
+        var paidByName = "";
+        for (i = 0; i < shares.length; i++) {
+          if (String(shares[i].id) === paidById) paidByName = shares[i].name;
+        }
+
+        return {
+          error: "",
+          title: title,
+          billDate: billDate,
+          currency: currency,
+          subtotal: subtotal,
+          tax: tax,
+          tip: tip,
+          total: total,
+          mode: mode,
+          shares: shares,
+          remaining: remaining,
+          paidByName: paidByName,
+          taxKind: taxKind,
+          taxN: taxN,
+          tipKind: tipKind,
+          tipN: tipN,
+          tipOnPretax: tipOnPretax
+        };
+      }
+
+      function copyText(text) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          return navigator.clipboard.writeText(text);
+        }
+        return new Promise(function (resolve, reject) {
+          var ta = document.createElement("textarea");
+          ta.value = text;
+          ta.setAttribute("readonly", "");
+          ta.style.position = "fixed";
+          ta.style.left = "-9999px";
+          document.body.appendChild(ta);
+          ta.select();
+          try {
+            var ok = document.execCommand("copy");
+            document.body.removeChild(ta);
+            if (ok) resolve();
+            else reject(new Error("copy"));
+          } catch (e) {
+            document.body.removeChild(ta);
+            reject(e);
+          }
+        });
+      }
+
+      function padName(name, width) {
+        var s = String(name);
+        while (s.length < width) s += " ";
+        return s;
+      }
+
+      function summaryText(bill) {
+        var lines = [];
+        var i;
+        var cur = bill.currency;
+        lines.push(bill.title);
+        lines.push(bill.billDate);
+        lines.push("Subtotal  " + money(bill.subtotal) + " " + cur);
+        lines.push("Tax       " + money(bill.tax) + " " + cur);
+        lines.push("Tip       " + money(bill.tip) + " " + cur);
+        lines.push("Total     " + money(bill.total) + " " + cur + " · " + (bill.mode === "even" ? "even split" : "custom") + " · " + bill.shares.length + " people");
+        lines.push("");
+        var width = 8;
+        for (i = 0; i < bill.shares.length; i++) {
+          if (bill.shares[i].name.length > width) width = bill.shares[i].name.length;
+        }
+        for (i = 0; i < bill.shares.length; i++) {
+          lines.push(padName(bill.shares[i].name, width) + "  " + money(bill.shares[i].cents) + " " + cur);
+        }
+        if (bill.remaining !== 0) {
+          lines.push("");
+          lines.push("Off by " + money(bill.remaining) + " " + cur + " (custom amounts must sum to the total).");
+        }
+        if (bill.paidByName) {
+          lines.push("");
+          lines.push(bill.paidByName + " paid. Settle up:");
+          for (i = 0; i < bill.shares.length; i++) {
+            if (bill.shares[i].name === bill.paidByName) continue;
+            lines.push(bill.shares[i].name + " owes " + bill.paidByName + " " + money(bill.shares[i].cents) + " " + cur);
+          }
+        }
+        return lines.join("\n");
+      }
+
+      function renderPeople() {
+        var wrap = $("people");
+        wrap.innerHTML = "";
+        var i;
+        for (i = 0; i < people.length; i++) {
+          (function (index) {
+            var row = document.createElement("div");
+            row.className = "person" + (mode === "custom" ? " custom" : "");
+            var name = document.createElement("input");
+            name.type = "text";
+            name.maxLength = 40;
+            name.setAttribute("aria-label", "Name " + (index + 1));
+            name.placeholder = defaultName(index);
+            name.value = people[index].name;
+            name.addEventListener("input", function () {
+              people[index].name = name.value;
+              refresh({ skipPeople: true });
+            });
+            row.appendChild(name);
+            if (mode === "custom") {
+              var amt = document.createElement("input");
+              amt.type = "text";
+              amt.inputMode = "decimal";
+              amt.setAttribute("aria-label", "Amount for " + (people[index].name || defaultName(index)));
+              amt.value = people[index].custom;
+              amt.addEventListener("input", function () {
+                people[index].custom = amt.value;
+                refresh({ skipPeople: true });
+              });
+              row.appendChild(amt);
+            }
+            var rm = document.createElement("button");
+            rm.type = "button";
+            rm.className = "icon-btn";
+            rm.setAttribute("aria-label", "Remove person");
+            rm.textContent = "×";
+            rm.disabled = people.length <= 1;
+            rm.addEventListener("click", function () {
+              if (people.length <= 1) return;
+              people.splice(index, 1);
+              $("count").value = String(people.length);
+              refresh();
+            });
+            row.appendChild(rm);
+            wrap.appendChild(row);
+          })(i);
+        }
+      }
+
+      function syncPaidBy(current) {
+        var sel = $("paidBy");
+        var keep = current || sel.value;
+        sel.innerHTML = "";
+        var none = document.createElement("option");
+        none.value = "";
+        none.textContent = "Not set";
+        sel.appendChild(none);
+        var i;
+        for (i = 0; i < people.length; i++) {
+          var opt = document.createElement("option");
+          opt.value = String(people[i].id);
+          opt.textContent = people[i].name.trim() || defaultName(i);
+          sel.appendChild(opt);
+        }
+        var found = false;
+        for (i = 0; i < people.length; i++) {
+          if (String(people[i].id) === keep) found = true;
+        }
+        sel.value = found ? keep : "";
+      }
+
+      function seedCustomFromEven(bill) {
+        var i;
+        if (!bill || bill.error) return;
+        for (i = 0; i < people.length; i++) {
+          people[i].custom = money(bill.shares[i] ? bill.shares[i].evenCents : 0);
+        }
+      }
+
+      function setMode(next) {
+        var was = mode;
+        mode = next;
+        $("modeEven").setAttribute("aria-pressed", mode === "even" ? "true" : "false");
+        $("modeCustom").setAttribute("aria-pressed", mode === "custom" ? "true" : "false");
+        $("evenFillBtn").classList.toggle("hidden", mode !== "custom");
+        $("fixRemainderBtn").classList.toggle("hidden", mode !== "custom");
+        if (was === "even" && next === "custom") {
+          var snapshot = mode;
+          mode = "even";
+          var evenBill = computeBill();
+          mode = snapshot;
+          seedCustomFromEven(evenBill);
+        }
+        refresh();
+      }
+
+      function setCount(n) {
+        n = Math.max(1, Math.min(MAX_PEOPLE, n));
+        while (people.length < n) {
+          people.push({ id: nextId++, name: defaultName(people.length), custom: "0.00" });
+        }
+        while (people.length > n) people.pop();
+        $("count").value = String(people.length);
+      }
+
+      function renderTotals(bill) {
+        if (bill.error) {
+          $("totals").innerHTML = "<div class=\"muted\">Fix the fields above to see the total.</div>";
+          return;
+        }
+        var cur = escapeHtml(bill.currency);
+        $("totals").innerHTML =
+          "<div><span class=\"muted\">Subtotal</span><span>" + money(bill.subtotal) + " " + cur + "</span></div>" +
+          "<div><span class=\"muted\">Tax</span><span>" + money(bill.tax) + " " + cur + "</span></div>" +
+          "<div><span class=\"muted\">Tip</span><span>" + money(bill.tip) + " " + cur + "</span></div>" +
+          "<div class=\"grand\"><span>Total</span><span>" + money(bill.total) + " " + cur + "</span></div>";
+      }
+
+      function renderPreview(bill) {
+        if (bill.error) {
+          $("preview").innerHTML = "<p class=\"muted\">Shares appear here once the bill is valid.</p>";
+          return;
+        }
+        var cur = escapeHtml(bill.currency);
+        var rows = "";
+        var i;
+        for (i = 0; i < bill.shares.length; i++) {
+          rows += "<tr><td>" + escapeHtml(bill.shares[i].name) + "</td>" +
+            "<td class=\"num\">" + money(bill.shares[i].cents) + " " + cur + "</td></tr>";
+        }
+        var settle = "";
+        if (bill.paidByName) {
+          settle = "<p class=\"note\" style=\"margin:12px 0 0\">" + escapeHtml(bill.paidByName) + " paid. Others settle that share.</p>";
+        }
+        $("preview").innerHTML =
+          "<h3>" + escapeHtml(bill.title) + "</h3>" +
+          "<p class=\"muted\" style=\"margin:0 0 12px\">" + escapeHtml(bill.billDate) + " · " +
+            (bill.mode === "even" ? "even split" : "custom amounts") + " · " +
+            bill.shares.length + " people</p>" +
+          "<table class=\"shares\"><thead><tr><th>Person</th><th class=\"num\">Share</th></tr></thead><tbody>" +
+          rows + "</tbody></table>" +
+          "<p style=\"text-align:right;font-weight:700;margin:12px 0 0\">Total " + money(bill.total) + " " + cur + "</p>" +
+          settle;
+      }
+
+      function buildReceiptHtml(bill) {
+        var cur = escapeHtml(bill.currency);
+        var rows = "";
+        var settle = "";
+        var i;
+        for (i = 0; i < bill.shares.length; i++) {
+          rows += "<tr><td>" + escapeHtml(bill.shares[i].name) + "</td><td class=\"num\">" +
+            money(bill.shares[i].cents) + " " + cur + "</td></tr>\n";
+        }
+        if (bill.paidByName) {
+          settle = "<h2>Settle up</h2>\n<p>" + escapeHtml(bill.paidByName) + " paid the bill.</p>\n<ul>\n";
+          for (i = 0; i < bill.shares.length; i++) {
+            if (bill.shares[i].name === bill.paidByName) continue;
+            settle += "<li>" + escapeHtml(bill.shares[i].name) + " owes " +
+              escapeHtml(bill.paidByName) + " " + money(bill.shares[i].cents) + " " + cur + "</li>\n";
+          }
+          settle += "</ul>\n";
+        }
+        return "<!doctype html>\n" +
+          "<html lang=\"en\">\n<head>\n" +
+          "<meta charset=\"utf-8\" />\n" +
+          "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n" +
+          "<title>" + escapeHtml(bill.title) + " · split receipt</title>\n" +
+          "<style>\n" +
+          ":root{color-scheme:light}*{box-sizing:border-box}body{margin:0;background:#f6f3ee;color:#1b1a17;font:16px/1.5 ui-sans-serif,system-ui,-apple-system,sans-serif}main{width:min(720px,100%);margin:0 auto;padding:32px 16px 64px}.sheet{background:#fff;border:1px solid #d9d3c7;border-radius:14px;padding:28px 24px;box-shadow:0 14px 40px rgba(40,32,18,.07)}h1{margin:0 0 4px;font-size:1.6rem;letter-spacing:-.03em}h2{margin:22px 0 8px;font-size:1rem}.meta{color:#5e5a53;margin:0 0 22px}table{width:100%;border-collapse:collapse;margin:0 0 12px}th,td{text-align:left;padding:10px 0;border-bottom:1px solid #d9d3c7}th{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:#5e5a53}td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}.total{text-align:right;font-size:1.25rem;font-weight:700;letter-spacing:-.02em}.note{color:#5e5a53;font-size:13px;margin:18px 0 0}ul{margin:0;padding:0 0 0 1.15em}li{margin:0 0 6px}\n" +
+          "</style>\n</head>\n<body>\n<main>\n<div class=\"sheet\">\n" +
+          "<h1>" + escapeHtml(bill.title) + "</h1>\n" +
+          "<p class=\"meta\">" + escapeHtml(bill.billDate) + " · " +
+            (bill.mode === "even" ? "even split" : "custom amounts") + " · " +
+            bill.shares.length + " people</p>\n" +
+          "<table><thead><tr><th>Bill</th><th class=\"num\">Amount</th></tr></thead><tbody>" +
+          "<tr><td>Subtotal</td><td class=\"num\">" + money(bill.subtotal) + " " + cur + "</td></tr>" +
+          "<tr><td>Tax</td><td class=\"num\">" + money(bill.tax) + " " + cur + "</td></tr>" +
+          "<tr><td>Tip</td><td class=\"num\">" + money(bill.tip) + " " + cur + "</td></tr>" +
+          "</tbody></table>\n" +
+          "<p class=\"total\">Total " + money(bill.total) + " " + cur + "</p>\n" +
+          "<table><thead><tr><th>Person</th><th class=\"num\">Share</th></tr></thead><tbody>\n" +
+          rows + "</tbody></table>\n" +
+          settle +
+          "<p class=\"note\">Split summary generated offline. Not a bank statement. Does not prove payment.</p>\n" +
+          "</div>\n</main>\n</body>\n</html>\n";
+      }
+
+      function filenameFor(bill) {
+        var slug = (bill.title || "split").replace(/[^A-Za-z0-9._-]+/g, "-");
+        if (!slug || slug === "-") slug = "split";
+        return slug + "-receipt.html";
+      }
+
+      function refresh(opts) {
+        opts = opts || {};
+        statusEl.classList.add("hidden");
+        if (!opts.skipPeople) {
+          renderPeople();
+          syncPaidBy();
+        } else {
+          syncPaidBy($("paidBy").value);
+        }
+        var bill = computeBill();
+        errorEl.classList.toggle("hidden", !bill.error);
+        errorEl.textContent = bill.error || "";
+        renderTotals(bill);
+        renderPreview(bill);
+        var unbalanced = !bill.error && bill.mode === "custom" && bill.remaining !== 0;
+        if (unbalanced) {
+          balanceWarn.textContent = "Custom amounts are off by " + money(bill.remaining) + " " + bill.currency + ". Assign the leftover before downloading.";
+          balanceWarn.classList.remove("hidden");
+        } else {
+          balanceWarn.classList.add("hidden");
+          balanceWarn.textContent = "";
+        }
+        $("downloadBtn").disabled = Boolean(bill.error) || unbalanced;
+        $("copySummaryBtn").disabled = Boolean(bill.error);
+        $("fixRemainderBtn").disabled = Boolean(bill.error) || !unbalanced;
+        return bill;
+      }
+
+      ["title", "billDate", "currency", "subtotal", "taxValue", "tipValue"].forEach(function (id) {
+        $(id).addEventListener("input", function () { refresh({ skipPeople: true }); });
+      });
+      ["taxKind", "tipKind", "tipOnPretax", "paidBy"].forEach(function (id) {
+        $(id).addEventListener("change", function () { refresh({ skipPeople: true }); });
+      });
+
+      $("count").addEventListener("input", function () {
+        var n = parseInt($("count").value, 10);
+        if (!isFinite(n)) return;
+        setCount(n);
+        if (mode === "custom") {
+          mode = "even";
+          var evenBill = computeBill();
+          mode = "custom";
+          seedCustomFromEven(evenBill);
+        }
+        refresh();
+      });
+
+      $("addPersonBtn").addEventListener("click", function () {
+        if (people.length >= MAX_PEOPLE) return;
+        setCount(people.length + 1);
+        if (mode === "custom") {
+          var last = people[people.length - 1];
+          last.custom = "0.00";
+        }
+        refresh();
+      });
+
+      $("modeEven").addEventListener("click", function () { setMode("even"); });
+      $("modeCustom").addEventListener("click", function () { setMode("custom"); });
+
+      $("evenFillBtn").addEventListener("click", function () {
+        var snapshot = mode;
+        mode = "even";
+        var evenBill = computeBill();
+        mode = snapshot;
+        seedCustomFromEven(evenBill);
+        refresh();
+      });
+
+      $("fixRemainderBtn").addEventListener("click", function () {
+        var bill = computeBill();
+        if (bill.error || bill.remaining === 0 || people.length < 1) return;
+        var first = parseNumber(people[0].custom);
+        if (first === null) return;
+        people[0].custom = money(toCents(first) + bill.remaining);
+        refresh();
+      });
+
+      $("copyPayBtn").addEventListener("click", function () {
+        copyText(PAY_TO).then(function () {
+          copyPayStatus.textContent = "Copied. Send exactly " + TOOL_PRICE + " USDC on Solana.";
+          copyPayStatus.classList.remove("hidden");
+        }, function () {
+          copyPayStatus.textContent = "Copy failed. Select the address.";
+          copyPayStatus.classList.remove("hidden");
+        });
+      });
+
+      $("copySummaryBtn").addEventListener("click", function () {
+        var bill = refresh({ skipPeople: true });
+        if (bill.error) return;
+        copyText(summaryText(bill)).then(function () {
+          statusEl.textContent = "Summary copied.";
+          statusEl.classList.remove("hidden");
+        }, function () {
+          statusEl.textContent = "Copy failed. You can select the preview instead.";
+          statusEl.classList.remove("hidden");
+        });
+      });
+
+      $("downloadBtn").addEventListener("click", function () {
+        var bill = refresh({ skipPeople: true });
+        if (bill.error || bill.remaining !== 0) return;
+        var html = buildReceiptHtml(bill);
+        var blob = new Blob([html], { type: "text/html;charset=utf-8" });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = filenameFor(bill);
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        statusEl.textContent = "Downloaded " + filenameFor(bill) + ".";
+        statusEl.classList.remove("hidden");
+      });
+
+      window.SplitBill = {
+        PAY_TO: PAY_TO,
+        USDC_MINT: USDC_MINT,
+        evenSplit: evenSplit,
+        toCents: toCents,
+        money: money,
+        percentOf: percentOf,
+        computeBill: computeBill
+      };
+
+      refresh();
+    })();
+  </script>
+</body>
+</html>
