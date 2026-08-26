@@ -200,6 +200,15 @@ input:focus, select:focus, textarea:focus {
   outline: 2px solid var(--accent);
   outline-offset: 1px;
 }
+.kbo-fixed {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px dashed var(--line);
+  border-radius: 10px;
+  color: var(--muted);
+  font-size: 14px;
+  background: #faf8f4;
+}
 .grid-2 {
   display: grid;
   gap: 0 14px;

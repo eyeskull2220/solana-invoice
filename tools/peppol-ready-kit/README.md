@@ -20,8 +20,8 @@ USDC mint: `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`
 |---|---|
 | [index.html](index.html) | Sell/demo page, copy-address, not-an-AP, no stamp |
 | [screening.html](screening.html) | Seven questions → work-hypothesis result (never a certificate) |
-| [template.html](template.html) | Fillable BIS Billing 3.0-style sheet + SAMPLE XML download |
-| [invoice-sample.xml](invoice-sample.xml) | Static Peppol BIS Billing 3.0 / UBL SAMPLE |
+| [template.html](template.html) | Fillable VOORBEELD sheet (never stamped FACTUUR) + SAMPLE XML |
+| [invoice-sample.xml](invoice-sample.xml) | Static Peppol BIS Billing 3.0 / UBL SAMPLE — no KBO/VAT digits |
 | [ap-pick-list.html](ap-pick-list.html) | Official lists first, then a short AP pick-list (no affiliates) |
 | [DISCLAIMER.html](DISCLAIMER.html) | Not an AP, not a bookkeeper, not a legal invoice, no stamp |
 
@@ -45,10 +45,16 @@ Do not sell or do any of these from this kit:
 - Bookkeeping
 - Azure AD / itsme / eID onboarding
 - Leftover 9 USDC Solana Invoice restack
+- Invented, demo, or placeholder KBO/VAT numbers — leave blank or print exactly `KBO/BTW: nog niet toegekend`
+- Stamping FACTUUR before a real KBO exists — this kit prints **VOORBEELD** (or OFFERTE) only
 
 ## Demo parties only
 
-Studio Noord / Client BV / `hello@studio.example` / fake KBO `0123456789`. No Gmail. No real inboxes. No named staff emails from OpenPeppol.
+Studio Noord / Client BV / `hello@studio.example`. **KBO/BTW: nog niet toegekend** — no invented KBO or VAT digits. No Gmail. No real inboxes. No named staff emails from OpenPeppol.
+
+Document stamp is **VOORBEELD** (or OFFERTE), never **FACTUUR**, until a real KBO exists. This kit never stamps FACTUUR.
+
+The official Peppol BIS Billing 3.0 `CustomizationID` URN contains the word `compliant`. That is the spec identifier, not a claim that this kit or the sample file is Peppol-compliant.
 
 ## Official links (not us)
 
