@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Intake — Peppol Client-Chase Pack</title>
+  <link rel="stylesheet" href="pack.css">
+</head>
+<body>
+  <main class="wrap">
+    <nav class="pack-nav" aria-label="Pack">
+      <a href="index.html">Start</a>
+      <a href="intake.html" aria-current="page">Intake</a>
+      <a href="master-data-checklist.html">Checklist</a>
+      <a href="invoice-preview.html">Factuur 21%</a>
+      <a href="invoice-preview-reverse-charge.html">Reverse charge</a>
+      <a href="software-shortlist.html">Software</a>
+      <a href="peppol-lookup-worksheet.html">Lookup</a>
+      <a href="HANDOFF.html">Handoff</a>
+      <a href="DISCLAIMER.html">Disclaimer</a>
+    </nav>
+
+    <p class="kicker">Stap 1 · placeholders</p>
+    <h1>Intake: u + tot 10 B2B-kopers</h1>
+    <p class="lead">Vul dit in bij u. Niets wordt verzonden. Dit formulier registreert geen Peppol-ID en is geen wettelijke factuur.</p>
+    <div class="banner warn">Placeholders zonder verzonnen KBO/BTW/IBAN-cijfers. Laat KBO/BTW leeg of vul later <span class="mono">KBO/BTW: nog niet toegekend</span>. Gebruik echte nummers alleen in een gecertificeerd AP-pakket — niet hier. Dit pack is geen Access Point.</div>
+
+    <form class="card" id="company" onsubmit="return false;">
+      <h2>Uw onderneming</h2>
+      <div class="grid-2">
+        <div>
+          <label for="legalName">Juridische naam (zoals KBO)</label>
+          <input id="legalName" type="text" autocomplete="organization" placeholder="Studio Noord">
+        </div>
+        <div>
+          <label for="kbo">Ondernemingsnummer KBO</label>
+          <input id="kbo" type="text" inputmode="text" placeholder="KBO/BTW: nog niet toegekend">
+        </div>
+        <div>
+          <label for="vat">BTW-nummer</label>
+          <input id="vat" type="text" placeholder="KBO/BTW: nog niet toegekend">
+        </div>
+        <div>
+          <label for="email">Bedrijfs-e-mail (geen Gmail)</label>
+          <input id="email" type="email" placeholder="hello@studio.example">
+        </div>
+      </div>
+      <label for="street">Straat en nummer</label>
+      <input id="street" type="text" placeholder="Noorderlaan 12">
+      <div class="grid-2">
+        <div>
+          <label for="postcode">Postcode</label>
+          <input id="postcode" type="text" placeholder="2030">
+        </div>
+        <div>
+          <label for="city">Gemeente</label>
+          <input id="city" type="text" placeholder="Antwerpen">
+        </div>
+      </div>
+      <div class="grid-2">
+        <div>
+          <label for="iban">IBAN</label>
+          <input id="iban" type="text" placeholder="nog niet toegekend">
+        </div>
+        <div>
+          <label for="bic">BIC (optioneel)</label>
+          <input id="bic" type="text" placeholder="nog niet toegekend">
+        </div>
+      </div>
+      <label for="companyNote">Notitie voor later in het AP-pakket</label>
+      <textarea id="companyNote" placeholder="Wie tekent facturen? Welk boekhoudpakket nu?"></textarea>
+    </form>
+
+    <section class="card">
+      <h2>B2B-kopers (max. 10)</h2>
+      <p class="lead">Per koper: naam, KBO, of ze al op Peppol staan, en het BTW-geval. B2C hoort hier niet — PDF blijft daar toegelaten.</p>
+      <div id="buyers"></div>
+    </section>
+
+    <p class="fine">Print of bewaar deze pagina. Volgende: <a href="master-data-checklist.html">master-data-checklist</a> en <a href="peppol-lookup-worksheet.html">lookup</a>.</p>
+  </main>
+  <script>
+    (function () {
+      var vatCases = [
+        { v: "", t: "Kies BTW-geval…" },
+        { v: "S21", t: "21% standaard (S)" },
+        { v: "S12", t: "12% verlaagd (S)" },
+        { v: "S6", t: "6% verlaagd (S)" },
+        { v: "Z", t: "0% nultarief (Z)" },
+        { v: "E", t: "Vrijgesteld (E)" },
+        { v: "AE", t: "Medecontractant / reverse charge (AE)" },
+        { v: "K", t: "Intra-communautair (K)" },
+        { v: "G", t: "Export buiten EU (G)" },
+        { v: "B2C", t: "B2C — PDF nog toegelaten (geen Peppol-plicht)" },
+        { v: "UNK", t: "Nog niet bekend — vraag boekhouder" }
+      ];
+      var host = document.getElementById("buyers");
+      var i, html, j, opt;
+      for (i = 1; i <= 10; i++) {
+        html = '<article class="card" style="box-shadow:none;margin:0 0 12px">';
+        html += "<h3>Koper " + i + "</h3>";
+        html += '<div class="grid-2">';
+        html += '<div><label for="b' + i + 'name">Juridische naam</label>';
+        html += '<input id="b' + i + 'name" type="text" placeholder="Client BV"></div>';
+        html += '<div><label for="b' + i + 'kbo">KBO (10 cijfers)</label>';
+        html += '<input id="b' + i + 'kbo" type="text" placeholder="KBO/BTW: nog niet toegekend"></div>';
+        html += '<div><label for="b' + i + 'vat">BTW</label>';
+        html += '<input id="b' + i + 'vat" type="text" placeholder="KBO/BTW: nog niet toegekend"></div>';
+        html += '<div><label for="b' + i + 'mail">Facturatie-e-mail</label>';
+        html += '<input id="b' + i + 'mail" type="email" placeholder="facturatie@client.example"></div>';
+        html += "</div>";
+        html += '<label for="b' + i + 'vatcase">BTW-geval</label><select id="b' + i + 'vatcase">';
+        for (j = 0; j < vatCases.length; j++) {
+          opt = vatCases[j];
+          html += '<option value="' + opt.v + '">' + opt.t + "</option>";
+        }
+        html += "</select>";
+        html += '<label for="b' + i + 'peppol">Peppol-status (na lookup 0208:)</label>';
+        html += '<select id="b' + i + 'peppol">';
+        html += '<option value="">Nog niet nagekeken</option>';
+        html += '<option value="ready">Gevonden in Directory — kan ontvangen</option>';
+        html += '<option value="missing">Niet gevonden — stuur chase-mail</option>';
+        html += '<option value="b2c">B2C / buiten scope</option>';
+        html += "</select></article>";
+        host.insertAdjacentHTML("beforeend", html);
+      }
+    })();
+  </script>
+</body>
+</html>

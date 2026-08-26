@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chase-mail 1 — eerste vraag of de koper Peppol-klaar is</title>
+  <link rel="stylesheet" href="pack.css">
+</head>
+<body>
+  <main class="wrap">
+    <nav class="pack-nav no-print" aria-label="Pack">
+      <a href="index.html">Start</a>
+      <a href="intake.html">Intake</a>
+      <a href="client-chase-mail-1.html" aria-current="page">Chase 1</a>
+      <a href="client-chase-mail-2.html">Chase 2</a>
+      <a href="reminder-buyer-not-ready.html">Niet klaar</a>
+      <a href="DISCLAIMER.html">Disclaimer</a>
+    </nav>
+
+    <p class="kicker no-print">Copy-paste · eerste contact</p>
+    <h1 class="no-print">Chase-mail 1: staat u al op Peppol?</h1>
+    <p class="lead no-print">Kort, zonder dreigement. U stuurt dit zelf. Wij hebben geen toegang tot uw mailbox en versturen niets.</p>
+    <p class="no-print copy-row">
+      <button type="button" id="copyBtn">Kopieer mailtekst</button>
+      <span class="copy-ok" id="copyStatus"></span>
+    </p>
+
+    <pre class="mail" id="mail">Onderwerp: E-factuur via Peppol — even checken of u kunt ontvangen
+
+Beste [naam],
+
+Vanaf 2026 moeten Belgische B2B-facturen als gestructureerde e-factuur via Peppol. Een PDF in de bijlage telt daarvoor niet meer.
+
+Kunt u bevestigen:
+1. of uw onderneming al een Peppol-ID heeft (in België meestal 0208: + uw 10-cijferig KBO, zonder BE en zonder punten);
+2. via welk pakket u e-facturen ontvangt (uw boekhouder of de FOD-lijst);
+3. het KBO-nummer waarop we moeten zoeken als dat anders is dan [KBO dat u nu hebt].
+
+Als u nog niet klaar bent, is dat oké — stuur dan chase-mail 2 / de reminder uit ons pack, of vraag het aan uw softwareleverancier. Wij kunnen uw Peppol-ID niet voor u registreren; dat doet een gecertificeerd Access Point.
+
+B2C (particulieren) mag nog PDF. Dit bericht is alleen voor B2B.
+
+Vriendelijke groeten,
+[uw juridische naam]
+[bedrijfs-e-mail]</pre>
+  </main>
+  <script>
+    (function () {
+      var text = document.getElementById("mail").textContent;
+      document.getElementById("copyBtn").addEventListener("click", function () {
+        var status = document.getElementById("copyStatus");
+        function ok() { status.textContent = "Gekopieerd."; }
+        function fail() { status.textContent = "Selecteer de tekst en kopieer handmatig."; }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(ok).catch(fail);
+        } else { fail(); }
+      });
+    })();
+  </script>
+</body>
+</html>

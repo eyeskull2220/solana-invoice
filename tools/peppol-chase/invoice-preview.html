@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Voorbeeld factuur 21% — Peppol-stijl (demo)</title>
+  <link rel="stylesheet" href="pack.css">
+</head>
+<body>
+  <main class="wrap">
+    <nav class="pack-nav no-print" aria-label="Pack">
+      <a href="index.html">Start</a>
+      <a href="intake.html">Intake</a>
+      <a href="master-data-checklist.html">Checklist</a>
+      <a href="invoice-preview.html" aria-current="page">Factuur 21%</a>
+      <a href="invoice-preview-reverse-charge.html">Reverse charge</a>
+      <a href="software-shortlist.html">Software</a>
+      <a href="peppol-lookup-worksheet.html">Lookup</a>
+      <a href="HANDOFF.html">Handoff</a>
+      <a href="DISCLAIMER.html">Disclaimer</a>
+    </nav>
+
+    <p class="kicker no-print">Menselijk leesbaar · matcht invoice-sample-21pct.xml</p>
+    <h1 class="no-print">Peppol-stijl factuur (21%)</h1>
+    <p class="lead no-print">Dit is een schermvoorstelling van de SAMPLE-XML. Printen of mailen maakt er geen wettelijke B2B-factuur van. Alleen een gecertificeerd Access Point kan die versturen.</p>
+    <p class="no-print"><a class="btn ghost" href="invoice-sample-21pct.xml">Open SAMPLE XML</a></p>
+
+    <article class="invoice" aria-label="Demo-factuur 21 procent">
+      <div class="stamp">VOORBEELD</div>
+      <header>
+        <div>
+          <div class="kicker">Peppol BIS Billing 3.0 · UBL (demo)</div>
+          <div class="word">VOORBEELD</div>
+        </div>
+        <div class="net">
+          Nummer <strong>INV-DEMO-2026-001</strong><br>
+          Datum 2 maart 2026<br>
+          Verval 1 april 2026<br>
+          Type 380 · EUR
+        </div>
+      </header>
+      <div class="parties">
+        <div>
+          <h3>Verkoper</h3>
+          <p>
+            Studio Noord<br>
+            Noorderlaan 12 · 2030 Antwerpen · BE<br>
+            KBO/BTW: nog niet toegekend<br>
+            Peppol-ID: nog niet toegekend<br>
+            hello@studio.example
+          </p>
+        </div>
+        <div>
+          <h3>Koper</h3>
+          <p>
+            Client BV<br>
+            Voorbeeldstraat 5 · 1000 Brussel · BE<br>
+            KBO/BTW: nog niet toegekend<br>
+            Peppol-ID: nog niet toegekend<br>
+            facturatie@client.example<br>
+            Ref. DEMO-PO-001
+          </p>
+        </div>
+      </div>
+      <table class="lines">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Omschrijving</th>
+            <th class="num">Aantal</th>
+            <th class="num">Prijs</th>
+            <th class="num">BTW</th>
+            <th class="num">Netto</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Studio-uren — vormgeving en copy, maart 2026 (demo)</td>
+            <td class="num">10 uur</td>
+            <td class="num">100,00</td>
+            <td class="num">S 21%</td>
+            <td class="num">1.000,00</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="totals">
+        <div><span>Maatstaf</span><span>1.000,00</span></div>
+        <div><span>BTW 21%</span><span>210,00</span></div>
+        <div class="pay"><span>Te betalen</span><span>1.210,00 EUR</span></div>
+      </div>
+      <p class="fine">VOORBEELD. Demo-partijen. Geen KBO/BTW/IBAN-cijfers. Niet verzonden via Peppol. Geen wettelijke BE B2B-factuur. Geen Access Point. Geen compliance-claim.</p>
+    </article>
+  </main>
+</body>
+</html>

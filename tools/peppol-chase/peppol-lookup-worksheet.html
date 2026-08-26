@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Peppol Lookup-worksheet — 0208: + KBO</title>
+  <link rel="stylesheet" href="pack.css">
+</head>
+<body>
+  <main class="wrap">
+    <nav class="pack-nav" aria-label="Pack">
+      <a href="index.html">Start</a>
+      <a href="intake.html">Intake</a>
+      <a href="master-data-checklist.html">Checklist</a>
+      <a href="invoice-preview.html">Factuur 21%</a>
+      <a href="invoice-preview-reverse-charge.html">Reverse charge</a>
+      <a href="software-shortlist.html">Software</a>
+      <a href="peppol-lookup-worksheet.html" aria-current="page">Lookup</a>
+      <a href="HANDOFF.html">Handoff</a>
+      <a href="DISCLAIMER.html">Disclaimer</a>
+    </nav>
+
+    <p class="kicker">Officiële Directory · u zoekt zelf</p>
+    <h1>Hoe u een Belgische koper opzoekt</h1>
+    <p class="lead">België gebruikt schema <strong>0208</strong> (ondernemingsnummer KBO/BCE). Het Peppol-ID is <span class="mono">0208:</span> plus 10 cijfers, zonder <span class="mono">BE</span>, zonder punten, zonder spaties.</p>
+
+    <section class="card">
+      <h2>Stappen</h2>
+      <ol class="steps">
+        <li>Haal het ondernemingsnummer uit de <a href="https://kbopub.economie.fgov.be/" rel="noopener">KBO publieke zoekfunctie</a> of van hun briefhoofd. Noteer 10 cijfers. Dit pack vult <strong>geen</strong> voorbeeldcijfers in.</li>
+        <li>Bouw het ID: <span class="mono">0208:</span> + die 10 cijfers, zonder <span class="mono">BE</span>, zonder punten, zonder spaties. Geen demo-nummer in dit pack.</li>
+        <li>Open de officiële Peppol Directory: <a href="https://directory.peppol.eu/public/" rel="noopener">directory.peppol.eu/public</a>.</li>
+        <li>Plak het ID in het zoekveld (of zoek op exacte juridische naam + land BE). Kijk of er een participant staat die Peppol BIS Billing kan ontvangen.</li>
+        <li>Noteer het resultaat op <a href="intake.html">intake.html</a>: gevonden / niet gevonden / B2C.</li>
+        <li>Niet gevonden? Stuur <a href="client-chase-mail-1.html">chase-mail 1</a>. Nog steeds niets? <a href="client-chase-mail-2.html">mail 2</a> of <a href="reminder-buyer-not-ready.html">niet-klaar-reminder</a>.</li>
+      </ol>
+    </section>
+
+    <section class="card">
+      <h2>Werkblad (print)</h2>
+      <div class="grid-2">
+        <div>
+          <label for="wName">Koper (juridische naam)</label>
+          <input id="wName" type="text" placeholder="Client BV">
+        </div>
+        <div>
+          <label for="wKbo">KBO 10 cijfers</label>
+          <input id="wKbo" type="text" placeholder="KBO/BTW: nog niet toegekend">
+        </div>
+      </div>
+      <label for="wId">ID om te zoeken</label>
+      <input id="wId" type="text" class="mono" placeholder="0208:" readonly>
+      <label for="wResult">Resultaat Directory</label>
+      <select id="wResult">
+        <option value="">—</option>
+        <option>Gevonden, kan factuur ontvangen</option>
+        <option>Gevonden, onduidelijk documenttype</option>
+        <option>Niet gevonden</option>
+        <option>Directory down / later opnieuw</option>
+      </select>
+      <label for="wNote">Notitie (datum, wie gezocht heeft)</label>
+      <textarea id="wNote" placeholder="2 mar 2026 — zelf gezocht, niets gevonden"></textarea>
+      <p class="net">Het ID-veld vult zich als u 10 cijfers typt. Niets verlaat deze pagina.</p>
+    </section>
+
+    <section class="card">
+      <h2>Let op</h2>
+      <ul>
+        <li>De Directory kan achterlopen op de echte SMP. Een AP-pakket doet vaak een verse lookup bij verzenden. Dit worksheet is voorbereiding, geen bewijs.</li>
+        <li>Soms bestaat ook schema <span class="mono">9925:</span> + <span class="mono">BE</span> + 10 cijfers (btw). Voor Belgische registratie is <span class="mono">0208</span> de eerste keuze.</li>
+        <li>Dit pack zoekt niet voor u en registreert niets.</li>
+      </ul>
+    </section>
+  </main>
+  <script>
+    (function () {
+      var kbo = document.getElementById("wKbo");
+      var out = document.getElementById("wId");
+      function digits(s) { return String(s || "").replace(/\D/g, ""); }
+      kbo.addEventListener("input", function () {
+        var d = digits(kbo.value);
+        out.value = d.length === 10 ? ("0208:" + d) : "";
+      });
+    })();
+  </script>
+</body>
+</html>
