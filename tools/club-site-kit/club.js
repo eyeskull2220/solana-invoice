@@ -5,7 +5,7 @@
 window.CLUB_KIT = {
   name: "Voorbeeldclub vzw",
   city: "Voorbeeldstad",
-  sport: "Sport en ontspanning",
+  sport: "sport en ontspanning",
   email: "info@voorbeeldclub.example",
   feeAdult: "€ 40",
   feeYouth: "€ 25",
