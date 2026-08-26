@@ -1,0 +1,697 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kilometervergoeding log — 9 USDC</title>
+  <meta name="description" content="Belgian freelancer kilometervergoeding log. Trips, FOD rate, EUR total, CSV. 9 USDC on Solana. No account, no wallet connect." />
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f3ee;
+      --card: #ffffff;
+      --ink: #1b1a17;
+      --muted: #5e5a53;
+      --line: #d9d3c7;
+      --accent: #0c4a36;
+      --accent-ink: #f4fff9;
+      --soft: #e4f0ea;
+      --warn-bg: #fff6e8;
+      --warn-line: #ecd4a4;
+      --shadow: 0 14px 40px rgba(40, 32, 18, 0.07);
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+    }
+    main {
+      width: min(980px, 100%);
+      margin: 0 auto;
+      padding: 28px 16px 72px;
+    }
+    header h1 {
+      margin: 0 0 6px;
+      font-size: clamp(1.6rem, 4vw, 2.1rem);
+      letter-spacing: -0.03em;
+    }
+    .lead {
+      margin: 0 0 12px;
+      color: var(--muted);
+      max-width: 46rem;
+    }
+    .price {
+      display: inline-block;
+      margin: 0 0 22px;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--soft);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 650;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      margin: 0 0 14px;
+    }
+    h2 {
+      margin: 0 0 10px;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+    .cols-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .cols-head h2 { margin: 0; }
+    label.field { display: block; margin: 0 0 12px; }
+    label.field span {
+      display: block;
+      font-size: 13px;
+      font-weight: 650;
+      margin: 0 0 6px;
+    }
+    input[type="text"],
+    input[type="date"],
+    input[type="number"] {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fcfaf6;
+      color: var(--ink);
+      border-radius: 10px;
+      padding: 11px 12px;
+      font: 15px/1.4 ui-sans-serif, system-ui, sans-serif;
+    }
+    input:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 1px;
+    }
+    .row { display: grid; gap: 12px; }
+    @media (min-width: 720px) {
+      .row.five { grid-template-columns: 1.1fr 1.2fr 1.2fr 0.8fr 1.6fr; }
+      .row.rate { grid-template-columns: 160px 1fr; align-items: end; }
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    button, .btn {
+      font: 650 15px/1.2 ui-sans-serif, system-ui, sans-serif;
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 14px;
+      cursor: pointer;
+    }
+    .primary { background: var(--accent); color: var(--accent-ink); }
+    .ghost {
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+    .ghost[aria-pressed="true"] {
+      background: var(--soft);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .danger { color: #8a4b12; }
+    button:disabled { opacity: 0.45; cursor: not-allowed; }
+    .addr {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      word-break: break-all;
+      background: #fcfaf6;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .net, .note {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 10px 0 0;
+    }
+    .ok { color: var(--accent); font-size: 14px; margin: 10px 0 0; }
+    .error, .disclaimer {
+      background: var(--warn-bg);
+      border: 1px solid var(--warn-line);
+      border-radius: 12px;
+      padding: 10px 12px;
+      color: #6b3d0c;
+      margin: 0 0 12px;
+    }
+    .disclaimer { margin: 12px 0 0; font-size: 0.92rem; }
+    .hidden { display: none !important; }
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin: 0 0 10px;
+    }
+    .stats b { color: var(--ink); }
+    .table-wrap {
+      overflow: auto;
+      max-height: min(62vh, 640px);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+      min-width: 640px;
+    }
+    th, td {
+      text-align: left;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+    th {
+      position: sticky;
+      top: 0;
+      background: #f3efe7;
+      font-size: 12px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: var(--muted);
+      z-index: 1;
+    }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    td.desc { max-width: 240px; word-break: break-word; }
+    tr:last-child td { border-bottom: 0; }
+    .empty {
+      color: var(--muted);
+      margin: 0;
+      padding: 18px 4px;
+    }
+    .presets { display: flex; flex-wrap: wrap; gap: 8px; }
+    .presets .hint {
+      flex: 1 1 220px;
+      color: var(--muted);
+      font-size: 13px;
+      margin: 0;
+      align-self: center;
+    }
+    footer {
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Kilometervergoeding log</h1>
+      <p class="lead">Log trips, multiply by the official Belgian forfait, total EUR, and export a CSV. Works offline after you open this file. No account. No wallet connect.</p>
+      <p class="price">9 USDC · Solana</p>
+    </header>
+
+    <section class="card" id="pay">
+      <h2>Pay 9 USDC on Solana</h2>
+      <p>Send exactly 9 USDC to:</p>
+      <div class="addr" id="addr">96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</div>
+      <p class="net">Network: Solana · Token: USDC only — not SOL, not another chain.</p>
+      <div class="actions">
+        <button type="button" class="primary" id="copyBtn">Copy address</button>
+      </div>
+      <p class="ok hidden" id="copyStatus"></p>
+    </section>
+
+    <section class="card">
+      <h2>Rate (EUR / km)</h2>
+      <div class="row rate">
+        <label class="field">
+          <span>Rate</span>
+          <input id="rate" type="text" inputmode="decimal" value="0.4440" autocomplete="off" />
+        </label>
+        <div class="presets">
+          <button type="button" class="ghost" id="quarterlyBtn" aria-pressed="true">Quarterly 0.4440</button>
+          <button type="button" class="ghost" id="annualBtn" aria-pressed="false">Annual 0.4761</button>
+          <p class="hint">Default is the quarterly forfait. The annual forfait is an optional preset, not the only rate. Type any current FOD number if yours differs.</p>
+        </div>
+      </div>
+      <p class="disclaimer">
+        Default <b>0.4440 EUR/km</b> is the quarterly forfait for 01.07.2026–30.09.2026 (FOD circulaire 2026/C/76 / omzendbrief 768).
+        Optional preset <b>0.4761 EUR/km</b> is the annual forfait for 01.07.2026–30.06.2027.
+        You must confirm the current FOD rate before you use this log. This is not tax advice.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>Add a trip</h2>
+      <p class="error hidden" id="error"></p>
+      <div class="row five">
+        <label class="field">
+          <span>Date</span>
+          <input id="date" type="date" />
+        </label>
+        <label class="field">
+          <span>From</span>
+          <input id="from" type="text" placeholder="Geel" autocomplete="off" />
+        </label>
+        <label class="field">
+          <span>To</span>
+          <input id="to" type="text" placeholder="Antwerpen" autocomplete="off" />
+        </label>
+        <label class="field">
+          <span>Km</span>
+          <input id="km" type="text" inputmode="decimal" placeholder="47" autocomplete="off" />
+        </label>
+        <label class="field">
+          <span>Purpose</span>
+          <input id="purpose" type="text" placeholder="Client meeting" autocomplete="off" />
+        </label>
+      </div>
+      <div class="actions">
+        <button type="button" class="primary" id="addBtn">Add trip</button>
+        <button type="button" class="ghost" id="exampleBtn">Fill Geel → Antwerpen</button>
+        <button type="button" class="ghost" id="resetFormBtn">Clear form</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="cols-head">
+        <h2>Log</h2>
+        <div class="actions" style="margin:0">
+          <button type="button" class="primary" id="downloadBtn">Download CSV</button>
+          <button type="button" class="ghost danger" id="clearBtn">Clear all trips</button>
+        </div>
+      </div>
+      <div class="stats" id="stats"></div>
+      <div class="table-wrap" id="tableWrap">
+        <p class="empty" id="empty">No trips yet. Add a trip, or fill the Geel → Antwerpen example.</p>
+        <table class="hidden" id="table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>From</th>
+              <th>To</th>
+              <th class="num">Km</th>
+              <th>Purpose</th>
+              <th class="num">EUR</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+      <p class="note">Trips are saved in this browser only. Changing the rate recalculates every row. Download a CSV before you clear them.</p>
+    </section>
+
+    <footer>
+      Offline one-file tool. 9 USDC on Solana to 96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3. No wallet connect. Not tax advice.
+    </footer>
+  </main>
+
+  <script>
+    (function () {
+      const PAY_TO = "96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3";
+      const PRICE_USDC = 9;
+      const RATE_QUARTERLY = 0.4440;
+      const RATE_ANNUAL = 0.4761;
+      const STORAGE_KEY = "treasury-km-log-v1";
+      const HEADERS = ["date", "from", "to", "km", "purpose", "rate_eur_per_km", "amount_eur"];
+
+      const $ = (id) => document.getElementById(id);
+      const rateEl = $("rate");
+      const dateEl = $("date");
+      const fromEl = $("from");
+      const toEl = $("to");
+      const kmEl = $("km");
+      const purposeEl = $("purpose");
+      const errorEl = $("error");
+      const emptyEl = $("empty");
+      const tableEl = $("table");
+      const tbody = $("tbody");
+      const statsEl = $("stats");
+      const downloadBtn = $("downloadBtn");
+      const clearBtn = $("clearBtn");
+      const copyStatus = $("copyStatus");
+      const quarterlyBtn = $("quarterlyBtn");
+      const annualBtn = $("annualBtn");
+
+      const loaded = loadState();
+      const state = {
+        rate: loaded.rate,
+        trips: loaded.trips
+      };
+
+      function todayIso() {
+        const d = new Date();
+        const m = String(d.getMonth() + 1).padStart(2, "0");
+        const day = String(d.getDate()).padStart(2, "0");
+        return d.getFullYear() + "-" + m + "-" + day;
+      }
+
+      function loadState() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          const parsed = raw ? JSON.parse(raw) : null;
+          if (!parsed || typeof parsed !== "object") {
+            return { rate: RATE_QUARTERLY, trips: [] };
+          }
+          const rate = parseNumber(parsed.rate);
+          const trips = Array.isArray(parsed.trips)
+            ? parsed.trips.filter((row) => row && typeof row === "object").map(normalizeTrip)
+            : [];
+          return {
+            rate: rate != null && rate > 0 ? rate : RATE_QUARTERLY,
+            trips: trips
+          };
+        } catch (e) {
+          return { rate: RATE_QUARTERLY, trips: [] };
+        }
+      }
+
+      function saveState() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({
+            rate: state.rate,
+            trips: state.trips
+          }));
+        } catch (e) {
+          /* private mode / quota */
+        }
+      }
+
+      function uid() {
+        return Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8);
+      }
+
+      function parseNumber(raw) {
+        const s = String(raw ?? "").trim().replace(/\s/g, "").replace(",", ".");
+        if (!s) return null;
+        if (!/^\d+(\.\d+)?$/.test(s)) return null;
+        const n = Number(s);
+        if (!isFinite(n)) return null;
+        return n;
+      }
+
+      function normalizeTrip(row) {
+        const km = parseNumber(row.km);
+        return {
+          id: String(row.id || uid()),
+          date: String(row.date || ""),
+          from: String(row.from || ""),
+          to: String(row.to || ""),
+          km: km != null ? km : 0,
+          purpose: String(row.purpose || "")
+        };
+      }
+
+      function tripAmount(km, rate) {
+        return Math.round((Number(km) || 0) * (Number(rate) || 0) * 100) / 100;
+      }
+
+      function formatEur(n) {
+        return tripAmount(1, n).toFixed(2);
+      }
+
+      function formatKm(n) {
+        const v = Number(n) || 0;
+        if (Number.isInteger(v)) return String(v);
+        return String(Math.round(v * 1000) / 1000);
+      }
+
+      function formatRate(n) {
+        const v = Number(n);
+        if (!isFinite(v)) return "";
+        return (Math.round(v * 10000) / 10000).toFixed(4);
+      }
+
+      function rateKey(n) {
+        return Math.round(Number(n) * 10000);
+      }
+
+      function csvCell(value) {
+        const s = String(value ?? "");
+        if (/[",\n\r]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+        return s;
+      }
+
+      function toCsv(trips, rate) {
+        const lines = [HEADERS.join(",")];
+        for (let i = 0; i < trips.length; i++) {
+          const row = trips[i];
+          lines.push([
+            csvCell(row.date),
+            csvCell(row.from),
+            csvCell(row.to),
+            csvCell(formatKm(row.km)),
+            csvCell(row.purpose),
+            csvCell(formatRate(rate)),
+            csvCell(formatEur(tripAmount(row.km, rate)))
+          ].join(","));
+        }
+        return lines.join("\r\n") + "\r\n";
+      }
+
+      function escapeHtml(s) {
+        return String(s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function totals() {
+        let km = 0;
+        let eur = 0;
+        for (let i = 0; i < state.trips.length; i++) {
+          km += Number(state.trips[i].km) || 0;
+          eur += tripAmount(state.trips[i].km, state.rate);
+        }
+        return { km: Math.round(km * 1000) / 1000, eur: Math.round(eur * 100) / 100 };
+      }
+
+      function showError(msg) {
+        errorEl.textContent = msg;
+        errorEl.classList.toggle("hidden", !msg);
+      }
+
+      function syncRateButtons() {
+        const key = rateKey(state.rate);
+        quarterlyBtn.setAttribute("aria-pressed", key === 4440 ? "true" : "false");
+        annualBtn.setAttribute("aria-pressed", key === 4761 ? "true" : "false");
+      }
+
+      function applyRate(rate, fromInput) {
+        if (rate == null || rate <= 0) {
+          if (fromInput) showError("Enter a rate greater than 0.");
+          return false;
+        }
+        state.rate = rate;
+        if (!fromInput) rateEl.value = formatRate(rate);
+        syncRateButtons();
+        saveState();
+        render();
+        return true;
+      }
+
+      function render() {
+        const n = state.trips.length;
+        const t = totals();
+        downloadBtn.disabled = n === 0;
+        clearBtn.disabled = n === 0;
+        statsEl.innerHTML = n
+          ? "<span><b>" + n + "</b> trip" + (n === 1 ? "" : "s") + "</span>" +
+            "<span>Km <b>" + escapeHtml(formatKm(t.km)) + "</b></span>" +
+            "<span>Total <b>" + escapeHtml(formatEur(t.eur)) + " EUR</b></span>" +
+            "<span>Rate <b>" + escapeHtml(formatRate(state.rate)) + "</b> EUR/km</span>"
+          : "";
+        emptyEl.classList.toggle("hidden", n > 0);
+        tableEl.classList.toggle("hidden", n === 0);
+        tbody.replaceChildren();
+        for (let i = 0; i < state.trips.length; i++) {
+          const row = state.trips[i];
+          const tr = document.createElement("tr");
+          tr.innerHTML =
+            "<td>" + escapeHtml(row.date) + "</td>" +
+            "<td>" + escapeHtml(row.from) + "</td>" +
+            "<td>" + escapeHtml(row.to) + "</td>" +
+            "<td class=\"num\">" + escapeHtml(formatKm(row.km)) + "</td>" +
+            "<td class=\"desc\">" + escapeHtml(row.purpose) + "</td>" +
+            "<td class=\"num\">" + escapeHtml(formatEur(tripAmount(row.km, state.rate))) + "</td>" +
+            "<td><button type=\"button\" class=\"ghost\" data-del=\"" + escapeHtml(row.id) + "\">Remove</button></td>";
+          tbody.appendChild(tr);
+        }
+      }
+
+      function resetForm() {
+        dateEl.value = todayIso();
+        fromEl.value = "";
+        toEl.value = "";
+        kmEl.value = "";
+        purposeEl.value = "";
+        showError("");
+        fromEl.focus();
+      }
+
+      function fillExample() {
+        dateEl.value = dateEl.value || todayIso();
+        fromEl.value = "Geel";
+        toEl.value = "Antwerpen";
+        kmEl.value = "47";
+        purposeEl.value = "Client meeting";
+        showError("");
+        kmEl.focus();
+      }
+
+      function addTrip() {
+        const date = dateEl.value.trim();
+        const from = fromEl.value.trim();
+        const to = toEl.value.trim();
+        const purpose = purposeEl.value.trim();
+        const km = parseNumber(kmEl.value);
+        if (!date) {
+          showError("Pick a date.");
+          dateEl.focus();
+          return;
+        }
+        if (!from) {
+          showError("Add a from place.");
+          fromEl.focus();
+          return;
+        }
+        if (!to) {
+          showError("Add a to place.");
+          toEl.focus();
+          return;
+        }
+        if (km == null || km <= 0) {
+          showError("Enter kilometres greater than 0.");
+          kmEl.focus();
+          return;
+        }
+        if (!purpose) {
+          showError("Add a purpose.");
+          purposeEl.focus();
+          return;
+        }
+        const typedRate = parseNumber(rateEl.value);
+        if (rateEl.value.trim() !== "" && (typedRate == null || typedRate <= 0)) {
+          showError("Enter a rate greater than 0.");
+          rateEl.focus();
+          return;
+        }
+        if (typedRate != null && typedRate > 0) applyRate(typedRate, true);
+        showError("");
+        state.trips.push({
+          id: uid(),
+          date: date,
+          from: from,
+          to: to,
+          km: km,
+          purpose: purpose
+        });
+        saveState();
+        render();
+        fromEl.value = to;
+        toEl.value = from;
+        kmEl.value = "";
+        purposeEl.value = "";
+        fromEl.focus();
+      }
+
+      function removeTrip(id) {
+        state.trips = state.trips.filter(function (row) { return row.id !== id; });
+        saveState();
+        render();
+      }
+
+      function downloadCsv() {
+        if (!state.trips.length) return;
+        const csv = toCsv(state.trips, state.rate);
+        const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "kilometervergoeding-" + todayIso() + ".csv";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+      }
+
+      function copyPayTo() {
+        function ok() {
+          copyStatus.textContent = "Address copied. Send exactly " + PRICE_USDC + " USDC on Solana.";
+          copyStatus.classList.remove("hidden");
+        }
+        function fail() {
+          copyStatus.textContent = "Copy failed. Select the address above.";
+          copyStatus.classList.remove("hidden");
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(PAY_TO).then(ok).catch(fail);
+        } else {
+          fail();
+        }
+      }
+
+      $("copyBtn").addEventListener("click", copyPayTo);
+      $("addBtn").addEventListener("click", addTrip);
+      $("exampleBtn").addEventListener("click", fillExample);
+      $("resetFormBtn").addEventListener("click", resetForm);
+      downloadBtn.addEventListener("click", downloadCsv);
+      clearBtn.addEventListener("click", function () {
+        if (!state.trips.length) return;
+        if (!window.confirm("Remove every trip from this browser?")) return;
+        state.trips = [];
+        saveState();
+        render();
+      });
+      quarterlyBtn.addEventListener("click", function () {
+        applyRate(RATE_QUARTERLY, false);
+      });
+      annualBtn.addEventListener("click", function () {
+        applyRate(RATE_ANNUAL, false);
+      });
+      rateEl.addEventListener("input", function () {
+        const n = parseNumber(rateEl.value);
+        if (n == null || n <= 0) {
+          syncRateButtons();
+          return;
+        }
+        applyRate(n, true);
+      });
+      tbody.addEventListener("click", function (e) {
+        const btn = e.target.closest("[data-del]");
+        if (!btn) return;
+        removeTrip(btn.getAttribute("data-del"));
+      });
+      [fromEl, toEl, kmEl, purposeEl].forEach(function (el) {
+        el.addEventListener("keydown", function (e) {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            addTrip();
+          }
+        });
+      });
+
+      dateEl.value = todayIso();
+      rateEl.value = formatRate(state.rate);
+      $("addr").textContent = PAY_TO;
+      syncRateButtons();
+      render();
+    })();
+  </script>
+</body>
+</html>
