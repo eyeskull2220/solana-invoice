@@ -14,10 +14,11 @@ Scanned every file in this pack for personal Gmail, live inboxes, phones, home a
 | Client mail | `billing@client.example` | RFC 2606 placeholder. |
 | Studio | Studio Noord · Voorbeeldlaan 1, 2000 Antwerpen | Fake demo practice / street. |
 | Client | Client BV · Klantplein 8, 1000 Brussel | Fake demo company. |
-| BTW | `BE 0999.999.992` / `BE 0888.888.888` | Obviously fake KBO numbers. |
+| KBO/BTW | `KBO/BTW: nog niet toegekend` | No invented VAT digits. |
 | Phone field | `+32 0 000 00 00` | Zeroed placeholder in the intake hint only. |
 | Intake name hint | Alex Example | Form placeholder, not a real person. |
 | Pay-to | `96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3` | Public treasury Solana USDC address already on the catalog / pay page. |
+| Solana Pay memo | `inbox-ops-299` | Identifies this pack on the 299 USDC payment. |
 
 ## Fail patterns (must be absent)
 
@@ -30,6 +31,7 @@ Scanned every file in this pack for personal Gmail, live inboxes, phones, home a
 | Home addresses of real people | **absent** |
 | Private keys / seed phrases | **absent** |
 | Base / ETH address `0x9eb954b567ef3616424a6e1bf42c63724930aa54` | **absent** |
+| Invented VAT/KBO digits (`BE 0999…`, `BE0123…`) | **absent** (demo uses `KBO/BTW: nog niet toegekend`) |
 | Leftover 9 USDC Solana Invoice restack (wallet-connect, `solana-invoice.html` embed, 9 USDC unlock) | **absent** |
 
 ## Notes

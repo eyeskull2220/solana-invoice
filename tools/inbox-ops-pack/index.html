@@ -16,7 +16,7 @@
     <nav class="pack-nav" aria-label="Pack">
       <a href="index.html" aria-current="page">Pack</a>
       <a href="intake.html">Intake</a>
-      <a href="invoice.html">Factuur</a>
+      <a href="invoice.html">Voorbeeld</a>
       <a href="reminder.html">Reminder</a>
       <a href="faq.html">FAQ</a>
     </nav>
@@ -34,6 +34,8 @@
       <p>Send exactly 299 USDC to:</p>
       <div class="addr" id="payTo">96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</div>
       <p class="net">Network: Solana · Token: USDC · Mint: EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v</p>
+      <p class="net">Solana Pay memo: <code>inbox-ops-299</code></p>
+      <div id="qr" class="qr" hidden></div>
       <p style="margin:12px 0 0">
         <button type="button" class="primary" id="copyBtn">Copy address</button>
       </p>
@@ -53,9 +55,9 @@
         <div class="file">
           <div>
             <h3>BTW invoice</h3>
-            <p>Belgian factuur, 21% default, live totals, download a standalone HTML file.</p>
+            <p>Belgian voorbeeld (not a legal factuur), 21% default, live totals, download standalone HTML.</p>
           </div>
-          <a class="btn ghost" href="invoice.html">Open factuur</a>
+          <a class="btn ghost" href="invoice.html">Open voorbeeld</a>
         </div>
         <div class="file">
           <div>
@@ -96,15 +98,28 @@
     </section>
 
     <footer>
-      299 USDC on Solana. Pay-to <code>96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</code>. Copy-address only.
+      299 USDC on Solana. Pay-to <code>96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</code>. Memo: <code>inbox-ops-299</code>. Copy-address only.
     </footer>
   </div>
   <script>
     (function () {
       var PAY_TO = "96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3";
+      var MEMO = "inbox-ops-299";
+      var MINT = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
+      var payUrl = "solana:" + PAY_TO +
+        "?amount=299&spl-token=" + encodeURIComponent(MINT) +
+        "&memo=" + encodeURIComponent(MEMO);
+      var qrBox = document.getElementById("qr");
+      var img = document.createElement("img");
+      img.alt = "Solana Pay QR — 299 USDC, memo inbox-ops-299";
+      img.width = 168;
+      img.height = 168;
+      img.src = "https://api.qrserver.com/v1/create-qr-code/?size=168x168&data=" + encodeURIComponent(payUrl);
+      qrBox.appendChild(img);
+      qrBox.hidden = false;
       var statusEl = document.getElementById("copyStatus");
       document.getElementById("copyBtn").addEventListener("click", function () {
-        function ok() { statusEl.textContent = "Copied. Send exactly 299 USDC on Solana."; }
+        function ok() { statusEl.textContent = "Copied. Send exactly 299 USDC on Solana. Memo: inbox-ops-299."; }
         function fail() { statusEl.textContent = "Copy failed. Select the address."; }
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(PAY_TO).then(ok, fail);

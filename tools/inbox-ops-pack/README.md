@@ -12,7 +12,7 @@ Send **exactly 299 USDC** on **Solana** (USDC only — not SOL, not Base, not ET
 
 Mint: `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`
 
-Copy-address only. No wallet connect. Open [`index.html`](index.html) and use **Copy address**.
+Copy-address only. No wallet connect. Open [`index.html`](index.html) and use **Copy address**. Solana Pay memo: `inbox-ops-299`.
 
 ## Files
 
@@ -20,7 +20,7 @@ Copy-address only. No wallet connect. Open [`index.html`](index.html) and use **
 | --- | --- |
 | [`index.html`](index.html) | Sell / demo page (299 USDC, copy-address) |
 | [`intake.html`](intake.html) | Branded one-job intake. Download a brief or open a `mailto:` draft |
-| [`invoice.html`](invoice.html) | Belgian BTW factuur, default **21%**, download standalone HTML |
+| [`invoice.html`](invoice.html) | Belgian BTW **voorbeeld** (prints VOORBEELD, not FACTUUR), default **21%**, download standalone HTML |
 | [`reminder.html`](reminder.html) | Overdue reminder letter, download standalone HTML |
 | [`faq.html`](faq.html) | Client FAQ, including Peppol / PDF rules |
 | [`pack.css`](pack.css) | Shared Studio Noord chrome (recolor `:root` when rebranding) |
@@ -36,9 +36,9 @@ Do this in the four working files (`intake.html`, `invoice.html`, `reminder.html
 
 1. Replace **Studio Noord** with the practice name.
 2. Replace **Voorbeeldlaan 1, 2000 Antwerpen** with the work address.
-3. Replace **BE 0999.999.992** with the real BE BTW / KBO number (invoice + FAQ).
+3. Leave **KBO/BTW: nog niet toegekend** until they have a real number. Do not invent digits (`BE 0999…`, `BE0123…`).
 4. Replace **you@studio.example** with their inbox. For a still-fake demo, keep an RFC 2606 host (`.example`, `.invalid`, `.test`). Do not paste Gmail or a harvested live mailbox.
-5. Replace **Client BV**, **Klantplein 8, 1000 Brussel**, **BE 0888.888.888**, and **billing@client.example** with the one client this pack is for — or clear those fields and type them per job.
+5. Replace **Client BV**, **Klantplein 8, 1000 Brussel**, and **billing@client.example** with the one client this pack is for — or clear those fields and type them per job.
 6. Recolor `--accent` / `--bg` in `pack.css` if they want their own ink.
 7. Set a real invoice number series, dates, line items, and due window on `invoice.html` / `reminder.html`.
 8. Read `faq.html` with them. Do **not** delete the Peppol answers.

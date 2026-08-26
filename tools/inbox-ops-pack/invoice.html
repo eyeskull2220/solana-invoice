@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Factuur — Studio Noord</title>
-  <meta name="description" content="Belgian BTW invoice for Studio Noord. 21% default. Download a standalone HTML factuur. Not a Peppol document." />
+  <title>Voorbeeld — Studio Noord</title>
+  <meta name="description" content="Belgian BTW voorbeeld for Studio Noord. 21% default. Download a standalone HTML document labelled VOORBEELD. Not a Peppol document." />
   <!-- Rebrand: Studio Noord, you@studio.example. See README.md -->
   <link rel="stylesheet" href="pack.css" />
 </head>
@@ -12,19 +12,19 @@
   <div class="wrap wide">
     <div class="brand">
       <strong>Studio Noord</strong>
-      <span>Belgian BTW factuur · demo</span>
+      <span>Belgian BTW voorbeeld · demo</span>
     </div>
     <nav class="pack-nav" aria-label="Pack">
       <a href="index.html">Pack</a>
       <a href="intake.html">Intake</a>
-      <a href="invoice.html" aria-current="page">Factuur</a>
+      <a href="invoice.html" aria-current="page">Voorbeeld</a>
       <a href="reminder.html">Reminder</a>
       <a href="faq.html">FAQ</a>
     </nav>
 
     <header>
-      <h1>Factuur met 21% BTW</h1>
-      <p class="lead">Demo for Studio Noord → Client BV. Edit, then download a standalone HTML file. Totals are arithmetic only. This is not tax advice and not a Peppol document.</p>
+      <h1>Voorbeeld met 21% BTW</h1>
+      <p class="lead">Demo for Studio Noord → Client BV. This prints <strong>VOORBEELD</strong>, not FACTUUR. Edit, then download a standalone HTML file. Totals are arithmetic only. This is not tax advice and not a Peppol document.</p>
     </header>
 
     <p class="disclaimer">B2C PDF-by-mail is still allowed. B2B PDF is NOT a legal invoice since 1 Jan 2026 (Peppol). We do not make them compliant. We do not send Peppol.</p>
@@ -43,8 +43,8 @@
 2000 Antwerpen</textarea>
           </label>
           <label class="field">
-            <span>BE BTW / KBO</span>
-            <input id="sellerVat" type="text" autocomplete="off" spellcheck="false" value="BE 0999.999.992" />
+            <span>KBO/BTW</span>
+            <input id="sellerVat" type="text" autocomplete="off" spellcheck="false" value="KBO/BTW: nog niet toegekend" />
           </label>
           <label class="field">
             <span>Mail</span>
@@ -64,8 +64,8 @@
 1000 Brussel</textarea>
           </label>
           <label class="field">
-            <span>BE BTW / KBO</span>
-            <input id="clientVat" type="text" autocomplete="off" spellcheck="false" value="BE 0888.888.888" />
+            <span>KBO/BTW</span>
+            <input id="clientVat" type="text" autocomplete="off" spellcheck="false" value="KBO/BTW: nog niet toegekend" />
           </label>
         </section>
 
@@ -113,7 +113,7 @@
           <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px">
             <h2 style="margin:0">Preview</h2>
             <div class="actions" style="margin:0">
-              <button type="button" class="primary" id="downloadBtn">Download HTML invoice</button>
+              <button type="button" class="primary" id="downloadBtn">Download HTML voorbeeld</button>
             </div>
           </div>
           <article class="sheet" id="preview" lang="nl"></article>
@@ -285,7 +285,7 @@
         var parts = [];
         parts.push(name ? escapeHtml(name) : "<span class=\"empty\">" + emptyName + "</span>");
         if (address) parts.push(escapeHtml(address));
-        if (vat) parts.push("BTW/KBO " + escapeHtml(vat));
+        if (vat) parts.push(escapeHtml(vat));
         if (mail) parts.push(escapeHtml(mail));
         return parts.join("\n");
       }
@@ -324,7 +324,7 @@
         var rateLabel = (inv.vatRate == null ? "—" : String(inv.vatRate).replace(".", ",")) + "%";
         return "" +
           "<div class=\"sheet-top\">" +
-            "<div><div class=\"kicker\">" + escapeHtml(inv.sellerName || "Studio Noord") + "</div><div class=\"word\">FACTUUR</div></div>" +
+            "<div><div class=\"kicker\">" + escapeHtml(inv.sellerName || "Studio Noord") + "</div><div class=\"word\">VOORBEELD</div></div>" +
             "<div class=\"meta\"><div>Nr. <strong>" + escapeHtml(inv.invoiceNo || "—") + "</strong></div>" +
             "<div>Datum <strong>" + escapeHtml(formatDateNl(inv.invoiceDate) || "—") + "</strong></div>" +
             (inv.dueDate ? "<div>Vervaldatum <strong>" + escapeHtml(formatDateNl(inv.dueDate)) + "</strong></div>" : "") +
@@ -344,7 +344,7 @@
             "<div><span>BTW " + escapeHtml(rateLabel) + "</span><span>" + escapeHtml(formatEur(tot.vatCents)) + "</span></div>" +
             "<div class=\"grand\"><span>Totaal incl. BTW</span><span>" + escapeHtml(formatEur(tot.inclCents)) + "</span></div>" +
           "</div>" +
-          "<p class=\"pay-note\">Betaal binnen de vermelde termijn. Vermeld factuurnummer " + escapeHtml(inv.invoiceNo || "—") + " als mededeling. Bedragen in euro.</p>";
+          "<p class=\"pay-note\">Dit is een VOORBEELD, geen wettelijke factuur. Vermeld nummer " + escapeHtml(inv.invoiceNo || "—") + " als mededeling. Bedragen in euro.</p>";
       }
 
       function renderPreview(inv) {
@@ -373,9 +373,9 @@
         return "<!doctype html>\n<html lang=\"nl\">\n<head>\n" +
           "<meta charset=\"utf-8\" />\n" +
           "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n" +
-          "<title>Factuur " + escapeHtml(inv.invoiceNo) + "</title>\n" +
+          "<title>Voorbeeld " + escapeHtml(inv.invoiceNo) + "</title>\n" +
           "<style>\n" + buildInvoiceCss() + "\n</style>\n</head>\n<body>\n<main>\n<div class=\"sheet\">\n" +
-          "<div class=\"top\"><div><div class=\"kicker\">" + escapeHtml(inv.sellerName) + "</div><div class=\"word\">FACTUUR</div></div>" +
+          "<div class=\"top\"><div><div class=\"kicker\">" + escapeHtml(inv.sellerName) + "</div><div class=\"word\">VOORBEELD</div></div>" +
           "<div class=\"meta\"><div>Nr. <strong>" + escapeHtml(inv.invoiceNo) + "</strong></div><div>Datum <strong>" +
           escapeHtml(formatDateNl(inv.invoiceDate)) + "</strong></div>" +
           (inv.dueDate ? "<div>Vervaldatum <strong>" + escapeHtml(formatDateNl(inv.dueDate)) + "</strong></div>" : "") +
@@ -391,7 +391,7 @@
           "<div><span>BTW " + escapeHtml(rateLabel) + "</span><span>" + escapeHtml(formatEur(tot.vatCents)) + "</span></div>" +
           "<div class=\"grand\"><span>Totaal incl. BTW</span><span>" + escapeHtml(formatEur(tot.inclCents)) + "</span></div>" +
           "</div>\n" +
-          "<p class=\"note\">Betaal binnen de vermelde termijn. Vermeld factuurnummer " + escapeHtml(inv.invoiceNo) +
+          "<p class=\"note\">Dit is een VOORBEELD, geen wettelijke factuur. Betaal binnen de vermelde termijn. Vermeld nummer " + escapeHtml(inv.invoiceNo) +
           " als mededeling. Bedragen in euro. B2C: PDF per mail blijft toegelaten. B2B: sinds 1 januari 2026 is een PDF geen wettelijke factuur in België (Peppol). Dit bestand is geen Peppol-document.</p>\n" +
           "</div>\n</main>\n</body>\n</html>\n";
       }
