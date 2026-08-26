@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Master data checklist — Peppol Client-Chase Pack</title>
+  <link rel="stylesheet" href="pack.css">
+</head>
+<body>
+  <main class="wrap">
+    <nav class="pack-nav" aria-label="Pack">
+      <a href="index.html">Start</a>
+      <a href="intake.html">Intake</a>
+      <a href="master-data-checklist.html" aria-current="page">Checklist</a>
+      <a href="invoice-preview.html">Factuur 21%</a>
+      <a href="invoice-preview-reverse-charge.html">Reverse charge</a>
+      <a href="software-shortlist.html">Software</a>
+      <a href="peppol-lookup-worksheet.html">Lookup</a>
+      <a href="HANDOFF.html">Handoff</a>
+      <a href="DISCLAIMER.html">Disclaimer</a>
+    </nav>
+
+    <p class="kicker">Voor u een AP-pakket opent</p>
+    <h1>Master data: wat later in het Access Point moet kloppen</h1>
+    <p class="lead">Dit pack vult niets in bij Billit, Dexxter of e-invoice.be. Vink af wat u al hebt. Wat ontbreekt, haalt u uit de KBO — niet uit deze demo.</p>
+    <div class="banner danger">Afvinken hier = voorbereiding. Het is geen bewijs van compliance en geen wettelijke factuur.</div>
+
+    <section class="card">
+      <h2>Uzelf (verkoper)</h2>
+      <ul class="check">
+        <li><input type="checkbox"> Juridische naam identiek aan <a href="https://kbopub.economie.fgov.be/" rel="noopener">KBO-public search</a></li>
+        <li><input type="checkbox"> Ondernemingsnummer: 10 cijfers, zonder BE, zonder punten voor Peppol <span class="mono">0208:</span></li>
+        <li><input type="checkbox"> BTW-nummer: <span class="mono">BE</span> + dezelfde 10 cijfers</li>
+        <li><input type="checkbox"> Adres zoals in de KBO (straat, postcode, gemeente, land BE)</li>
+        <li><input type="checkbox"> IBAN + BIC van de rekening die op de e-factuur mag</li>
+        <li><input type="checkbox"> Bedrijfs-e-mail op eigen domein (geen Gmail als Peppol-contact)</li>
+        <li><input type="checkbox"> Wie mag verzenden in het latere AP-pakket (niet itsme via ons)</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Per B2B-koper</h2>
+      <ul class="check">
+        <li><input type="checkbox"> Juridische naam + KBO van de koper (niet de handelsnaam alleen)</li>
+        <li><input type="checkbox"> Lookup gedaan: <span class="mono">0208:</span> + 10-cijferig KBO in de officiële Directory — zie <a href="peppol-lookup-worksheet.html">worksheet</a></li>
+        <li><input type="checkbox"> BTW-geval gekozen (21 / 12 / 6 / AE / K / G / E / B2C)</li>
+        <li><input type="checkbox"> Als niet op Peppol: chase-mail 1 klaar, wij versturen die mail niet</li>
+        <li><input type="checkbox"> B2C-klanten uit deze lijst gehaald — PDF mag daar nog</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Software (niet dit pack)</h2>
+      <ul class="check">
+        <li><input type="checkbox"> Officiële FOD-lijst gelezen — <a href="software-shortlist.html">shortlist</a></li>
+        <li><input type="checkbox"> Eigen boekhouder gevraagd welk pakket zij al ontvangen (wij doen geen boekhouding)</li>
+        <li><input type="checkbox"> Begrepen: registratie Peppol-ID gebeurt in dát pakket, niet hier</li>
+      </ul>
+    </section>
+
+    <p class="fine">Daarna: <a href="HANDOFF.html">HANDOFF</a> — de klikken in een écht AP-tool.</p>
+  </main>
+</body>
+</html>

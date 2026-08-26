@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chase-mail 2 — opvolging met FOD-lijst en lookup</title>
+  <link rel="stylesheet" href="pack.css">
+</head>
+<body>
+  <main class="wrap">
+    <nav class="pack-nav no-print" aria-label="Pack">
+      <a href="index.html">Start</a>
+      <a href="intake.html">Intake</a>
+      <a href="client-chase-mail-1.html">Chase 1</a>
+      <a href="client-chase-mail-2.html" aria-current="page">Chase 2</a>
+      <a href="reminder-buyer-not-ready.html">Niet klaar</a>
+      <a href="DISCLAIMER.html">Disclaimer</a>
+    </nav>
+
+    <p class="kicker no-print">Copy-paste · opvolging</p>
+    <h1 class="no-print">Chase-mail 2: concrete stappen voor de koper</h1>
+    <p class="lead no-print">Gebruik dit als mail 1 geen antwoord kreeg, of als ze “we sturen nog PDF” antwoorden. Nog steeds: u plakt, u verstuurt, wij niet.</p>
+    <p class="no-print copy-row">
+      <button type="button" id="copyBtn">Kopieer mailtekst</button>
+      <span class="copy-ok" id="copyStatus"></span>
+    </p>
+
+    <pre class="mail" id="mail">Onderwerp: Opvolging Peppol — FOD-lijst + hoe we u opzoeken (0208:KBO)
+
+Beste [naam],
+
+We hebben nog geen bevestiging dat u Peppol-facturen kunt ontvangen. Zonder dat punt kunnen we geen wettelijke Belgische B2B-factuur afleveren. PDF blijft ontoereikend.
+
+Twee concrete stappen aan uw kant:
+
+1. Software
+Officiële (niet-uitputtende) lijst van de FOD Financiën:
+https://efactuur.belgium.be/nl/article/softwareoplossingen-voor-het-verzenden-ontvangen-en-verwerken-van-elektronische-facturen
+Vraag uw boekhouder welk pakket zij al gebruiken. Voorbeelden die wij zelf op die markt nakeken (geen affiliates, geen aanbeveling van de FOD): Billit, Dexxter, e-invoice.be.
+
+2. Lookup
+Open de officiële Peppol Directory:
+https://directory.peppol.eu/public/
+Zoek op 0208: gevolgd door uw 10-cijferig ondernemingsnummer, zonder BE en zonder punten.
+Voorbeeld van de schrijfwijze (niet uw nummer): 0208:0123456789
+
+Zodra u in de Directory staat, mail ons het KBO. Dan gaat de factuur via een Access Point — niet als PDF-bijlage.
+
+De administratieve boete als er geen technische middelen zijn, start bij €1.500. Dit is geen juridisch advies; het is de reden waarom we u lastigvallen in plaats van stilletjes een PDF te sturen.
+
+Vriendelijke groeten,
+[uw juridische naam]
+[KBO]
+[bedrijfs-e-mail]</pre>
+  </main>
+  <script>
+    (function () {
+      var text = document.getElementById("mail").textContent;
+      document.getElementById("copyBtn").addEventListener("click", function () {
+        var status = document.getElementById("copyStatus");
+        function ok() { status.textContent = "Gekopieerd."; }
+        function fail() { status.textContent = "Selecteer de tekst en kopieer handmatig."; }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(ok).catch(fail);
+        } else { fail(); }
+      });
+    })();
+  </script>
+</body>
+</html>
