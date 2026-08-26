@@ -1,0 +1,686 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EUR receive log</title>
+  <meta name="description" content="Record inbound USDC as EUR same-day. Operator-entered mid. No baked rate. Not a tax filing.">
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f3ee;
+      --card: #ffffff;
+      --ink: #1b1a17;
+      --muted: #5e5a53;
+      --line: #d9d3c7;
+      --accent: #0c4a36;
+      --accent-ink: #f4fff9;
+      --soft: #e4f0ea;
+      --warn: #8a4b12;
+      --warn-bg: #fff6e8;
+      --warn-line: #ecd4a4;
+      --danger: #9b2c1a;
+      --shadow: 0 14px 40px rgba(40, 32, 18, 0.07);
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+    }
+    main {
+      width: min(920px, 100%);
+      margin: 0 auto;
+      padding: 28px 16px 72px;
+    }
+    h1 {
+      margin: 0 0 6px;
+      font-size: clamp(1.6rem, 4vw, 2.1rem);
+      letter-spacing: -0.03em;
+    }
+    .lead { margin: 0 0 12px; color: var(--muted); max-width: 46rem; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      box-shadow: var(--shadow);
+      margin: 0 0 14px;
+    }
+    .card h2 { margin: 0 0 8px; font-size: 1.05rem; letter-spacing: -0.02em; }
+    .warn {
+      background: var(--warn-bg);
+      border: 1px solid var(--warn-line);
+      border-radius: 12px;
+      padding: 10px 12px;
+      color: var(--warn);
+      margin: 0 0 14px;
+      font-size: 0.95rem;
+    }
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 12px 0 6px;
+    }
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font: 15px/1.4 ui-sans-serif, system-ui, sans-serif;
+      color: var(--ink);
+      background: #fff;
+    }
+    textarea { min-height: 64px; resize: vertical; }
+    input:focus, select:focus, textarea:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 1px;
+    }
+    .grid {
+      display: grid;
+      gap: 0 14px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 720px) {
+      .grid { grid-template-columns: 1fr 1fr 1fr; }
+      .span-2 { grid-column: span 2; }
+      .span-3 { grid-column: span 3; }
+    }
+    .hint { font-size: 12px; color: var(--muted); margin: 6px 0 0; }
+    .hint.warn { color: var(--warn); }
+    .preview {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+      margin-top: 14px;
+      padding: 10px 12px;
+      background: var(--soft);
+      border-radius: 10px;
+      font-size: 14px;
+    }
+    .preview strong { font-variant-numeric: tabular-nums; }
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    button, .file-btn {
+      appearance: none;
+      font: 650 15px/1.2 ui-sans-serif, system-ui, sans-serif;
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 14px;
+      cursor: pointer;
+    }
+    .primary { background: var(--accent); color: var(--accent-ink); }
+    .ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .file-btn { display: inline-block; }
+    .err { color: var(--danger); font-size: 14px; margin: 10px 0 0; min-height: 1.2em; }
+    .ok { color: var(--accent); font-size: 14px; margin: 10px 0 0; min-height: 1.2em; }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td {
+      text-align: left;
+      padding: 8px 8px 8px 0;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+    th {
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    td.mono, .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+    }
+    td.num { font-variant-numeric: tabular-nums; }
+    .empty { color: var(--muted); font-style: italic; }
+    .row-actions { white-space: nowrap; }
+    .row-actions button { padding: 6px 10px; font-size: 13px; }
+    .addr {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      word-break: break-all;
+      background: var(--soft);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+    .fine { color: var(--muted); font-size: 13px; margin: 14px 0 0; }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.9em; }
+    .totals { margin-top: 12px; font-variant-numeric: tabular-nums; }
+    @media print {
+      .no-print { display: none !important; }
+      body { background: #fff; }
+      .card { box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>EUR receive log</h1>
+      <p class="lead">Record each inbound USDC as EUR on the day it arrived. Columns match Wallet’s receive-log.csv. You paste the mid. This file does not fetch or invent an exchange rate. It does not file taxes.</p>
+    </header>
+
+    <p class="warn">Books only — not a tax filing. Same-day. <code>tx</code> is last-6 only. Do not put personal email in <code>memo</code> or <code>notes</code>.</p>
+
+    <section class="card no-print">
+      <h2>New inbound</h2>
+      <form id="entryForm" autocomplete="off">
+        <div class="grid">
+          <div>
+            <label for="date">date</label>
+            <input id="date" name="date" type="date" required>
+            <p class="hint">The calendar day the USDC arrived.</p>
+          </div>
+          <div>
+            <label for="usdc">usdc</label>
+            <input id="usdc" name="usdc" type="text" inputmode="decimal" placeholder="Amount received">
+          </div>
+          <div>
+            <label for="eurMid">eur_mid (EUR per 1 USDC)</label>
+            <input id="eurMid" name="eur_mid" type="text" inputmode="decimal" placeholder="Paste today's mid">
+            <p class="hint warn">Required. No default. Do not guess.</p>
+          </div>
+          <div>
+            <label for="tx">tx</label>
+            <input id="tx" name="tx" type="text" spellcheck="false" placeholder="Paste full id or last 6">
+            <p class="hint">Saved as last-6 only.</p>
+          </div>
+          <div class="span-2">
+            <label for="memo">memo</label>
+            <textarea id="memo" name="memo" placeholder="invoice-1042 — no names, no email"></textarea>
+          </div>
+          <div class="span-3">
+            <label for="notes">notes</label>
+            <textarea id="notes" name="notes" placeholder="Optional operator note — no names, no email"></textarea>
+          </div>
+        </div>
+        <div class="preview" id="preview">
+          <span>tx last-6: <strong class="mono" id="previewTx">—</strong></span>
+          <span>EUR check (not tax): <strong id="previewEur">—</strong></span>
+        </div>
+        <div class="actions">
+          <button class="primary" type="submit" id="addBtn">Add to log</button>
+          <button class="ghost" type="button" id="resetBtn">Clear form</button>
+        </div>
+        <p class="err" id="formErr"></p>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Log</h2>
+      <div class="actions no-print">
+        <button class="primary" type="button" id="exportBtn">Download CSV</button>
+        <label class="file-btn ghost">
+          Import CSV
+          <input id="importFile" type="file" accept=".csv,text/csv" hidden>
+        </label>
+        <button class="ghost" type="button" id="printBtn">Print</button>
+        <button class="ghost" type="button" id="clearBtn">Clear log</button>
+      </div>
+      <p class="ok" id="logOk"></p>
+      <p class="err" id="logErr"></p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>date</th>
+              <th>usdc</th>
+              <th>eur_mid</th>
+              <th>memo</th>
+              <th>tx</th>
+              <th>notes</th>
+              <th class="no-print"></th>
+            </tr>
+          </thead>
+          <tbody id="tbody">
+            <tr><td class="empty" colspan="7">No rows yet. Add an inbound or import receive-log.csv.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="totals" id="totals"></p>
+    </section>
+
+    <section class="card no-print" id="pay">
+      <h2>Pay note</h2>
+      <p>Internal use is free. If billed: <strong>49 USDC</strong> on Solana, due on receipt.</p>
+      <p>Send USDC on Solana to:</p>
+      <div class="addr" id="addr">96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</div>
+      <p class="hint">Network: Solana · Token: USDC · Mint: <code>EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v</code></p>
+      <p class="hint">Memo: <code>eur-receive-log</code></p>
+      <div class="actions">
+        <button class="ghost" type="button" id="copyBtn">Copy address</button>
+      </div>
+      <p class="ok" id="copyStatus"></p>
+    </section>
+
+    <p class="fine">No wallet connect. No account. No rate feed. Not a tax filing. CSV columns: date, usdc, eur_mid, memo, tx, notes.</p>
+  </main>
+  <script>
+    (function () {
+      var STORAGE_KEY = "eur-receive-log.v2";
+      var PAY_TO = "96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3";
+      var CSV_HEADER = "date,usdc,eur_mid,memo,tx,notes";
+      var rows = [];
+
+      var dateEl = document.getElementById("date");
+      var txEl = document.getElementById("tx");
+      var usdcEl = document.getElementById("usdc");
+      var eurMidEl = document.getElementById("eurMid");
+      var memoEl = document.getElementById("memo");
+      var notesEl = document.getElementById("notes");
+      var formErr = document.getElementById("formErr");
+      var logOk = document.getElementById("logOk");
+      var logErr = document.getElementById("logErr");
+
+      function todayISO() {
+        var d = new Date();
+        var m = String(d.getMonth() + 1);
+        var day = String(d.getDate());
+        if (m.length < 2) m = "0" + m;
+        if (day.length < 2) day = "0" + day;
+        return d.getFullYear() + "-" + m + "-" + day;
+      }
+
+      function last6(raw) {
+        var s = String(raw || "").trim().replace(/\s/g, "");
+        if (s.slice(0, 2).toLowerCase() === "0x") s = s.slice(2);
+        if (s.length <= 6) return s;
+        return s.slice(-6);
+      }
+
+      function parseAmount(raw, maxDecimals) {
+        var s = String(raw || "").trim().replace(",", ".");
+        if (!s) return null;
+        var re = maxDecimals === 6 ? /^\d+(\.\d{0,6})?$/ : /^\d+(\.\d{0,8})?$/;
+        if (!re.test(s)) return null;
+        var n = Number(s);
+        if (!isFinite(n) || n <= 0) return null;
+        return s;
+      }
+
+      function eurCheck(usdc, mid) {
+        var a = Number(usdc);
+        var m = Number(mid);
+        if (!isFinite(a) || !isFinite(m) || a <= 0 || m <= 0) return "";
+        return (Math.round(a * m * 100) / 100).toFixed(2);
+      }
+
+      function csvEscape(value) {
+        var s = String(value == null ? "" : value);
+        if (/[",\n\r]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+        return s;
+      }
+
+      function parseCsv(text) {
+        var src = String(text || "").replace(/^\uFEFF/, "");
+        var out = [];
+        var row = [];
+        var field = "";
+        var i;
+        var inQuotes = false;
+        var c;
+        for (i = 0; i < src.length; i++) {
+          c = src.charAt(i);
+          if (inQuotes) {
+            if (c === '"') {
+              if (src.charAt(i + 1) === '"') {
+                field += '"';
+                i++;
+              } else {
+                inQuotes = false;
+              }
+            } else {
+              field += c;
+            }
+          } else if (c === '"') {
+            inQuotes = true;
+          } else if (c === ",") {
+            row.push(field);
+            field = "";
+          } else if (c === "\n") {
+            row.push(field);
+            out.push(row);
+            row = [];
+            field = "";
+          } else if (c !== "\r") {
+            field += c;
+          }
+        }
+        if (field.length || row.length) {
+          row.push(field);
+          out.push(row);
+        }
+        return out.filter(function (r) {
+          return r.some(function (cell) { return String(cell).trim() !== ""; });
+        });
+      }
+
+      function looksLikeEmail(s) {
+        return /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i.test(String(s || ""));
+      }
+
+      function setFormErr(msg) {
+        formErr.textContent = msg || "";
+      }
+
+      function setLogMsg(ok, err) {
+        logOk.textContent = ok || "";
+        logErr.textContent = err || "";
+      }
+
+      function save() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(rows));
+        } catch (e) {}
+      }
+
+      function load() {
+        try {
+          var raw = localStorage.getItem(STORAGE_KEY);
+          var parsed = raw ? JSON.parse(raw) : [];
+          if (Array.isArray(parsed)) rows = parsed.filter(validRow);
+        } catch (e) {
+          rows = [];
+        }
+      }
+
+      function validRow(r) {
+        return r && r.date && r.usdc && r.eur_mid && r.tx;
+      }
+
+      function rowKey(r) {
+        return [r.date, r.usdc, r.tx].join("|");
+      }
+
+      function cell(line, idx, key, fallback) {
+        var i = idx[key];
+        if (i == null && fallback) i = idx[fallback];
+        if (i == null) return "";
+        return String(line[i] || "").trim();
+      }
+
+      function readForm() {
+        var date = dateEl.value;
+        var tx = last6(txEl.value);
+        var usdc = parseAmount(usdcEl.value, 6);
+        var mid = parseAmount(eurMidEl.value, 8);
+        var memo = memoEl.value.trim();
+        var notes = notesEl.value.trim();
+        if (!date) return { error: "Date is required. Use the day the USDC arrived." };
+        if (!usdc) return { error: "usdc must be a number greater than 0 (up to 6 decimals)." };
+        if (!mid) return { error: "eur_mid is required. This pack does not invent a rate." };
+        if (!tx || tx.length < 6) return { error: "Need at least six characters of the transaction id. Only last-6 is stored in tx." };
+        if (looksLikeEmail(memo) || looksLikeEmail(notes)) {
+          return { error: "memo and notes must not contain an email address." };
+        }
+        return {
+          date: date,
+          usdc: usdc,
+          eur_mid: mid,
+          memo: memo,
+          tx: tx,
+          notes: notes
+        };
+      }
+
+      function updatePreview() {
+        var tx = last6(txEl.value);
+        document.getElementById("previewTx").textContent = tx || "—";
+        var usdc = parseAmount(usdcEl.value, 6);
+        var mid = parseAmount(eurMidEl.value, 8);
+        var previewEur = document.getElementById("previewEur");
+        if (usdc && mid) {
+          previewEur.textContent = eurCheck(usdc, mid) + " EUR";
+        } else if (usdc && !mid) {
+          previewEur.textContent = "— (needs your mid)";
+        } else {
+          previewEur.textContent = "—";
+        }
+      }
+
+      function escapeHtml(s) {
+        return String(s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function render() {
+        var tbody = document.getElementById("tbody");
+        var totals = document.getElementById("totals");
+        if (!rows.length) {
+          tbody.innerHTML = '<tr><td class="empty" colspan="7">No rows yet. Add an inbound or import receive-log.csv.</td></tr>';
+          totals.textContent = "";
+          return;
+        }
+        var html = "";
+        var usdcSum = 0;
+        var i;
+        var r;
+        for (i = 0; i < rows.length; i++) {
+          r = rows[i];
+          usdcSum += Number(r.usdc) || 0;
+          html += "<tr>" +
+            "<td>" + escapeHtml(r.date) + "</td>" +
+            "<td class=\"num\">" + escapeHtml(r.usdc) + "</td>" +
+            "<td class=\"num\">" + escapeHtml(r.eur_mid) + "</td>" +
+            "<td>" + escapeHtml(r.memo || "") + "</td>" +
+            "<td class=\"mono\">" + escapeHtml(r.tx) + "</td>" +
+            "<td>" + escapeHtml(r.notes || "") + "</td>" +
+            "<td class=\"row-actions no-print\"><button class=\"ghost\" type=\"button\" data-remove=\"" + i + "\">Remove</button></td>" +
+            "</tr>";
+        }
+        tbody.innerHTML = html;
+        totals.textContent = "Rows: " + rows.length +
+          " · USDC: " + (Math.round(usdcSum * 1e6) / 1e6) +
+          " · Not a tax filing.";
+      }
+
+      function toCsv() {
+        var lines = [CSV_HEADER];
+        var i;
+        var r;
+        for (i = 0; i < rows.length; i++) {
+          r = rows[i];
+          lines.push([
+            csvEscape(r.date),
+            csvEscape(r.usdc),
+            csvEscape(r.eur_mid),
+            csvEscape(r.memo || ""),
+            csvEscape(r.tx),
+            csvEscape(r.notes || "")
+          ].join(","));
+        }
+        return lines.join("\n") + "\n";
+      }
+
+      function headerIndex(header) {
+        var map = {};
+        var i;
+        var key;
+        for (i = 0; i < header.length; i++) {
+          key = String(header[i] || "").trim().toLowerCase().replace(/[\s-]+/g, "_");
+          map[key] = i;
+        }
+        return map;
+      }
+
+      function importCsvText(text) {
+        var table = parseCsv(text);
+        if (!table.length) return { added: 0, skipped: 0, error: "CSV is empty." };
+        var idx = headerIndex(table[0]);
+        var start = 0;
+        if (idx.date != null && (idx.usdc != null || idx.usdc_amount != null) && (idx.tx != null || idx.tx_last6 != null)) {
+          start = 1;
+        } else {
+          idx = { date: 0, usdc: 1, eur_mid: 2, memo: 3, tx: 4, notes: 5 };
+        }
+        var existing = {};
+        var i;
+        for (i = 0; i < rows.length; i++) existing[rowKey(rows[i])] = true;
+        var added = 0;
+        var skipped = 0;
+        var line;
+        var rec;
+        var txCell;
+        var usdc;
+        var mid;
+        var memo;
+        var notes;
+        for (i = start; i < table.length; i++) {
+          line = table[i];
+          txCell = last6(cell(line, idx, "tx", "tx_last6"));
+          usdc = parseAmount(cell(line, idx, "usdc", "usdc_amount"), 6);
+          mid = parseAmount(cell(line, idx, "eur_mid"), 8);
+          memo = cell(line, idx, "memo", "source_memo");
+          notes = cell(line, idx, "notes");
+          rec = {
+            date: cell(line, idx, "date"),
+            usdc: usdc || "",
+            eur_mid: mid || "",
+            memo: memo,
+            tx: txCell,
+            notes: notes
+          };
+          if (!validRow(rec) || rec.tx.length < 6 || looksLikeEmail(rec.memo) || looksLikeEmail(rec.notes)) {
+            skipped += 1;
+            continue;
+          }
+          if (existing[rowKey(rec)]) {
+            skipped += 1;
+            continue;
+          }
+          rows.push(rec);
+          existing[rowKey(rec)] = true;
+          added += 1;
+        }
+        save();
+        render();
+        return { added: added, skipped: skipped };
+      }
+
+      function resetForm() {
+        dateEl.value = todayISO();
+        txEl.value = "";
+        usdcEl.value = "";
+        eurMidEl.value = "";
+        memoEl.value = "";
+        notesEl.value = "";
+        setFormErr("");
+        updatePreview();
+      }
+
+      dateEl.value = todayISO();
+      load();
+      render();
+      updatePreview();
+
+      ["input", "change"].forEach(function (ev) {
+        txEl.addEventListener(ev, updatePreview);
+        usdcEl.addEventListener(ev, updatePreview);
+        eurMidEl.addEventListener(ev, updatePreview);
+      });
+
+      document.getElementById("entryForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        var rec = readForm();
+        if (rec.error) {
+          setFormErr(rec.error);
+          return;
+        }
+        rows.push(rec);
+        save();
+        render();
+        setFormErr("");
+        setLogMsg("Row added. tx last-6 " + rec.tx + ".", "");
+        txEl.value = "";
+        usdcEl.value = "";
+        memoEl.value = "";
+        notesEl.value = "";
+        updatePreview();
+        txEl.focus();
+      });
+
+      document.getElementById("resetBtn").addEventListener("click", resetForm);
+
+      document.getElementById("tbody").addEventListener("click", function (e) {
+        var btn = e.target.closest("[data-remove]");
+        if (!btn) return;
+        var i = Number(btn.getAttribute("data-remove"));
+        if (!isFinite(i) || i < 0 || i >= rows.length) return;
+        rows.splice(i, 1);
+        save();
+        render();
+        setLogMsg("Row removed.", "");
+      });
+
+      document.getElementById("exportBtn").addEventListener("click", function () {
+        var blob = new Blob([toCsv()], { type: "text/csv;charset=utf-8" });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = "receive-log.csv";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        setLogMsg("CSV downloaded. Header is date,usdc,eur_mid,memo,tx,notes.", "");
+      });
+
+      document.getElementById("importFile").addEventListener("change", function () {
+        var file = this.files && this.files[0];
+        this.value = "";
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function () {
+          var result = importCsvText(String(reader.result || ""));
+          if (result.error) {
+            setLogMsg("", result.error);
+            return;
+          }
+          setLogMsg("Imported " + result.added + " row(s). Skipped " + result.skipped + ".", "");
+        };
+        reader.onerror = function () {
+          setLogMsg("", "Could not read that file.");
+        };
+        reader.readAsText(file);
+      });
+
+      document.getElementById("printBtn").addEventListener("click", function () {
+        window.print();
+      });
+
+      document.getElementById("clearBtn").addEventListener("click", function () {
+        if (!rows.length) return;
+        if (!window.confirm("Clear all rows from this browser? CSV files you already downloaded are unchanged.")) return;
+        rows = [];
+        save();
+        render();
+        setLogMsg("Log cleared in this browser.", "");
+      });
+
+      document.getElementById("copyBtn").addEventListener("click", function () {
+        var status = document.getElementById("copyStatus");
+        function ok() { status.textContent = "Copied."; }
+        function fail() { status.textContent = "Copy failed. Select the address instead."; }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(PAY_TO).then(ok).catch(fail);
+        } else {
+          fail();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
