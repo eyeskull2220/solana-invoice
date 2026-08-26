@@ -170,18 +170,20 @@
     return "(function(){var t=document.querySelector(\"[data-nav-toggle]\");var m=document.querySelector(\"[data-nav]\");if(t&&m){t.addEventListener(\"click\",function(){var o=m.classList.toggle(\"is-open\");t.setAttribute(\"aria-expanded\",o?\"true\":\"false\");t.textContent=o?\"Sluit\":\"Menu\";});m.addEventListener(\"click\",function(e){if(e.target&&e.target.tagName===\"A\"&&m.classList.contains(\"is-open\")){m.classList.remove(\"is-open\");t.setAttribute(\"aria-expanded\",\"false\");t.textContent=\"Menu\";}});}var y=document.querySelector(\"[data-year]\");if(y)y.textContent=String(new Date().getFullYear());})();";
   }
 
-  function header(d, current, prefix) {
+  function header(d, current, prefix, hashNav) {
     var p = prefix || "";
-    function item(href, label, key) {
-      var cur = key === current ? " aria-current=\"page\"" : "";
-      return "<a href=\"" + p + href + "\"" + cur + ">" + label + "</a>";
+    function item(href, label, key, hash) {
+      var url = hashNav ? ("#" + hash) : (p + href);
+      var cur = !hashNav && key === current ? " aria-current=\"page\"" : "";
+      return "<a href=\"" + url + "\"" + cur + ">" + label + "</a>";
     }
-    return "<header class=\"site-header\"><a class=\"skip\" href=\"#inhoud\">Naar inhoud</a><div class=\"bar\"><a class=\"brand\" href=\"" + p + "index.html\"><span class=\"mark\" aria-hidden=\"true\"></span><span class=\"brand-text\"><strong>" + esc(d.name) + "</strong><span>" + esc(d.sport) + " · " + esc(d.city) + "</span></span></a><button type=\"button\" class=\"nav-toggle\" data-nav-toggle aria-expanded=\"false\" aria-controls=\"menu\">Menu</button><nav id=\"menu\" class=\"menu\" data-nav>" +
-      item("index.html", "Home", "home") +
-      item("over.html", "Over ons", "over") +
-      item("agenda.html", "Agenda", "agenda") +
-      item("lidworden.html", "Lid worden", "lid") +
-      item("contact.html", "Contact", "contact") +
+    var homeHref = hashNav ? "#inhoud" : (p + "index.html");
+    return "<header class=\"site-header\"><a class=\"skip\" href=\"#inhoud\">Naar inhoud</a><div class=\"bar\"><a class=\"brand\" href=\"" + homeHref + "\"><span class=\"mark\" aria-hidden=\"true\"></span><span class=\"brand-text\"><strong>" + esc(d.name) + "</strong><span>" + esc(d.sport) + " · " + esc(d.city) + "</span></span></a><button type=\"button\" class=\"nav-toggle\" data-nav-toggle aria-expanded=\"false\" aria-controls=\"menu\">Menu</button><nav id=\"menu\" class=\"menu\" data-nav>" +
+      item("index.html", "Home", "home", "inhoud") +
+      item("over.html", "Over ons", "over", "over") +
+      item("agenda.html", "Agenda", "agenda", "agenda") +
+      item("lidworden.html", "Lid worden", "lid", "lidworden") +
+      item("contact.html", "Contact", "contact", "contact") +
       "</nav></div></header>";
   }
 
@@ -211,7 +213,7 @@
   function onePager(d, linked) {
     var mail = mailtoJoin(d);
     var body =
-      header(d, "home", "") +
+      header(d, "home", "", !linked) +
       "<main id=\"inhoud\"><section class=\"hero\"><div class=\"wrap\"><p class=\"kicker\">" + esc(d.city) + "</p><h1>" + esc(d.name) + "</h1><p class=\"lead\">" + esc(d.sport) + " in " + esc(d.city) + ". Agenda, lidgeld en contact op één statische site. Geen account.</p><div class=\"chips\"><span class=\"chip\">" + esc(d.sport) + "</span><span class=\"chip\">" + esc(d.city) + "</span></div><div class=\"actions\"><a class=\"btn btn-primary\" href=\"" + (linked ? "lidworden.html" : "#lidworden") + "\">Lid worden</a><a class=\"btn btn-ghost\" href=\"" + (linked ? "agenda.html" : "#agenda") + "\">Agenda</a></div></div></section>" +
       "<section class=\"section\" id=\"over\"><div class=\"wrap\"><p class=\"kicker\">Over ons</p><h2>Welkom bij " + esc(d.name) + "</h2><div class=\"prose\"><p>" + esc(d.name) + " is een club in " + esc(d.city) + ". Deze pagina is de mal: vervang deze alinea door het echte clubverhaal.</p></div></div></section>" +
       "<section class=\"section\" id=\"agenda\"><div class=\"wrap\"><p class=\"kicker\">Agenda</p><h2>Volgende momenten</h2><div class=\"grid grid-2\">" + eventCards(d) + "</div></div></section>" +
