@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Offerte — Pipeline kit</title>
+  <link rel="stylesheet" href="pipeline.css">
+</head>
+<body>
+  <div class="wrap">
+    <header class="brand">
+      <strong>Studio Noord</strong>
+      <span>Offerte · demo</span>
+    </header>
+    <nav class="kit" aria-label="Kit">
+      <a href="index.html">Kit</a>
+      <a href="form.html">Form</a>
+      <a href="offerte.html" aria-current="page">Offerte</a>
+      <a href="invoice.html">Factuur</a>
+      <a href="reminder.html">Herinnering</a>
+    </nav>
+
+    <h1>Offerte met 21% BTW</h1>
+    <p class="lead">Demo for Studio Noord → Client BV. Lines can come from the lead form. Download a standalone HTML offerte, then push the same lines to the factuur.</p>
+    <p class="disclaimer">Dit is een offerte, geen factuur. Totals are arithmetic only. This is not tax advice and not a Peppol document.</p>
+    <div id="mount"></div>
+    <footer class="page">Studio Noord demo kit. Not bookkeeping. Not a Peppol Access Point.</footer>
+  </div>
+  <script src="pipeline.js"></script>
+  <script>Pipeline.mount("offerte");</script>
+</body>
+</html>
