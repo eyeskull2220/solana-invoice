@@ -1,14 +1,14 @@
 # PII / secrets scan — all open PRs
 
-**Overall: 2 FAIL, 50 PASS** (52 open PRs)
+**Overall: 4 FAIL, 57 PASS** (61 other open PRs; this report is #66)
 
 | | |
 |---|---|
 | Repo | [eyeskull2220/solana-invoice](https://github.com/eyeskull2220/solana-invoice) |
-| Snapshot | 2026-08-26 00:55 UTC |
+| Snapshot | 2026-08-26 01:00 UTC |
 | Base | `main` @ `2170952` |
-| Scope | Every **open** pull request at snapshot (draft + ready). Diffs, added files, and PR description bodies. |
-| Not scanned | Closed/merged PRs (#1, #10, #26, #27, #30). PRs opened after this snapshot. |
+| Scope | Every **open** pull request at snapshot except this report (#66). Diffs, added files, and PR description bodies. |
+| Not scanned | Closed/merged PRs (#1, #10, #26, #27, #30). This report PR (#66). PRs opened after this snapshot. |
 | Merge | **Do not merge** this report PR as a substitute for remediating FAIL findings. |
 
 ## What was flagged
@@ -46,14 +46,14 @@ Circle USDC on Solana mainnet (`EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`) i
 3. Regex + manual review for the classes above.
 4. Discarded false positives: FNV hash `2166136261`, Greenhouse job ids, Cursor agent UUIDs, “Circle” (USDC issuer) vs street “Circle”, USDC mint, Solana **transaction signatures** (64-byte base58, same length as a secret key but used as `const SIG` fixtures), token-prefix examples in scan writeups (`sk_live_`, `ghp_`, … with no payload).
 
-No `.env` files, PEM keys, mnemonics, password values, phone numbers, or street addresses were found in any open PR at snapshot.
+No `.env` files, PEM keys, mnemonics, password values, or phone numbers were found in any open PR at snapshot. One published org street line appears in #63 (noted, not a home-address FAIL).
 
 ## Summary
 
 | Verdict | PRs |
 |---|---|
-| **FAIL** | [#2](https://github.com/eyeskull2220/solana-invoice/pull/2), [#56](https://github.com/eyeskull2220/solana-invoice/pull/56) |
-| **PASS** | #3–#9, #11–#25, #28–#29, #31–#55, #57 (50 PRs) |
+| **FAIL** | [#2](https://github.com/eyeskull2220/solana-invoice/pull/2), [#56](https://github.com/eyeskull2220/solana-invoice/pull/56), [#60](https://github.com/eyeskull2220/solana-invoice/pull/60), [#63](https://github.com/eyeskull2220/solana-invoice/pull/63) |
+| **PASS** | #3–#9, #11–#25, #28–#29, #31–#55, #57–#59, #61–#62, #64–#65, #67 (57 PRs) |
 
 ## FAIL details
 
@@ -85,6 +85,33 @@ Values below are redacted. See the cited files on the PR for the full string.
 | Keys / seeds / tokens / passwords / `.env` | None |
 
 **Remediation:** replace the third-party inbox with a non-identifying description (e.g. “a Gmail on josylaumen.be, different person”) without pasting the local-part.
+
+### PR #60 — FAIL
+
+- **Title:** Futurepedia sweep: one NoUploadTools listing, zero to Futurepedia
+- **URL:** https://github.com/eyeskull2220/solana-invoice/pull/60
+- **Files:** `docs/sweep-futurepedia.md`
+
+| Finding | Notes |
+|---|---|
+| Personal Gmail | Form-field table names the same personal `@gmail.com` already used in listing research, and notes it “is not published on the site.” Committing it here publishes it. |
+| Keys / seeds / tokens / passwords / phone / home address / `.env` | None |
+
+**Remediation:** same as #2 — remove the personal inbox from the sweep file.
+
+### PR #63 — FAIL
+
+- **Title:** docs: Belgian ICT one-job mailto sweep (2026-08-26)
+- **URL:** https://github.com/eyeskull2220/solana-invoice/pull/63
+- **Files:** `docs/sweep-be-onejob-mailto.md`
+
+| Finding | Notes |
+|---|---|
+| Personal Gmail | Named as the From address (“if a human sends”) and encoded in draft `mailto:` bodies, plus a first name + city (“Sasha, Geel”). |
+| Keys / seeds / tokens / passwords / phone / `.env` | None. Org/recruiting inboxes (`info@…`, `gille@konnekt.be`, `inschrijvingendmi@hotmail.com` on the club site, etc.) are public business contacts, not FAIL. |
+| Street line | Source log copies `Koetsweg 13, 3010 Kessel-Lo` from Meer Democratie’s public contact page. That is an **org office**, not a private home; recorded here, not used as a FAIL for “home address.” |
+
+**Remediation:** strip the personal Gmail and first-name/city signature from draft mailto bodies.
 
 ## PASS (with reviewed-not-flagged notes)
 
@@ -151,6 +178,13 @@ These bake the allowlisted Solana pay-to (and usually the USDC mint) into HTML/R
 | [#54](https://github.com/eyeskull2220/solana-invoice/pull/54) | Layer3/Bountycaster/Questbook recheck | `docs/sweep-web3-gated-recheck.md` | No keys/PII. |
 | [#55](https://github.com/eyeskull2220/solana-invoice/pull/55) | Dework this-week sweep | `docs/sweep-dework-today.md` | Allowlisted pay-tos listed as unused. |
 | [#57](https://github.com/eyeskull2220/solana-invoice/pull/57) | ComeOn.be sweep | `docs/sweep-comeon-be.md` | States personal phones on Vivastreet were **not copied**. Allowlisted EVM. |
+| [#58](https://github.com/eyeskull2220/solana-invoice/pull/58) | tinytools.tools/requests sweep | `docs/sweep-tinytools-requests.md` | No secrets/PII. |
+| [#59](https://github.com/eyeskull2220/solana-invoice/pull/59) | Base/ETH USDC paste-address bounty sweep | `docs/sweep-base-paste-bounties.md` | Extra `0x` strings are Circle **USDC / USDbC token contracts** on Base, not pay-to wallets. Allowlisted EVM is the intended paste address. |
+| [#61](https://github.com/eyeskull2220/solana-invoice/pull/61) | SaaSHub alternatives sweep | `docs/sweep-saashub-alts.md` | Placeholder `you@studio.example` only. |
+| [#62](https://github.com/eyeskull2220/solana-invoice/pull/62) | HN/IH read-only sweep | `docs/sweep-hn-ih-read.md` | No secrets/PII. |
+| [#64](https://github.com/eyeskull2220/solana-invoice/pull/64) | Twago Belgium/EU sweep | `docs/sweep-twago.md` | No secrets/PII. |
+| [#65](https://github.com/eyeskull2220/solana-invoice/pull/65) | QuickBooks forum sweep | `docs/sweep-qbo-forums.md` | No secrets/PII. |
+| [#67](https://github.com/eyeskull2220/solana-invoice/pull/67) | EU/Belgium micro-task sweep | `docs/sweep-eu-microtasks.md` | Public hiring inboxes only (`bg@tuco.ai`, `gille@konnekt.be`, etc.). |
 
 ## Out of scope / not findings
 
@@ -161,4 +195,4 @@ These bake the allowlisted Solana pay-to (and usually the USDC mint) into HTML/R
 
 ## Recheck
 
-Re-run this scan if new open PRs land after 2026-08-26 00:55 UTC, or after FAIL PRs #2 / #56 are edited.
+Re-run this scan if new open PRs land after 2026-08-26 01:00 UTC, or after FAIL PRs #2 / #56 / #60 / #63 are edited.
