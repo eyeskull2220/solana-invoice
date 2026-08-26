@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Herinnering koper nog niet klaar — copy-paste (wij versturen dit niet)</title>
+  <link rel="stylesheet" href="pack.css">
+</head>
+<body>
+  <main class="wrap">
+    <nav class="pack-nav no-print" aria-label="Pack">
+      <a href="index.html">Start</a>
+      <a href="intake.html">Intake</a>
+      <a href="client-chase-mail-1.html">Chase 1</a>
+      <a href="client-chase-mail-2.html">Chase 2</a>
+      <a href="reminder-buyer-not-ready.html" aria-current="page">Niet klaar</a>
+      <a href="DISCLAIMER.html">Disclaimer</a>
+    </nav>
+
+    <p class="kicker no-print">Copy-paste · wij versturen deze mail niet</p>
+    <h1 class="no-print">Koper staat nog niet op Peppol</h1>
+    <p class="lead no-print">U kopieert dit naar uw eigen mailprogramma. Dit pack heeft geen inbox, geen SMTP, geen “verzend”-knop. Vervang de [blokken] door uw gegevens — niet de demo Studio Noord als u live gaat.</p>
+    <div class="banner warn no-print">PDF in bijlage bij deze mail maakt de B2B-factuur niet wettelijk. Dit is alleen een reminder om een Access Point te nemen.</div>
+    <p class="no-print copy-row">
+      <button type="button" id="copyBtn">Kopieer mailtekst</button>
+      <span class="copy-ok" id="copyStatus"></span>
+    </p>
+
+    <pre class="mail" id="mail">Onderwerp: We kunnen u nog geen wettelijke B2B e-factuur sturen — Peppol ontbreekt
+
+Beste [naam of team facturatie],
+
+Sinds 1 januari 2026 is een PDF per e-mail in België geen wettelijke B2B-factuur meer tussen btw-plichtige ondernemingen. We moeten gestructureerd factureren via Peppol (BIS Billing 3.0).
+
+We hebben uw ondernemingsnummer [KBO koper, 10 cijfers] opgezocht in de officiële Peppol Directory als 0208:[dezelfde 10 cijfers zonder punten]. We vinden daar nog geen ontvangstpunt voor e-facturen.
+
+Zolang dat zo blijft:
+- kunnen wij u geen conforme B2B-factuur bezorgen via Peppol;
+- is een PDF in deze mail hoogstens ter info, geen wettelijk document;
+- blijft u (en wij) blootgesteld aan de Belgische sanctie als er geen technische middelen zijn — die start bij €1.500.
+
+Wat u kunt doen (wij registreren dit niet voor u):
+1. Kies software op de officiële FOD-lijst:
+   https://efactuur.belgium.be/nl/article/softwareoplossingen-voor-het-verzenden-ontvangen-en-verwerken-van-elektronische-facturen
+2. Laat die software uw Peppol-ID registreren als 0208: + uw KBO.
+3. Bevestig ons wanneer u in de Directory zichtbaar bent. Dan sturen wij de factuur via ons Access Point — niet via deze mail.
+
+B2C-facturen (aan particulieren) mogen nog als PDF. Deze vraag geldt alleen voor B2B.
+
+Met vriendelijke groeten,
+[uw juridische naam]
+[uw KBO]
+[uw bedrijfs-e-mail op eigen domein]
+
+— Deze tekst komt uit een voorbereidingspack. De afzender van dit pack is geen Access Point en heeft deze mail niet voor u verstuurd.</pre>
+  </main>
+  <script>
+    (function () {
+      var text = document.getElementById("mail").textContent;
+      document.getElementById("copyBtn").addEventListener("click", function () {
+        var status = document.getElementById("copyStatus");
+        function ok() { status.textContent = "Gekopieerd."; }
+        function fail() { status.textContent = "Selecteer de tekst en kopieer handmatig."; }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(ok).catch(fail);
+        } else { fail(); }
+      });
+    })();
+  </script>
+</body>
+</html>

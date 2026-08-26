@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Belgisch Peppol Client-Chase Pack — 399 USDC</title>
+  <meta name="description" content="399 USDC. Geen Access Point. PDF per e-mail is sinds 1 jan 2026 geen wettelijke BE B2B-factuur.">
+  <link rel="stylesheet" href="pack.css">
+</head>
+<body>
+  <main class="wrap">
+    <nav class="pack-nav" aria-label="Pack">
+      <a href="index.html" aria-current="page">Start</a>
+      <a href="intake.html">Intake</a>
+      <a href="master-data-checklist.html">Checklist</a>
+      <a href="invoice-preview.html">Factuur 21%</a>
+      <a href="invoice-preview-reverse-charge.html">Reverse charge</a>
+      <a href="software-shortlist.html">Software</a>
+      <a href="peppol-lookup-worksheet.html">Lookup</a>
+      <a href="HANDOFF.html">Handoff</a>
+      <a href="DISCLAIMER.html">Disclaimer</a>
+    </nav>
+
+    <p class="kicker">Client-Chase Pack · België · B2B e-factuur</p>
+    <h1>Uw klanten zitten nog op PDF. Dit pack jaagt ze naar Peppol — u niet.</h1>
+    <p class="lead">399 USDC. Statische bestanden + sample XML. Geen Access Point. Wij registreren geen Peppol-ID. Na deze bestanden bent u niet compliant.</p>
+    <p><span class="price">399 USDC</span></p>
+
+    <div class="banner danger">
+      <strong>Dit is geen Peppol Access Point.</strong>
+      Wij kunnen geen Peppol-ID registreren. Wij maken de koper niet compliant.
+      PDF per e-mail is sinds <strong>1 januari 2026 geen wettelijke Belgische B2B-factuur</strong>.
+      De boete als u geen technische middelen hebt, start bij <strong>€1.500</strong>.
+      B2C-PDF blijft toegelaten. B2B-PDF niet.
+    </div>
+
+    <section class="card" id="pay">
+      <h2>Betaal 399 USDC op Solana</h2>
+      <p>Alleen USDC. Niet SOL, niet Base, niet ETH, niet XRP. Copy-address — geen wallet-connect.</p>
+      <p>Stuur exact 399 USDC naar:</p>
+      <div class="addr" id="addr">96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</div>
+      <p class="net">Netwerk: Solana · Token: USDC · mint EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v</p>
+      <div class="copy-row">
+        <button type="button" id="copyBtn">Kopieer adres</button>
+        <span class="copy-ok" id="copyStatus"></span>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Wat u krijgt</h2>
+      <ul class="file-list">
+        <li><a href="intake.html">intake.html</a> <small>Bedrijfsblok + tot 10 B2B-kopers + BTW-geval</small></li>
+        <li><a href="master-data-checklist.html">master-data-checklist.html</a> <small>Wat een AP later nodig heeft</small></li>
+        <li><a href="invoice-preview.html">invoice-preview.html</a> <small>Leesbare Peppol-stijl factuur 21%</small></li>
+        <li><a href="invoice-preview-reverse-charge.html">invoice-preview-reverse-charge.html</a> <small>Zelfde, BTW verlegd</small></li>
+        <li><a href="invoice-sample-21pct.xml">invoice-sample-21pct.xml</a> <small>BIS Billing 3.0 SAMPLE</small></li>
+        <li><a href="invoice-sample-reverse-charge.xml">invoice-sample-reverse-charge.xml</a> <small>SAMPLE, categorie AE</small></li>
+        <li><a href="creditnote-sample.xml">creditnote-sample.xml</a> <small>SAMPLE creditnota</small></li>
+        <li><a href="reminder-buyer-not-ready.html">reminder-buyer-not-ready.html</a> <small>Mail die wij niet versturen</small></li>
+        <li><a href="client-chase-mail-1.html">client-chase-mail-1.html</a> + <a href="client-chase-mail-2.html">mail-2</a> <small>Copy-paste naar kopers</small></li>
+        <li><a href="software-shortlist.html">software-shortlist.html</a> <small>Officiële FOD-lijst + voorbeelden</small></li>
+        <li><a href="peppol-lookup-worksheet.html">peppol-lookup-worksheet.html</a> <small>0208: + KBO in de Directory</small></li>
+        <li><a href="HANDOFF.html">HANDOFF.html</a> <small>Volgende klikken in een écht AP-tool</small></li>
+        <li><a href="DISCLAIMER.html">DISCLAIMER.html</a> <small>Geen AP, geen boekhouder, geen wettelijke factuur</small></li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Wat dit pack niet is</h2>
+      <ul>
+        <li>Geen gecertificeerd Access Point, geen OpenPeppol-lidmaatschap.</li>
+        <li>Geen live Peppol verzenden of ontvangen.</li>
+        <li>Geen registratie van úw Peppol-ID.</li>
+        <li>Geen boekhouding, geen Azure AD, geen itsme/eID-onboarding.</li>
+        <li>Geen restack van de 9 USDC Solana Invoice, geen coding-job sollicitaties.</li>
+        <li>Geen claim dat u “compliant” bent na deze bestanden.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Demo-data in de voorbeelden</h2>
+      <p>Studio Noord · Client BV · <span class="mono">hello@studio.example</span> · vals KBO BE0123.456.789. Geen echte inboxen.</p>
+    </section>
+
+    <p class="fine">Prijs is 399 USDC, niet 499. Lees <a href="DISCLAIMER.html">DISCLAIMER.html</a> voor u iets naar een klant stuurt.</p>
+  </main>
+  <script>
+    (function () {
+      var ADDR = "96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3";
+      document.getElementById("copyBtn").addEventListener("click", function () {
+        var status = document.getElementById("copyStatus");
+        function ok() { status.textContent = "Gekopieerd."; }
+        function fail() { status.textContent = "Selecteer het adres en kopieer handmatig."; }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(ADDR).then(ok).catch(fail);
+        } else { fail(); }
+      });
+    })();
+  </script>
+</body>
+</html>

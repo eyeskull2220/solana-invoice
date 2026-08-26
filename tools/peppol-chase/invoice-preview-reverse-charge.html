@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Voorbeeld factuur reverse charge — Peppol-stijl (demo)</title>
+  <link rel="stylesheet" href="pack.css">
+</head>
+<body>
+  <main class="wrap">
+    <nav class="pack-nav no-print" aria-label="Pack">
+      <a href="index.html">Start</a>
+      <a href="intake.html">Intake</a>
+      <a href="master-data-checklist.html">Checklist</a>
+      <a href="invoice-preview.html">Factuur 21%</a>
+      <a href="invoice-preview-reverse-charge.html" aria-current="page">Reverse charge</a>
+      <a href="software-shortlist.html">Software</a>
+      <a href="peppol-lookup-worksheet.html">Lookup</a>
+      <a href="HANDOFF.html">Handoff</a>
+      <a href="DISCLAIMER.html">Disclaimer</a>
+    </nav>
+
+    <p class="kicker no-print">Menselijk leesbaar · matcht invoice-sample-reverse-charge.xml</p>
+    <h1 class="no-print">Peppol-stijl factuur (BTW verlegd / AE)</h1>
+    <p class="lead no-print">Categorie AE, 0% op de factuur, koper voldoet de BTW. Nog steeds SAMPLE. Uw boekhouder — niet dit pack — beslist of AE van toepassing is.</p>
+    <p class="no-print"><a class="btn ghost" href="invoice-sample-reverse-charge.xml">Open SAMPLE XML</a></p>
+
+    <article class="invoice" aria-label="Demo-factuur reverse charge">
+      <div class="stamp">SAMPLE</div>
+      <header>
+        <div>
+          <div class="kicker">Peppol BIS Billing 3.0 · UBL (demo)</div>
+          <div class="word">FACTUUR</div>
+        </div>
+        <div class="net">
+          Nummer <strong>INV-DEMO-2026-RC-001</strong><br>
+          Datum 2 maart 2026<br>
+          Verval 1 april 2026<br>
+          Type 380 · EUR · AE
+        </div>
+      </header>
+      <div class="parties">
+        <div>
+          <h3>Verkoper</h3>
+          <p>
+            Studio Noord<br>
+            Noorderlaan 12 · 2030 Antwerpen · BE<br>
+            KBO 0123.456.789 · BTW BE0123.456.789<br>
+            Peppol <span class="mono">0208:0123456789</span><br>
+            hello@studio.example
+          </p>
+        </div>
+        <div>
+          <h3>Koper (medecontractant)</h3>
+          <p>
+            Client BV<br>
+            Voorbeeldstraat 5 · 1000 Brussel · BE<br>
+            KBO 0987.654.321 · BTW BE0987.654.321<br>
+            Peppol <span class="mono">0208:0987654321</span><br>
+            facturatie@client.example<br>
+            Ref. DEMO-PO-RC-001
+          </p>
+        </div>
+      </div>
+      <div class="banner warn">BTW verlegd (VATEX-EU-AE). Demo. Controleer met uw boekhouder of dit regime voor úw prestatie geldt.</div>
+      <table class="lines">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Omschrijving</th>
+            <th class="num">Aantal</th>
+            <th class="num">Prijs</th>
+            <th class="num">BTW</th>
+            <th class="num">Netto</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Onderaanneming studio-uren, maart 2026 (demo, BTW verlegd)</td>
+            <td class="num">10 uur</td>
+            <td class="num">100,00</td>
+            <td class="num">AE 0%</td>
+            <td class="num">1.000,00</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="totals">
+        <div><span>Maatstaf</span><span>1.000,00</span></div>
+        <div><span>BTW op factuur</span><span>0,00</span></div>
+        <div class="pay"><span>Te betalen</span><span>1.000,00 EUR</span></div>
+      </div>
+      <p class="fine">SAMPLE. Demo-partijen. Niet verzonden via Peppol. Geen wettelijke BE B2B-factuur.</p>
+    </article>
+  </main>
+</body>
+</html>

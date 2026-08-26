@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Handoff — volgende klikken in een écht AP-tool</title>
+  <link rel="stylesheet" href="pack.css">
+</head>
+<body>
+  <main class="wrap">
+    <nav class="pack-nav" aria-label="Pack">
+      <a href="index.html">Start</a>
+      <a href="intake.html">Intake</a>
+      <a href="master-data-checklist.html">Checklist</a>
+      <a href="invoice-preview.html">Factuur 21%</a>
+      <a href="invoice-preview-reverse-charge.html">Reverse charge</a>
+      <a href="software-shortlist.html">Software</a>
+      <a href="peppol-lookup-worksheet.html">Lookup</a>
+      <a href="HANDOFF.html" aria-current="page">Handoff</a>
+      <a href="DISCLAIMER.html">Disclaimer</a>
+    </nav>
+
+    <p class="kicker">Einde van dit pack</p>
+    <h1>Wat u nu in een Access Point klikt</h1>
+    <p class="lead">Schermen verschillen per leverancier. Dit is de volgorde, niet een handleiding van Billit/Dexxter/e-invoice.be. Wij klikken niets voor u.</p>
+    <div class="banner danger">Tot een gecertificeerd Access Point een document aflevert, hebt u geen wettelijke Belgische B2B-factuur. Deze HTML en SAMPLE-XML tellen niet.</div>
+
+    <section class="card">
+      <h2>Volgende klikken (bij hen, niet hier)</h2>
+      <ol class="steps">
+        <li>Kies een pakket op de <a href="software-shortlist.html">FOD-lijst</a>. Maak daar een account. Identiteitscheck (itsme/eID) gebeurt bij hen — wij doen dat niet.</li>
+        <li>Registreer uw participant: schema <span class="mono">0208</span>, waarde = 10-cijferig KBO. Dat is uw Peppol-ID. Wij mogen dat niet registreren.</li>
+        <li>Vul verkoper-stamgegevens in vanuit <a href="intake.html">intake</a> (naam, adres, IBAN, e-mail op eigen domein).</li>
+        <li>Voeg kopers toe. Doe per koper de <a href="peppol-lookup-worksheet.html">Directory-lookup</a>. Wie ontbreekt: chase-mails.</li>
+        <li>Zet het juiste BTW-geval (21 / AE / …). SAMPLE-XML in dit pack is oefenmateriaal, geen productiedocument.</li>
+        <li>Verstuur de eerste live factuur vanuit dát pakket. Bewaar hun bevestiging (message-id / Peppol receipt), niet een PDF-print van onze preview.</li>
+        <li>Creditnota’s ook via hetzelfde AP, met verwijzing naar de originele factuur — zie het patroon in <a href="creditnote-sample.xml">creditnote-sample.xml</a>.</li>
+      </ol>
+    </section>
+
+    <section class="card">
+      <h2>Wat wij niet hebben gedaan</h2>
+      <ul>
+        <li>Geen Access Point, geen OpenPeppol-lid, geen SMP/SML, geen live send/receive.</li>
+        <li>Geen Peppol-ID voor u of uw klanten geregistreerd.</li>
+        <li>Geen boekhouding, geen btw-advies, geen Azure AD, geen itsme/eID.</li>
+        <li>Geen kopers gemaild. De mailbestanden zijn copy-paste voor ú.</li>
+        <li>Geen claim dat u na download “compliant” bent.</li>
+        <li>Geen restack van de 9 USDC Solana Invoice, geen sollicitatie als developer.</li>
+      </ul>
+    </section>
+
+    <p class="fine">Prijs van dit pack: 399 USDC op Solana. Pay-to staat op <a href="index.html">index.html</a>.</p>
+  </main>
+</body>
+</html>
