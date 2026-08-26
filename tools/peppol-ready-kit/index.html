@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Peppol Ready Kit — 249 USDC</title>
+  <meta name="description" content="249 USDC. Screening, SAMPLE-template en AP-keuzelijst. Geen Access Point. Geen compliance-stempel.">
+  <link rel="stylesheet" href="pack.css">
+</head>
+<body>
+  <main class="wrap">
+    <nav class="pack-nav" aria-label="Kit">
+      <a href="index.html" aria-current="page">Start</a>
+      <a href="screening.html">Screening</a>
+      <a href="template.html">Template</a>
+      <a href="ap-pick-list.html">AP-keuzelijst</a>
+      <a href="DISCLAIMER.html">Disclaimer</a>
+    </nav>
+
+    <p class="kicker">Peppol Ready Kit · België · B2B e-factuur</p>
+    <h1>Klaar om te kiezen. Niet klaar als Access Point.</h1>
+    <p class="lead">249 USDC. Drie statische stukken: screeningvragen, een SAMPLE BIS Billing 3.0-template, en een keuzelijst van echte Access Points. Dit kit is zelf geen AP. Het zet geen compliance-stempel.</p>
+    <p><span class="price">249 USDC</span></p>
+
+    <div class="banner danger">
+      <strong>Dit is geen Peppol Access Point.</strong>
+      Wij registreren geen Peppol-ID. Wij verzenden en ontvangen niets op het netwerk.
+      Opening van deze bestanden is <strong>geen compliance</strong>. Er is <strong>geen stempel “u bent compliant”</strong>.
+      PDF per e-mail is sinds <strong>1 januari 2026 geen wettelijke Belgische B2B-factuur</strong>.
+      De boete als u geen technische middelen hebt, start bij <strong>€1.500</strong>.
+      B2C-PDF blijft toegelaten. B2B-PDF niet.
+    </div>
+
+    <section class="card" id="pay">
+      <h2>Betaal 249 USDC op Solana</h2>
+      <p>Alleen USDC. Niet SOL, niet Base, niet ETH, niet XRP. Copy-address — geen wallet-connect.</p>
+      <p>Stuur exact 249 USDC naar:</p>
+      <div class="addr" id="addr">96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</div>
+      <p class="net">Netwerk: Solana · Token: USDC · mint EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v</p>
+      <div class="copy-row">
+        <button type="button" id="copyBtn">Kopieer adres</button>
+        <span class="copy-ok" id="copyStatus"></span>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Wat u krijgt</h2>
+      <ul class="file-list">
+        <li><a href="screening.html">screening.html</a> <small>7 vragen · resultaat zonder stempel</small></li>
+        <li><a href="template.html">template.html</a> <small>Invulbaar + SAMPLE XML download</small></li>
+        <li><a href="invoice-sample.xml">invoice-sample.xml</a> <small>BIS Billing 3.0 SAMPLE, demo-partijen</small></li>
+        <li><a href="ap-pick-list.html">ap-pick-list.html</a> <small>Officiële lijsten + keuzelijst, geen affiliates</small></li>
+        <li><a href="DISCLAIMER.html">DISCLAIMER.html</a> <small>Geen AP, geen stempel, geen wettelijke factuur</small></li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Wat dit kit niet is</h2>
+      <ul>
+        <li>Geen gecertificeerd Access Point, geen OpenPeppol-lidmaatschap.</li>
+        <li>Geen live Peppol verzenden of ontvangen.</li>
+        <li>Geen registratie van úw Peppol-ID.</li>
+        <li>Geen FOD- of Peppol-certificaat, geen groene “compliant”-badge.</li>
+        <li>Geen boekhouding, geen Azure AD, geen itsme/eID-onboarding.</li>
+        <li>Geen restack van de 9 USDC Solana Invoice.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Demo-data in de voorbeelden</h2>
+      <p>Studio Noord · Client BV · <span class="mono">hello@studio.example</span> · vals KBO 0123.456.789. Geen echte inboxen. Geen Gmail.</p>
+    </section>
+
+    <p class="fine">Prijs is 249 USDC. Lees <a href="DISCLAIMER.html">DISCLAIMER.html</a> voor u iets naar een klant stuurt.</p>
+  </main>
+  <script>
+    (function () {
+      var ADDR = "96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3";
+      document.getElementById("copyBtn").addEventListener("click", function () {
+        var status = document.getElementById("copyStatus");
+        function ok() { status.textContent = "Gekopieerd. Stuur exact 249 USDC op Solana."; }
+        function fail() { status.textContent = "Selecteer het adres en kopieer handmatig."; }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(ADDR).then(ok).catch(fail);
+        } else { fail(); }
+      });
+    })();
+  </script>
+</body>
+</html>
