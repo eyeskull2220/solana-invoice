@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agenda &amp; trainingen — ZWV De Golfbreker (demo)</title>
+  <meta name="description" content="Voorbeeldagenda en trainingstijden van de fictieve zwemclub ZWV De Golfbreker in Geel.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="skip" href="#inhoud">Naar inhoud</a>
+    <p class="demo-banner">Demo van de club-site kit · ZWV De Golfbreker is geen echte club of vzw</p>
+    <div class="bar">
+      <a class="brand" href="index.html">
+        <span class="mark" aria-hidden="true"></span>
+        <span class="brand-text">
+          <strong>ZWV De Golfbreker</strong>
+          <span>Zwemclub · Geel</span>
+        </span>
+      </a>
+      <button type="button" class="nav-toggle" data-nav-toggle aria-expanded="false" aria-controls="menu">Menu</button>
+      <nav id="menu" class="menu" data-nav>
+        <a href="index.html">Home</a>
+        <a href="over.html">Over ons</a>
+        <a href="agenda.html" aria-current="page">Agenda</a>
+        <a href="lidworden.html">Lid worden</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="inhoud">
+    <div class="wrap page-hero-mini">
+      <p class="kicker">Agenda &amp; trainingen</p>
+      <h1>Vier komende momenten, plus de weekkaart.</h1>
+      <p class="lead">Vervang deze rijen in de HTML of via <a href="editor.html">editor.html</a>. Datums zijn voorbeelden voor najaar 2026.</p>
+    </div>
+
+    <section class="section">
+      <div class="wrap">
+        <div class="grid grid-2">
+          <article class="card event">
+            <div class="dateblock"><span class="d">07</span><span class="m">sep</span></div>
+            <div>
+              <h3>Openwater ochtend</h3>
+              <p>Zondag 7 september 2026 · 09:00<br>Stadsvijver — demo-locatie, geen echte afspraak.</p>
+            </div>
+          </article>
+          <article class="card event">
+            <div class="dateblock"><span class="d">13</span><span class="m">sep</span></div>
+            <div>
+              <h3>Jeugdcompetitie intern</h3>
+              <p>Zaterdag 13 september 2026 · 14:00<br>Binnenzwembad (demo).</p>
+            </div>
+          </article>
+          <article class="card event">
+            <div class="dateblock"><span class="d">18</span><span class="m">sep</span></div>
+            <div>
+              <h3>Ouderavond jeugdgroep</h3>
+              <p>Donderdag 18 september 2026 · 20:00<br>Clubhuis (demo).</p>
+            </div>
+          </article>
+          <article class="card event">
+            <div class="dateblock"><span class="d">27</span><span class="m">sep</span></div>
+            <div>
+              <h3>Clubkampioenschap</h3>
+              <p>Zaterdag 27 september 2026 · 10:00<br>50m-bad (demo).</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2>Vaste trainingen</h2>
+        <div class="card" style="overflow-x:auto">
+          <table class="train">
+            <thead>
+              <tr>
+                <th>Dag</th>
+                <th>Groep</th>
+                <th>Uur</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>ma / wo / vr</td>
+                <td>Recreanten</td>
+                <td>19:00–20:30</td>
+              </tr>
+              <tr>
+                <td>di / do</td>
+                <td>Jeugd</td>
+                <td>18:00–19:30</td>
+              </tr>
+              <tr>
+                <td>za</td>
+                <td>Wedstrijdgroep</td>
+                <td>09:00–11:00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="muted" style="margin-top:12px">Uren en groepen zijn verzonnen. Een echte club past de tabel aan zonder build-stap.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div>
+        <strong>ZWV De Golfbreker</strong>
+        Demonstratie. Geen echte trainingen. <a href="mailto:info@golfbreker.example">info@golfbreker.example</a>
+        <p style="margin:12px 0 0">© <span data-year>2026</span></p>
+      </div>
+      <div class="foot-pay">
+        <p class="kicker" style="color:var(--lane)">Deze kit · 900 USDC · Solana</p>
+        <code class="addr" id="pay-addr-foot">96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</code>
+        <button type="button" class="btn btn-primary" data-copy="#pay-addr-foot" data-copy-status="#copy-status-foot">Kopieer adres</button>
+        <p class="copy-status" id="copy-status-foot" role="status"></p>
+      </div>
+    </div>
+  </footer>
+  <script src="site.js"></script>
+</body>
+</html>
