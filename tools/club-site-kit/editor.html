@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Editor — club-site kit</title>
+  <meta name="description" content="Herschrijf de club-site kit: naam, stad, sport, agenda, lidgeld, mailto. Download één HTML-bestand of een zip. Werkt offline.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="skip" href="#inhoud">Naar inhoud</a>
+    <p class="demo-banner">Kit-editor · geen account · download blijft lokaal</p>
+    <div class="bar">
+      <a class="brand" href="index.html">
+        <span class="mark" aria-hidden="true"></span>
+        <span class="brand-text">
+          <strong>Club-site kit</strong>
+          <span>Editor · 900 USDC</span>
+        </span>
+      </a>
+      <button type="button" class="nav-toggle" data-nav-toggle aria-expanded="false" aria-controls="menu">Menu</button>
+      <nav id="menu" class="menu" data-nav>
+        <a href="index.html">Demo</a>
+        <a href="editor.html" aria-current="page">Editor</a>
+        <a href="README.md">README</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="inhoud" class="wrap editor-app">
+    <form class="card" id="form" autocomplete="off">
+      <p class="kicker">Rebrand</p>
+      <h1>Vul de club in. Download de site.</h1>
+      <p class="lead">Geen netwerk na openen. Geen wallet. Gebruik een clubadres, geen privé-Gmail.</p>
+
+      <label class="field" for="name">Clubnaam</label>
+      <input id="name" type="text" required placeholder="ZWV De Golfbreker" value="ZWV De Golfbreker">
+
+      <label class="field" for="city">Stad</label>
+      <input id="city" type="text" required placeholder="Geel" value="Geel">
+
+      <label class="field" for="sport">Sport / activiteit</label>
+      <input id="sport" type="text" required placeholder="Zwemmen" value="Zwemmen">
+
+      <label class="field" for="fee">Lidgeld</label>
+      <input id="fee" type="text" required placeholder="€ 85 / jaar" value="€ 85 / jaar">
+
+      <label class="field" for="email">Contact-e-mail (clubadres)</label>
+      <input id="email" type="email" required placeholder="info@club.example" value="info@golfbreker.example">
+      <p class="hint">Placeholder mag. Geen persoonlijke inbox in de publieke site.</p>
+
+      <label class="field" for="water">Kleur primair</label>
+      <input id="water" type="color" value="#123a56">
+
+      <label class="field" for="lane">Kleur accent</label>
+      <input id="lane" type="color" value="#d9a441">
+
+      <p class="kicker" style="margin-top:22px">Volgende 4 evenementen</p>
+      <div id="events"></div>
+
+      <div class="actions" style="margin-top:18px">
+        <button type="button" class="btn btn-ink" id="dlHtml">Download één HTML</button>
+        <button type="button" class="btn btn-primary" id="dlZip">Download zip</button>
+      </div>
+      <p class="hint" id="dlStatus" role="status"></p>
+      <p class="hint">Zip = index + over + agenda + lidworden + contact + CSS/JS. Eén HTML is zelfstandig te hosten.</p>
+    </form>
+
+    <div>
+      <p class="kicker">Live preview</p>
+      <iframe class="preview-frame" id="preview" title="Voorvertoning van de clubsite" sandbox="allow-scripts"></iframe>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div>
+        <strong>Club-site kit</strong>
+        900 USDC op Solana. Alleen USDC.
+      </div>
+      <div class="foot-pay">
+        <code class="addr" id="pay-addr-foot">96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</code>
+        <button type="button" class="btn btn-primary" data-copy="#pay-addr-foot" data-copy-status="#copy-status-foot">Kopieer adres</button>
+        <p class="copy-status" id="copy-status-foot" role="status"></p>
+      </div>
+    </div>
+  </footer>
+  <script src="site.js"></script>
+  <script>
+(function () {
+  "use strict";
+
+  var DEFAULT_EVENTS = [
+    { day: "07", month: "sep", title: "Openwater ochtend", detail: "Zondag 7 september · 09:00" },
+    { day: "13", month: "sep", title: "Jeugdcompetitie intern", detail: "Zaterdag 13 september · 14:00" },
+    { day: "18", month: "sep", title: "Ouderavond jeugdgroep", detail: "Donderdag 18 september · 20:00" },
+    { day: "27", month: "sep", title: "Clubkampioenschap", detail: "Zaterdag 27 september · 10:00" }
+  ];
+
+  var eventsRoot = document.getElementById("events");
+  DEFAULT_EVENTS.forEach(function (ev, i) {
+    var n = i + 1;
+    var wrap = document.createElement("div");
+    wrap.className = "card";
+    wrap.style.marginTop = "10px";
+    wrap.innerHTML =
+      "<p class=\"kicker\">Event " + n + "</p>" +
+      "<label class=\"field\" for=\"e" + n + "d\">Dag</label>" +
+      "<input id=\"e" + n + "d\" type=\"text\" maxlength=\"2\" value=\"" + ev.day + "\">" +
+      "<label class=\"field\" for=\"e" + n + "m\">Maand</label>" +
+      "<input id=\"e" + n + "m\" type=\"text\" maxlength=\"8\" value=\"" + ev.month + "\">" +
+      "<label class=\"field\" for=\"e" + n + "t\">Titel</label>" +
+      "<input id=\"e" + n + "t\" type=\"text\" value=\"" + ev.title + "\">" +
+      "<label class=\"field\" for=\"e" + n + "x\">Detail</label>" +
+      "<input id=\"e" + n + "x\" type=\"text\" value=\"" + ev.detail + "\">";
+    eventsRoot.appendChild(wrap);
+  });
+
+  function val(id) {
+    var el = document.getElementById(id);
+    return el ? String(el.value || "").trim() : "";
+  }
+
+  function esc(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  function slug(s) {
+    var map = { é: "e", è: "e", ë: "e", ê: "e", á: "a", à: "a", ä: "a", ö: "o", ü: "u", ï: "i", ç: "c" };
+    var t = String(s || "club").toLowerCase();
+    t = t.replace(/[éèëêáàäöüïç]/g, function (ch) { return map[ch] || ch; });
+    t = t.replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    return t || "club";
+  }
+
+  function readData() {
+    var events = [];
+    var i;
+    for (i = 1; i <= 4; i++) {
+      events.push({
+        day: val("e" + i + "d") || "01",
+        month: val("e" + i + "m") || "jan",
+        title: val("e" + i + "t") || "Activiteit " + i,
+        detail: val("e" + i + "x") || ""
+      });
+    }
+    return {
+      name: val("name") || "Club",
+      city: val("city") || "Stad",
+      sport: val("sport") || "Activiteit",
+      fee: val("fee") || "Lidgeld op aanvraag",
+      email: val("email") || "info@club.example",
+      water: val("water") || "#123a56",
+      lane: val("lane") || "#d9a441",
+      events: events
+    };
+  }
+
+  function clubCss(d) {
+    return ":root{--water:" + d.water + ";--water-deep:" + d.water + ";--lane:" + d.lane + ";--lane-soft:#f3e4c0;--foam:#f6f3ee;--paper:#efebe3;--ink:#1c242c;--muted:#5c6570;--line:#d4cdc2;--card:#fffcf7;--radius:6px;--max:72rem}*{box-sizing:border-box}html,body{margin:0;padding:0}body{min-height:100vh;font:16px/1.55 ui-sans-serif,system-ui,sans-serif;color:var(--ink);background:var(--paper)}.skip{position:absolute;left:12px;top:-40px;background:var(--lane);color:#0b283c;padding:8px 12px;z-index:20;font-weight:700;text-decoration:none}.skip:focus{top:12px}.site-header{position:sticky;top:0;z-index:10;background:var(--water);color:var(--foam)}.bar{width:min(var(--max),100%);margin:0 auto;padding:10px 16px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px}.brand{display:flex;align-items:center;gap:10px;color:inherit;text-decoration:none;min-width:0}.mark{flex:none;width:40px;height:40px;border-radius:50%;background:repeating-conic-gradient(from 20deg,var(--lane) 0 18deg,var(--water) 18deg 36deg);box-shadow:inset 0 0 0 2px var(--lane)}.brand-text{display:flex;flex-direction:column;min-width:0;line-height:1.15}.brand-text strong{font-family:Georgia,serif;font-size:1.05rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.brand-text span{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--lane-soft)}.nav-toggle{appearance:none;border:1px solid rgba(246,243,238,.35);background:transparent;color:var(--foam);border-radius:4px;padding:8px 12px;font:700 13px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}.menu{display:none;flex-basis:100%;flex-direction:column;gap:2px;padding:4px 0 10px}.menu.is-open{display:flex}.menu a{color:var(--foam);text-decoration:none;padding:10px 4px;border-bottom:1px solid rgba(246,243,238,.12);font-weight:600}@media(min-width:760px){.nav-toggle{display:none}.menu{display:flex;flex-basis:auto;flex-direction:row;gap:4px 18px;padding:0}.menu a{border:0;padding:6px 0}}.wrap{width:min(var(--max),100%);margin:0 auto;padding:0 16px}.section{padding:40px 0}.kicker{margin:0 0 6px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--water)}h1,h2,h3{font-family:Georgia,serif;letter-spacing:-.02em;line-height:1.15;margin:0 0 12px}h1{font-size:clamp(2rem,7vw,3.2rem)}h2{font-size:clamp(1.4rem,4vw,2rem)}.lead{margin:0 0 20px;color:var(--muted);font-size:1.08rem;max-width:38rem}.prose{max-width:42rem}.prose p{margin:0 0 14px}.hero{color:var(--foam);background:repeating-linear-gradient(90deg,var(--water) 0 26px,#0e3148 26px 28px);padding:36px 0 48px;border-bottom:6px solid var(--lane)}.hero .lead,.hero .kicker{color:var(--lane-soft)}.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 22px}.chip{display:inline-block;padding:5px 10px;border:1px solid var(--lane);color:var(--lane-soft);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}.actions{display:flex;flex-wrap:wrap;gap:10px}.btn{display:inline-block;appearance:none;border:0;border-radius:var(--radius);padding:12px 16px;font:700 15px/1.2 ui-sans-serif,system-ui,sans-serif;text-decoration:none;cursor:pointer;text-align:center}.btn-primary{background:var(--lane);color:#0b283c}.btn-ghost{background:transparent;color:var(--foam);border:1px solid rgba(246,243,238,.45)}.btn-ink{background:var(--water);color:var(--foam)}.btn-full{width:100%}.grid{display:grid;gap:14px}@media(min-width:640px){.grid-2{grid-template-columns:1fr 1fr}}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px 16px}.muted{color:var(--muted)}.event{display:grid;grid-template-columns:4.4rem 1fr;gap:14px}.dateblock{background:var(--water);color:var(--foam);text-align:center;padding:10px 6px;border-radius:4px;border-bottom:3px solid var(--lane)}.dateblock .d{display:block;font-family:Georgia,serif;font-size:1.55rem;line-height:1}.dateblock .m{display:block;margin-top:4px;font-size:10px;letter-spacing:.1em;text-transform:uppercase}.event h3{margin:0 0 4px}.event p{margin:0;color:var(--muted);font-size:.95rem}.price-hero{font-family:Georgia,serif;font-size:clamp(2.2rem,8vw,3.2rem);letter-spacing:-.03em;line-height:1;margin:4px 0 8px}.site-footer{margin-top:24px;background:var(--water);color:#c5d4de;padding:28px 0 36px;font-size:14px}.site-footer a{color:var(--lane-soft)}.mailto{word-break:break-all}a{color:var(--water)}";
+  }
+
+  function clubJs() {
+    return "(function(){var t=document.querySelector(\"[data-nav-toggle]\");var m=document.querySelector(\"[data-nav]\");if(t&&m){t.addEventListener(\"click\",function(){var o=m.classList.toggle(\"is-open\");t.setAttribute(\"aria-expanded\",o?\"true\":\"false\");t.textContent=o?\"Sluit\":\"Menu\";});m.addEventListener(\"click\",function(e){if(e.target&&e.target.tagName===\"A\"&&m.classList.contains(\"is-open\")){m.classList.remove(\"is-open\");t.setAttribute(\"aria-expanded\",\"false\");t.textContent=\"Menu\";}});}var y=document.querySelector(\"[data-year]\");if(y)y.textContent=String(new Date().getFullYear());})();";
+  }
+
+  function header(d, current, prefix) {
+    var p = prefix || "";
+    function item(href, label, key) {
+      var cur = key === current ? " aria-current=\"page\"" : "";
+      return "<a href=\"" + p + href + "\"" + cur + ">" + label + "</a>";
+    }
+    return "<header class=\"site-header\"><a class=\"skip\" href=\"#inhoud\">Naar inhoud</a><div class=\"bar\"><a class=\"brand\" href=\"" + p + "index.html\"><span class=\"mark\" aria-hidden=\"true\"></span><span class=\"brand-text\"><strong>" + esc(d.name) + "</strong><span>" + esc(d.sport) + " · " + esc(d.city) + "</span></span></a><button type=\"button\" class=\"nav-toggle\" data-nav-toggle aria-expanded=\"false\" aria-controls=\"menu\">Menu</button><nav id=\"menu\" class=\"menu\" data-nav>" +
+      item("index.html", "Home", "home") +
+      item("over.html", "Over ons", "over") +
+      item("agenda.html", "Agenda", "agenda") +
+      item("lidworden.html", "Lid worden", "lid") +
+      item("contact.html", "Contact", "contact") +
+      "</nav></div></header>";
+  }
+
+  function footer(d) {
+    var year = new Date().getFullYear();
+    return "<footer class=\"site-footer\"><div class=\"wrap\"><strong>" + esc(d.name) + "</strong><p>" + esc(d.sport) + " in " + esc(d.city) + " · <a class=\"mailto\" href=\"mailto:" + esc(d.email) + "\">" + esc(d.email) + "</a></p><p>© <span data-year>" + year + "</span></p></div></footer>";
+  }
+
+  function eventCards(d) {
+    return d.events.map(function (ev) {
+      return "<article class=\"card event\"><div class=\"dateblock\"><span class=\"d\">" + esc(ev.day) + "</span><span class=\"m\">" + esc(ev.month) + "</span></div><div><h3>" + esc(ev.title) + "</h3><p>" + esc(ev.detail) + "</p></div></article>";
+    }).join("");
+  }
+
+  function mailtoJoin(d) {
+    return "mailto:" + encodeURIComponent(d.email).replace(/%40/g, "@") +
+      "?subject=" + encodeURIComponent("Lid worden " + d.name);
+  }
+
+  function pageShell(d, title, body, linked) {
+    var css = linked
+      ? "<link rel=\"stylesheet\" href=\"styles.css\">"
+      : "<style>" + clubCss(d) + "</style>";
+    return "<!doctype html>\n<html lang=\"nl\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>" + esc(title) + "</title>\n" + css + "\n</head>\n<body>\n" + body + "\n" + (linked ? "<script src=\"site.js\"></scr" + "ipt>" : "<script>" + clubJs() + "</scr" + "ipt>") + "\n</body>\n</html>\n";
+  }
+
+  function onePager(d, linked) {
+    var mail = mailtoJoin(d);
+    var body =
+      header(d, "home", "") +
+      "<main id=\"inhoud\"><section class=\"hero\"><div class=\"wrap\"><p class=\"kicker\">" + esc(d.city) + "</p><h1>" + esc(d.name) + "</h1><p class=\"lead\">" + esc(d.sport) + " in " + esc(d.city) + ". Agenda, lidgeld en contact op één statische site. Geen account.</p><div class=\"chips\"><span class=\"chip\">" + esc(d.sport) + "</span><span class=\"chip\">" + esc(d.city) + "</span></div><div class=\"actions\"><a class=\"btn btn-primary\" href=\"" + (linked ? "lidworden.html" : "#lidworden") + "\">Lid worden</a><a class=\"btn btn-ghost\" href=\"" + (linked ? "agenda.html" : "#agenda") + "\">Agenda</a></div></div></section>" +
+      "<section class=\"section\" id=\"over\"><div class=\"wrap\"><p class=\"kicker\">Over ons</p><h2>Welkom bij " + esc(d.name) + "</h2><div class=\"prose\"><p>" + esc(d.name) + " is een club in " + esc(d.city) + ". Deze pagina is de mal: vervang deze alinea door het echte clubverhaal.</p></div></div></section>" +
+      "<section class=\"section\" id=\"agenda\"><div class=\"wrap\"><p class=\"kicker\">Agenda</p><h2>Volgende momenten</h2><div class=\"grid grid-2\">" + eventCards(d) + "</div></div></section>" +
+      "<section class=\"section\" id=\"lidworden\"><div class=\"wrap\"><p class=\"kicker\">Lid worden</p><h2>Lidgeld</h2><div class=\"card\"><p class=\"price-hero\">" + esc(d.fee) + "</p><p class=\"muted\">Aanvraag via e-mail. Geen webshop, geen wallet.</p><p style=\"margin-top:16px\"><a class=\"btn btn-ink\" href=\"" + mail + "\">Mail " + esc(d.email) + "</a></p></div></div></section>" +
+      "<section class=\"section\" id=\"contact\"><div class=\"wrap\"><p class=\"kicker\">Contact</p><h2>Schrijf de club</h2><div class=\"card\"><p>" + esc(d.name) + " · " + esc(d.city) + "</p><p><a class=\"mailto\" href=\"mailto:" + esc(d.email) + "\">" + esc(d.email) + "</a></p></div></div></section></main>" +
+      footer(d);
+    return pageShell(d, d.name + " — " + d.city, body, linked);
+  }
+
+  function extraPages(d) {
+    var mail = mailtoJoin(d);
+    var over = pageShell(d, "Over ons — " + d.name, header(d, "over") + "<main id=\"inhoud\" class=\"wrap section\"><p class=\"kicker\">Over ons</p><h1>" + esc(d.name) + "</h1><div class=\"prose\"><p>" + esc(d.sport) + " in " + esc(d.city) + ". Vervang deze tekst door het clubverhaal, de groepen en wat jullie naast de training doen.</p></div></main>" + footer(d), true);
+    var agenda = pageShell(d, "Agenda — " + d.name, header(d, "agenda") + "<main id=\"inhoud\" class=\"wrap section\"><p class=\"kicker\">Agenda</p><h1>Komende momenten</h1><div class=\"grid grid-2\">" + eventCards(d) + "</div></main>" + footer(d), true);
+    var lid = pageShell(d, "Lid worden — " + d.name, header(d, "lid") + "<main id=\"inhoud\" class=\"wrap section\"><p class=\"kicker\">Lid worden</p><h1>" + esc(d.fee) + "</h1><p class=\"lead\">Mail de club. Geen account.</p><p><a class=\"btn btn-ink\" href=\"" + mail + "\">Mail " + esc(d.email) + "</a></p></main>" + footer(d), true);
+    var contact = pageShell(d, "Contact — " + d.name, header(d, "contact") + "<main id=\"inhoud\" class=\"wrap section\"><p class=\"kicker\">Contact</p><h1>" + esc(d.name) + "</h1><p>" + esc(d.city) + " · " + esc(d.sport) + "</p><p><a class=\"mailto\" href=\"mailto:" + esc(d.email) + "\">" + esc(d.email) + "</a></p></main>" + footer(d), true);
+    return {
+      "index.html": onePager(d, true),
+      "over.html": over,
+      "agenda.html": agenda,
+      "lidworden.html": lid,
+      "contact.html": contact,
+      "styles.css": clubCss(d),
+      "site.js": clubJs()
+    };
+  }
+
+  /* Uncompressed ZIP (STORE), UTF-8 names — no library. */
+  var CRC_TABLE = (function () {
+    var t = new Uint32Array(256);
+    var n, c, k;
+    for (n = 0; n < 256; n++) {
+      c = n;
+      for (k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+      t[n] = c >>> 0;
+    }
+    return t;
+  })();
+
+  function crc32(bytes) {
+    var crc = 0xFFFFFFFF;
+    var i;
+    for (i = 0; i < bytes.length; i++) crc = CRC_TABLE[(crc ^ bytes[i]) & 0xFF] ^ (crc >>> 8);
+    return (crc ^ 0xFFFFFFFF) >>> 0;
+  }
+
+  function u16(n) { return [n & 0xFF, (n >>> 8) & 0xFF]; }
+  function u32(n) { return [n & 0xFF, (n >>> 8) & 0xFF, (n >>> 16) & 0xFF, (n >>> 24) & 0xFF]; }
+
+  function zipStore(files) {
+    var encoder = new TextEncoder();
+    var parts = [];
+    var central = [];
+    var offset = 0;
+    var names = Object.keys(files);
+    names.forEach(function (name) {
+      var nameB = encoder.encode(name);
+      var data = encoder.encode(files[name]);
+      var crc = crc32(data);
+      var local = [0x50, 0x4B, 0x03, 0x04]
+        .concat(u16(20))
+        .concat(u16(0x0800))
+        .concat(u16(0))
+        .concat(u16(0))
+        .concat(u16(0))
+        .concat(u32(crc))
+        .concat(u32(data.length))
+        .concat(u32(data.length))
+        .concat(u16(nameB.length))
+        .concat(u16(0));
+      var localArr = new Uint8Array(local.concat(Array.prototype.slice.call(nameB)));
+      parts.push(localArr);
+      parts.push(data);
+      var cd = [0x50, 0x4B, 0x01, 0x02]
+        .concat(u16(20))
+        .concat(u16(20))
+        .concat(u16(0x0800))
+        .concat(u16(0))
+        .concat(u16(0))
+        .concat(u16(0))
+        .concat(u32(crc))
+        .concat(u32(data.length))
+        .concat(u32(data.length))
+        .concat(u16(nameB.length))
+        .concat(u16(0))
+        .concat(u16(0))
+        .concat(u16(0))
+        .concat(u16(0))
+        .concat(u32(0))
+        .concat(u32(offset));
+      central.push(new Uint8Array(cd.concat(Array.prototype.slice.call(nameB))));
+      offset += localArr.length + data.length;
+    });
+    var cdOffset = offset;
+    var cdSize = 0;
+    central.forEach(function (c) {
+      parts.push(c);
+      cdSize += c.length;
+    });
+    var eocd = [0x50, 0x4B, 0x05, 0x06]
+      .concat(u16(0))
+      .concat(u16(0))
+      .concat(u16(names.length))
+      .concat(u16(names.length))
+      .concat(u32(cdSize))
+      .concat(u32(cdOffset))
+      .concat(u16(0));
+    parts.push(new Uint8Array(eocd));
+    var total = 0;
+    parts.forEach(function (p) { total += p.length; });
+    var out = new Uint8Array(total);
+    var o = 0;
+    parts.forEach(function (p) {
+      out.set(p, o);
+      o += p.length;
+    });
+    return out;
+  }
+
+  function downloadBlob(blob, filename) {
+    var a = document.createElement("a");
+    var url = URL.createObjectURL(blob);
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
+  }
+
+  function renderPreview() {
+    var d = readData();
+    document.getElementById("preview").srcdoc = onePager(d, false);
+  }
+
+  var form = document.getElementById("form");
+  form.addEventListener("input", renderPreview);
+  renderPreview();
+
+  document.getElementById("dlHtml").addEventListener("click", function () {
+    var d = readData();
+    var html = onePager(d, false);
+    downloadBlob(new Blob([html], { type: "text/html;charset=utf-8" }), slug(d.name) + ".html");
+    document.getElementById("dlStatus").textContent = "HTML gedownload. Open het bestand lokaal of host het ergens.";
+  });
+
+  document.getElementById("dlZip").addEventListener("click", function () {
+    var d = readData();
+    var files = extraPages(d);
+    var bytes = zipStore(files);
+    downloadBlob(new Blob([bytes], { type: "application/zip" }), slug(d.name) + "-site.zip");
+    document.getElementById("dlStatus").textContent = "Zip gedownload. Pak uit en open index.html.";
+  });
+})();
+  </script>
+</body>
+</html>
