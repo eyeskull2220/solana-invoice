@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Screening — Peppol Ready Kit</title>
+  <link rel="stylesheet" href="pack.css">
+</head>
+<body>
+  <main class="wrap">
+    <nav class="pack-nav no-print" aria-label="Kit">
+      <a href="index.html">Start</a>
+      <a href="screening.html" aria-current="page">Screening</a>
+      <a href="template.html">Template</a>
+      <a href="ap-pick-list.html">AP-keuzelijst</a>
+      <a href="DISCLAIMER.html">Disclaimer</a>
+    </nav>
+
+    <p class="kicker">Stap 1 · geen stempel</p>
+    <h1>Screening: zit u in de Belgische B2B-plicht?</h1>
+    <p class="lead">Zeven vragen. Het resultaat is een werkhypothese, geen juridisch advies en <strong>geen compliance-stempel</strong>. Niets wordt verzonden.</p>
+    <div class="banner warn">Sinds 1 januari 2026 geldt de B2B-plicht. De tolerantieperiode eindigde 31 maart 2026. Check FOD Financiën voor uitzonderingen van vandaag. Dit kit bevestigt niets.</div>
+
+    <form class="card" id="screen" onsubmit="return false;">
+      <div class="q">
+        <p>1. Waar is de onderneming gevestigd?</p>
+        <div class="choices">
+          <label><input type="radio" name="seat" value="be"> In België (zetel of vaste inrichting)</label>
+          <label><input type="radio" name="seat" value="foreign"> Buiten België, eventueel met BE-btw-nummer</label>
+          <label><input type="radio" name="seat" value="unknown"> Weet ik niet</label>
+        </div>
+      </div>
+      <div class="q">
+        <p>2. Wat is de btw-situatie?</p>
+        <div class="choices">
+          <label><input type="radio" name="vat" value="liable"> Btw-plichtig in België</label>
+          <label><input type="radio" name="vat" value="small"> Vrijstelling kleine ondernemingen</label>
+          <label><input type="radio" name="vat" value="art44"> Uitsluitend handelingen vrijgesteld onder art. 44 Wbtw</label>
+          <label><input type="radio" name="vat" value="none"> Niet btw-plichtig</label>
+          <label><input type="radio" name="vat" value="unknown"> Weet ik niet — vraag boekhouder</label>
+        </div>
+      </div>
+      <div class="q">
+        <p>3. Aan wie factureert u (binnenland)?</p>
+        <div class="choices">
+          <label><input type="radio" name="who" value="b2b"> Andere Belgische btw-plichtige ondernemingen (B2B)</label>
+          <label><input type="radio" name="who" value="b2c"> Alleen particulieren (B2C)</label>
+          <label><input type="radio" name="who" value="gov"> Overheid / B2G (Mercurius)</label>
+          <label><input type="radio" name="who" value="mix"> Mix B2B en B2C</label>
+          <label><input type="radio" name="who" value="unknown"> Weet ik niet</label>
+        </div>
+      </div>
+      <div class="q">
+        <p>4. Hebt u een KBO-ondernemingsnummer (10 cijfers)?</p>
+        <div class="choices">
+          <label><input type="radio" name="kbo" value="yes"> Ja</label>
+          <label><input type="radio" name="kbo" value="no"> Nee / onbekend</label>
+        </div>
+      </div>
+      <div class="q">
+        <p>5. Kunt u nu gestructureerde e-facturen <em>verzenden</em> via Peppol?</p>
+        <div class="choices">
+          <label><input type="radio" name="send" value="yes"> Ja, via software + Access Point</label>
+          <label><input type="radio" name="send" value="no"> Nee (PDF, Word, Excel, papier)</label>
+          <label><input type="radio" name="send" value="unknown"> Weet ik niet</label>
+        </div>
+      </div>
+      <div class="q">
+        <p>6. Kunt u nu gestructureerde e-facturen <em>ontvangen</em> via Peppol?</p>
+        <div class="choices">
+          <label><input type="radio" name="recv" value="yes"> Ja — KBO staat in de Peppol Directory (schema 0208)</label>
+          <label><input type="radio" name="recv" value="no"> Nee / nooit nagekeken</label>
+          <label><input type="radio" name="recv" value="unknown"> Weet ik niet</label>
+        </div>
+      </div>
+      <div class="q">
+        <p>7. Welke software gebruikt u nu voor facturen?</p>
+        <div class="choices">
+          <label><input type="radio" name="soft" value="none"> Geen (Word / Excel / mail)</label>
+          <label><input type="radio" name="soft" value="account"> Boekhoud- of facturatiepakket</label>
+          <label><input type="radio" name="soft" value="erp"> ERP</label>
+          <label><input type="radio" name="soft" value="unknown"> Weet ik niet</label>
+        </div>
+      </div>
+      <div class="actions">
+        <button type="button" id="runBtn">Toon resultaat</button>
+        <button type="button" class="ghost" id="dlBtn" disabled>Download screening (HTML)</button>
+      </div>
+      <p class="fine" id="formErr"></p>
+    </form>
+
+    <section class="card hidden" id="resultBox" aria-live="polite">
+      <p class="kicker">Werkhypothese · geen stempel</p>
+      <h2 class="result-title" id="resultTitle"></h2>
+      <div class="banner danger" id="noStamp">Dit is geen compliance-stempel. Dit kit is geen Access Point. Alleen een gecertificeerd AP + geldige UBL op het netwerk telt.</div>
+      <div id="resultBody"></div>
+      <p class="fine">Volgende: <a href="template.html">SAMPLE-template</a> om velden te oefenen, daarna <a href="ap-pick-list.html">AP-keuzelijst</a>.</p>
+    </section>
+  </main>
+  <script>
+    (function () {
+      var KEYS = ["seat", "vat", "who", "kbo", "send", "recv", "soft"];
+
+      function val(name) {
+        var el = document.querySelector('input[name="' + name + '"]:checked');
+        return el ? el.value : "";
+      }
+
+      function allAnswered() {
+        var i;
+        for (i = 0; i < KEYS.length; i++) {
+          if (!val(KEYS[i])) return false;
+        }
+        return true;
+      }
+
+      /**
+       * @typedef {"ask_accountant"|"likely_out_foreign"|"likely_out_art44"|"likely_out_b2c"|"in_scope_gap"|"in_scope_partial"|"in_scope_connected"} Kind
+       */
+
+      /** @returns {Kind} */
+      function classify(a) {
+        if (a.seat === "unknown" || a.vat === "unknown" || a.who === "unknown") {
+          return "ask_accountant";
+        }
+        if (a.seat === "foreign") {
+          return "likely_out_foreign";
+        }
+        if (a.vat === "art44") {
+          return "likely_out_art44";
+        }
+        if (a.who === "b2c" && a.vat !== "liable" && a.vat !== "small") {
+          return "likely_out_b2c";
+        }
+        if (a.who === "b2c") {
+          return "likely_out_b2c";
+        }
+        var inScope = a.seat === "be" && (a.vat === "liable" || a.vat === "small") &&
+          (a.who === "b2b" || a.who === "mix" || a.who === "gov");
+        if (!inScope) {
+          return "ask_accountant";
+        }
+        if (a.send === "yes" && a.recv === "yes") {
+          return "in_scope_connected";
+        }
+        if (a.send === "yes" || a.recv === "yes") {
+          return "in_scope_partial";
+        }
+        return "in_scope_gap";
+      }
+
+      function copyFor(kind, a) {
+        switch (kind) {
+          case "ask_accountant":
+            return {
+              title: "Vraag uw boekhouder — dit kit beslist niet",
+              html:
+                "<p>Minstens één kernvraag is onbekend, of de combinatie valt buiten deze zeven hokjes. Dat is geen “vrijstelling”.</p>" +
+                "<ul>" +
+                "<li>Geen groene badge. Geen FOD-stempel.</li>" +
+                "<li>Neem de vragenlijst mee naar de boekhouder of het pakket dat ú kiest.</li>" +
+                "</ul>"
+            };
+          case "likely_out_foreign":
+            return {
+              title: "Waarschijnlijk buiten scope voor uitreiken",
+              html:
+                "<p>Niet-gevestigde ondernemingen vallen doorgaans buiten de Belgische uitreikplicht, ook met een BE-btw-nummer. Belgische klanten moeten wél kunnen <em>ontvangen</em>.</p>" +
+                "<ul>" +
+                "<li>Dit is een werkhypothese, geen ruling.</li>" +
+                "<li>PDF naar BE B2B-klanten is voor <em>hen</em> sinds 1 jan 2026 geen wettelijke factuur.</li>" +
+                "</ul>"
+            };
+          case "likely_out_art44":
+            return {
+              title: "Mogelijke uitzondering (art. 44) — niet zelf afvinken",
+              html:
+                "<p>Wie uitsluitend handelingen verricht die onder artikel 44 Wbtw vrijgesteld zijn, zit vaak buiten de plicht. “Uitsluitend” is een boekhoudvraag.</p>" +
+                "<ul>" +
+                "<li>Wij verklaren u niet vrijgesteld.</li>" +
+                "<li>Mix van belaste en vrijgestelde handelingen: behandel B2B als in scope tot de boekhouder anders zegt.</li>" +
+                "</ul>"
+            };
+          case "likely_out_b2c":
+            return {
+              title: "B2C: PDF blijft toegelaten",
+              html:
+                "<p>Facturen aan particulieren mogen nog als PDF. Zodra u aan een Belgische btw-plichtige onderneming factureert, geldt Peppol voor die stroom.</p>" +
+                "<ul>" +
+                "<li>Ontvangen van B2B-leveranciers kan wél verplicht zijn als u zelf btw-plichtig en in België gevestigd bent.</li>" +
+                "<li>Kleine-ondernemingsregeling: uitreiken kan anders liggen dan ontvangen — vraag de boekhouder.</li>" +
+                "</ul>"
+            };
+          case "in_scope_gap":
+            return {
+              title: "Waarschijnlijk in scope — nog geen technische middelen",
+              html:
+                "<p>Belgische vestiging + btw-situatie + B2B/overheid wijst op de plicht. U gaf aan dat verzenden en/of ontvangen via Peppol ontbreekt.</p>" +
+                "<ul>" +
+                "<li>PDF per mail is sinds 1 januari 2026 geen wettelijke BE B2B-factuur.</li>" +
+                "<li>Boete bij ontbreken van technische middelen: vanaf €1.500 (check FOD).</li>" +
+                "<li>KBO-schema op Peppol is <span class=\"mono\">0208:</span> + 10 cijfers zonder BE.</li>" +
+                (a.soft === "none"
+                  ? "<li>Geen pakket: kies eindgebruikerssoftware op de FOD-lijst, of een AP dat een portaal biedt.</li>"
+                  : "<li>Vraag eerst uw huidige software of ze Peppol send + receive doen. Zo niet: AP-keuzelijst.</li>") +
+                (a.kbo === "no" ? "<li>Zonder KBO kunt u niet als BE-deelnemer op 0208 publiceren. Zoek het nummer in de KBO-public search.</li>" : "") +
+                "<li>Dit kit maakt u niet compliant. Kies een gecertificeerd Access Point.</li>" +
+                "</ul>"
+            };
+          case "in_scope_partial":
+            return {
+              title: "Waarschijnlijk in scope — send of receive ontbreekt",
+              html:
+                "<p>De plicht is bidirectioneel: uitreiken én ontvangen. Eén richting is geen “klaar”.</p>" +
+                "<ul>" +
+                "<li>Directory-check: <span class=\"mono\">0208:</span> + uw 10-cijferige KBO op directory.peppol.eu.</li>" +
+                "<li>Vraag het AP/pakket expliciet om send <em>en</em> receive.</li>" +
+                "<li>Geen stempel, geen AP van ons.</li>" +
+                "</ul>"
+            };
+          case "in_scope_connected":
+            return {
+              title: "U zegt dat send én receive al lopen — dit kit voegt geen stempel toe",
+              html:
+                "<p>Als dat klopt, hebt u dit kit niet nodig om “Peppol-ready” te lijken. Wij controleren het netwerk niet en zetten geen certificaat.</p>" +
+                "<ul>" +
+                "<li>Verifieer zelf in de Peppol Directory en in uw software.</li>" +
+                "<li>SAMPLE-XML hier is oefenmateriaal, geen productiefactuur.</li>" +
+                "</ul>"
+            };
+          default: {
+            var _exhaustive = kind;
+            throw new Error("onbekend screeningresultaat: " + _exhaustive);
+          }
+        }
+      }
+
+      function answers() {
+        return {
+          seat: val("seat"),
+          vat: val("vat"),
+          who: val("who"),
+          kbo: val("kbo"),
+          send: val("send"),
+          recv: val("recv"),
+          soft: val("soft")
+        };
+      }
+
+      function render() {
+        var err = document.getElementById("formErr");
+        var box = document.getElementById("resultBox");
+        if (!allAnswered()) {
+          err.textContent = "Beantwoord de zeven vragen.";
+          box.classList.add("hidden");
+          document.getElementById("dlBtn").disabled = true;
+          return;
+        }
+        err.textContent = "";
+        var a = answers();
+        var kind = classify(a);
+        var copy = copyFor(kind, a);
+        document.getElementById("resultTitle").textContent = copy.title;
+        document.getElementById("resultBody").innerHTML = copy.html;
+        box.classList.remove("hidden");
+        document.getElementById("dlBtn").disabled = false;
+        box.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      function downloadBrief() {
+        if (!allAnswered()) return;
+        var a = answers();
+        var kind = classify(a);
+        var copy = copyFor(kind, a);
+        var html = "<!doctype html><html lang=\"nl\"><head><meta charset=\"utf-8\"><title>Screening — geen stempel</title>";
+        html += "<style>body{font:16px/1.5 ui-sans-serif,system-ui,sans-serif;max-width:40rem;margin:24px auto;padding:0 16px;color:#1b1a17}";
+        html += "h1{font-size:1.4rem} .stamp{color:#8a2f18;font-weight:800;letter-spacing:.08em} .muted{color:#5e5a53}</style></head><body>";
+        html += "<p class=\"stamp\">GEEN COMPLIANCE-STEMPEL · GEEN ACCESS POINT</p>";
+        html += "<h1>" + escapeHtml(copy.title) + "</h1>";
+        html += "<p class=\"muted\">Peppol Ready Kit · screening 2026-08-26 · demo-kit, niet verzonden.</p>";
+        html += "<ul>";
+        html += "<li>Vestiging: " + escapeHtml(a.seat) + "</li>";
+        html += "<li>Btw: " + escapeHtml(a.vat) + "</li>";
+        html += "<li>Aan wie: " + escapeHtml(a.who) + "</li>";
+        html += "<li>KBO bekend: " + escapeHtml(a.kbo) + "</li>";
+        html += "<li>Send: " + escapeHtml(a.send) + "</li>";
+        html += "<li>Receive: " + escapeHtml(a.recv) + "</li>";
+        html += "<li>Software: " + escapeHtml(a.soft) + "</li>";
+        html += "</ul>";
+        html += "<p>Werkhypothese, geen advies. PDF is sinds 1 jan 2026 geen wettelijke BE B2B-factuur. Boete technische middelen vanaf €1.500 (check FOD).</p>";
+        html += "</body></html>";
+        var blob = new Blob([html], { type: "text/html;charset=utf-8" });
+        var url = URL.createObjectURL(blob);
+        var ael = document.createElement("a");
+        ael.href = url;
+        ael.download = "peppol-screening-geen-stempel.html";
+        document.body.appendChild(ael);
+        ael.click();
+        ael.remove();
+        URL.revokeObjectURL(url);
+      }
+
+      function escapeHtml(s) {
+        return String(s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      document.getElementById("runBtn").addEventListener("click", render);
+      document.getElementById("dlBtn").addEventListener("click", downloadBrief);
+    })();
+  </script>
+</body>
+</html>

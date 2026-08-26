@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VOORBEELD-template — Peppol Ready Kit</title>
+  <link rel="stylesheet" href="pack.css">
+</head>
+<body>
+  <main class="wrap">
+    <nav class="pack-nav no-print" aria-label="Kit">
+      <a href="index.html">Start</a>
+      <a href="screening.html">Screening</a>
+      <a href="template.html" aria-current="page">Template</a>
+      <a href="ap-pick-list.html">AP-keuzelijst</a>
+      <a href="DISCLAIMER.html">Disclaimer</a>
+    </nav>
+
+    <p class="kicker no-print">Stap 2 · VOORBEELD only</p>
+    <h1 class="no-print">Template: Peppol BIS Billing 3.0 (oefen)</h1>
+    <p class="lead no-print">Vul namen en bedragen in. KBO/BTW: nog niet toegekend — dit kit vult geen cijfers in. Download is SAMPLE-UBL. Printen of mailen maakt er geen wettelijke B2B-factuur van. Geen validatie tegen uw productie-AP. Geen compliance-stempel. Geen Access Point.</p>
+    <div class="banner danger no-print">
+      Stempel op het blad: <strong>VOORBEELD — NIET VERZONDEN</strong>. Nooit “FACTUUR”, nooit “PEPPOL CERTIFIED”, nooit “COMPLIANT”.
+      Geen verzonnen KBO- of btw-cijfers. Live verzenden van deze demo is fout.
+    </div>
+
+    <form class="card no-print" id="editor" onsubmit="return false;">
+      <h2>Velden (blijven in deze browser)</h2>
+      <div class="grid-2">
+        <div>
+          <label for="invId">Documentnummer</label>
+          <input id="invId" type="text" value="VB-DEMO-2026-001" autocomplete="off">
+        </div>
+        <div>
+          <label for="issue">Datum</label>
+          <input id="issue" type="date" value="2026-08-26">
+        </div>
+        <div>
+          <label for="due">Vervaldatum</label>
+          <input id="due" type="date" value="2026-09-25">
+        </div>
+        <div>
+          <label for="buyerRef">Koperreferentie</label>
+          <input id="buyerRef" type="text" value="DEMO-PO-001" autocomplete="off">
+        </div>
+      </div>
+      <h3>Verkoper (demo: Studio Noord)</h3>
+      <div class="grid-2">
+        <div>
+          <label for="sName">Naam</label>
+          <input id="sName" type="text" value="Studio Noord" autocomplete="off">
+        </div>
+        <div>
+          <label>KBO / BTW</label>
+          <p class="kbo-fixed">KBO/BTW: nog niet toegekend</p>
+        </div>
+        <div>
+          <label for="sStreet">Straat</label>
+          <input id="sStreet" type="text" value="Noorderlaan 12" autocomplete="off">
+        </div>
+        <div>
+          <label for="sCity">Postcode + gemeente</label>
+          <input id="sCity" type="text" value="2030 Antwerpen" autocomplete="off">
+        </div>
+        <div>
+          <label for="sMail">Bedrijfs-e-mail (RFC 2606)</label>
+          <input id="sMail" type="email" value="hello@studio.example" autocomplete="off">
+        </div>
+        <div>
+          <label for="sIban">IBAN (leeg laten tot toegekend)</label>
+          <input id="sIban" type="text" value="" autocomplete="off" placeholder="nog niet toegekend">
+        </div>
+      </div>
+      <h3>Koper (demo: Client BV)</h3>
+      <div class="grid-2">
+        <div>
+          <label for="cName">Naam</label>
+          <input id="cName" type="text" value="Client BV" autocomplete="off">
+        </div>
+        <div>
+          <label>KBO / BTW</label>
+          <p class="kbo-fixed">KBO/BTW: nog niet toegekend</p>
+        </div>
+        <div>
+          <label for="cStreet">Straat</label>
+          <input id="cStreet" type="text" value="Voorbeeldstraat 5" autocomplete="off">
+        </div>
+        <div>
+          <label for="cCity">Postcode + gemeente</label>
+          <input id="cCity" type="text" value="1000 Brussel" autocomplete="off">
+        </div>
+        <div>
+          <label for="cMail">Bedrijfs-e-mail (RFC 2606)</label>
+          <input id="cMail" type="email" value="facturatie@client.example" autocomplete="off">
+        </div>
+      </div>
+      <h3>Lijn 1</h3>
+      <div class="grid-2">
+        <div>
+          <label for="item">Omschrijving</label>
+          <input id="item" type="text" value="Studio-uren — vormgeving en copy (demo)" autocomplete="off">
+        </div>
+        <div>
+          <label for="qty">Aantal uren</label>
+          <input id="qty" type="text" inputmode="decimal" value="10" autocomplete="off">
+        </div>
+        <div>
+          <label for="price">Prijs per uur (EUR)</label>
+          <input id="price" type="text" inputmode="decimal" value="100,00" autocomplete="off">
+        </div>
+        <div>
+          <label for="vatPct">BTW %</label>
+          <select id="vatPct">
+            <option value="21" selected>21% standaard (S)</option>
+            <option value="12">12% verlaagd (S)</option>
+            <option value="6">6% verlaagd (S)</option>
+            <option value="0">0% — niet voor reverse charge (gebruik een AP)</option>
+          </select>
+        </div>
+      </div>
+      <div class="actions">
+        <button type="button" id="xmlBtn">Download SAMPLE XML</button>
+        <button type="button" class="ghost" id="printBtn">Print / PDF</button>
+        <a class="btn ghost" href="invoice-sample.xml">Statische SAMPLE XML</a>
+      </div>
+      <p class="fine" id="xmlStatus"></p>
+    </form>
+
+    <article class="invoice" id="sheet" aria-label="VOORBEELD document">
+      <div class="stamp">VOORBEELD — NIET VERZONDEN</div>
+      <header>
+        <div>
+          <div class="kicker">Peppol BIS Billing 3.0 · UBL (demo)</div>
+          <div class="word">VOORBEELD</div>
+        </div>
+        <div class="net">
+          Nummer <strong id="oId"></strong><br>
+          Datum <span id="oIssue"></span><br>
+          Verval <span id="oDue"></span><br>
+          EUR · geen FACTUUR-stempel
+        </div>
+      </header>
+      <div class="parties">
+        <div>
+          <h3>Verkoper</h3>
+          <p>
+            <span id="oSName"></span><br>
+            <span id="oSStreet"></span> · <span id="oSCity"></span> · BE<br>
+            <span id="oSKboLine"></span><br>
+            <span id="oSPep"></span><br>
+            <span id="oSMail"></span><br>
+            <span id="oSIban"></span>
+          </p>
+        </div>
+        <div>
+          <h3>Koper</h3>
+          <p>
+            <span id="oCName"></span><br>
+            <span id="oCStreet"></span> · <span id="oCCity"></span> · BE<br>
+            <span id="oCKboLine"></span><br>
+            <span id="oCPep"></span><br>
+            <span id="oCMail"></span><br>
+            Ref. <span id="oRef"></span>
+          </p>
+        </div>
+      </div>
+      <table class="lines">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Omschrijving</th>
+            <th class="num">Aantal</th>
+            <th class="num">Prijs</th>
+            <th class="num">BTW</th>
+            <th class="num">Netto</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td id="oItem"></td>
+            <td class="num" id="oQty"></td>
+            <td class="num" id="oPrice"></td>
+            <td class="num" id="oVat"></td>
+            <td class="num" id="oNet"></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="totals">
+        <div><span>Maatstaf</span><span id="oBase"></span></div>
+        <div><span>BTW</span><span id="oVatAmt"></span></div>
+        <div class="pay"><span>Te betalen</span><span id="oPay"></span></div>
+      </div>
+      <p class="fine">VOORBEELD. Demo-partijen. KBO/BTW: nog niet toegekend. Niet verzonden via Peppol. Geen wettelijke B2B-factuur. Geen compliance-stempel. Geen Access Point.</p>
+    </article>
+  </main>
+  <script>
+    (function () {
+      var UNASSIGNED = "KBO/BTW: nog niet toegekend";
+      var ids = ["invId","issue","due","buyerRef","sName","sStreet","sCity","sMail","sIban","cName","cStreet","cCity","cMail","item","qty","price","vatPct"];
+
+      function parseDec(raw) {
+        var s = String(raw || "").trim().replace(/\s/g, "").replace(",", ".");
+        if (!s) return null;
+        if (!/^\d+(\.\d{0,2})?$/.test(s)) return null;
+        var n = Number(s);
+        if (!isFinite(n) || n < 0) return null;
+        return Math.round(n * 100);
+      }
+      function eurFromCents(c) {
+        var n = c / 100;
+        var parts = n.toFixed(2).split(".");
+        var intp = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        return intp + "," + parts[1];
+      }
+      function xmlEsc(s) {
+        return String(s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&apos;");
+      }
+      function setText(id, v) {
+        document.getElementById(id).textContent = v;
+      }
+
+      function model() {
+        var qtyC = parseDec(document.getElementById("qty").value);
+        var priceC = parseDec(document.getElementById("price").value);
+        var pct = Number(document.getElementById("vatPct").value);
+        var qty = qtyC === null ? null : qtyC / 100;
+        var netC = (qtyC === null || priceC === null) ? null : Math.round((qtyC / 100) * priceC);
+        var vatC = netC === null ? null : Math.round(netC * pct / 100);
+        var sIban = document.getElementById("sIban").value.replace(/\s/g, "");
+        return {
+          invId: document.getElementById("invId").value.trim() || "VB-DEMO-2026-001",
+          issue: document.getElementById("issue").value || "2026-08-26",
+          due: document.getElementById("due").value || "2026-09-25",
+          buyerRef: document.getElementById("buyerRef").value.trim() || "DEMO-PO-001",
+          sName: document.getElementById("sName").value.trim() || "Studio Noord",
+          sStreet: document.getElementById("sStreet").value.trim() || "Noorderlaan 12",
+          sCity: document.getElementById("sCity").value.trim() || "2030 Antwerpen",
+          sMail: document.getElementById("sMail").value.trim() || "hello@studio.example",
+          sIban: sIban,
+          cName: document.getElementById("cName").value.trim() || "Client BV",
+          cStreet: document.getElementById("cStreet").value.trim() || "Voorbeeldstraat 5",
+          cCity: document.getElementById("cCity").value.trim() || "1000 Brussel",
+          cMail: document.getElementById("cMail").value.trim() || "facturatie@client.example",
+          item: document.getElementById("item").value.trim() || "Studio-uren (demo)",
+          qty: qty,
+          priceC: priceC,
+          pct: pct,
+          netC: netC,
+          vatC: vatC,
+          payC: (netC === null || vatC === null) ? null : netC + vatC
+        };
+      }
+
+      function render() {
+        var m = model();
+        setText("oId", m.invId);
+        setText("oIssue", m.issue);
+        setText("oDue", m.due);
+        setText("oSName", m.sName);
+        setText("oSStreet", m.sStreet);
+        setText("oSCity", m.sCity);
+        setText("oSKboLine", UNASSIGNED);
+        setText("oSPep", "Peppol: " + UNASSIGNED);
+        setText("oSMail", m.sMail);
+        setText("oSIban", m.sIban ? m.sIban : "IBAN: nog niet toegekend");
+        setText("oCName", m.cName);
+        setText("oCStreet", m.cStreet);
+        setText("oCCity", m.cCity);
+        setText("oCKboLine", UNASSIGNED);
+        setText("oCPep", "Peppol: " + UNASSIGNED);
+        setText("oCMail", m.cMail);
+        setText("oRef", m.buyerRef);
+        setText("oItem", m.item);
+        if (m.qty === null || m.priceC === null || m.netC === null) {
+          setText("oQty", "—");
+          setText("oPrice", "gebruik een getal");
+          setText("oVat", "S " + m.pct + "%");
+          setText("oNet", "—");
+          setText("oBase", "—");
+          setText("oVatAmt", "—");
+          setText("oPay", "—");
+          return;
+        }
+        setText("oQty", String(m.qty).replace(".", ",") + " uur");
+        setText("oPrice", eurFromCents(m.priceC));
+        setText("oVat", "S " + m.pct + "%");
+        setText("oNet", eurFromCents(m.netC));
+        setText("oBase", eurFromCents(m.netC));
+        setText("oVatAmt", eurFromCents(m.vatC));
+        setText("oPay", eurFromCents(m.payC) + " EUR");
+      }
+
+      function partyXml(name, street, city, mail) {
+        var cityName = city.replace(/^\d+\s+/, "");
+        var zone = (city.match(/^\d+/) || [""])[0];
+        var xml = "    <cac:Party>\n";
+        xml += "      <!-- KBO/BTW: nog niet toegekend — geen verzonnen cijfers -->\n";
+        xml += "      <cac:PartyName><cbc:Name>" + xmlEsc(name) + "</cbc:Name></cac:PartyName>\n";
+        xml += "      <cac:PostalAddress><cbc:StreetName>" + xmlEsc(street) + "</cbc:StreetName><cbc:CityName>" + xmlEsc(cityName) + "</cbc:CityName>";
+        if (zone) xml += "<cbc:PostalZone>" + xmlEsc(zone) + "</cbc:PostalZone>";
+        xml += "<cac:Country><cbc:IdentificationCode>BE</cbc:IdentificationCode></cac:Country></cac:PostalAddress>\n";
+        xml += "      <cac:PartyLegalEntity><cbc:RegistrationName>" + xmlEsc(name) + "</cbc:RegistrationName></cac:PartyLegalEntity>\n";
+        xml += "      <cac:Contact><cbc:ElectronicMail>" + xmlEsc(mail) + "</cbc:ElectronicMail></cac:Contact>\n";
+        xml += "    </cac:Party>\n";
+        return xml;
+      }
+
+      function buildXml(m) {
+        var net = (m.netC / 100).toFixed(2);
+        var vat = (m.vatC / 100).toFixed(2);
+        var pay = (m.payC / 100).toFixed(2);
+        var price = (m.priceC / 100).toFixed(2);
+        var qty = String(m.qty);
+        return '<?xml version="1.0" encoding="UTF-8"?>\n' +
+          "<!-- SAMPLE / VOORBEELD ONLY. Geen wettelijke B2B-factuur. KBO/BTW: nog niet toegekend. Not sent on Peppol. No FACTUUR stamp. No compliance stamp. Not an Access Point. -->\n" +
+          '<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">\n' +
+          "  <!-- CustomizationID is the official Peppol BIS Billing 3.0 spec URI. The word compliant is part of that URN, not a claim that this file or this kit is Peppol-compliant. -->\n" +
+          "  <cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0</cbc:CustomizationID>\n" +
+          "  <cbc:ProfileID>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</cbc:ProfileID>\n" +
+          "  <cbc:ID>" + xmlEsc(m.invId) + "</cbc:ID>\n" +
+          "  <cbc:IssueDate>" + xmlEsc(m.issue) + "</cbc:IssueDate>\n" +
+          "  <cbc:DueDate>" + xmlEsc(m.due) + "</cbc:DueDate>\n" +
+          "  <cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>\n" +
+          "  <cbc:Note>VOORBEELD / SAMPLE. Geen wettelijke B2B-factuur. KBO/BTW: nog niet toegekend. Niet verzonden via Peppol. Geen compliance-stempel. Geen Access Point.</cbc:Note>\n" +
+          "  <cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>\n" +
+          "  <cbc:BuyerReference>" + xmlEsc(m.buyerRef) + "</cbc:BuyerReference>\n" +
+          "  <cac:AccountingSupplierParty>\n" + partyXml(m.sName, m.sStreet, m.sCity, m.sMail) + "  </cac:AccountingSupplierParty>\n" +
+          "  <cac:AccountingCustomerParty>\n" + partyXml(m.cName, m.cStreet, m.cCity, m.cMail) + "  </cac:AccountingCustomerParty>\n" +
+          "  <cac:PaymentMeans><cbc:PaymentMeansCode>58</cbc:PaymentMeansCode><cbc:PaymentID>" + xmlEsc(m.invId) + "</cbc:PaymentID></cac:PaymentMeans>\n" +
+          "  <cac:PaymentTerms><cbc:Note>VOORBEELD. IBAN weggelaten. Niet betalen. Niet verzonden via Peppol.</cbc:Note></cac:PaymentTerms>\n" +
+          "  <cac:TaxTotal><cbc:TaxAmount currencyID=\"EUR\">" + vat + "</cbc:TaxAmount>\n" +
+          "    <cac:TaxSubtotal><cbc:TaxableAmount currencyID=\"EUR\">" + net + "</cbc:TaxableAmount><cbc:TaxAmount currencyID=\"EUR\">" + vat + "</cbc:TaxAmount>\n" +
+          "      <cac:TaxCategory><cbc:ID>S</cbc:ID><cbc:Percent>" + m.pct + "</cbc:Percent><cac:TaxScheme><cbc:ID>VAT</cbc:ID></cac:TaxScheme></cac:TaxCategory>\n" +
+          "    </cac:TaxSubtotal>\n" +
+          "  </cac:TaxTotal>\n" +
+          "  <cac:LegalMonetaryTotal>\n" +
+          "    <cbc:LineExtensionAmount currencyID=\"EUR\">" + net + "</cbc:LineExtensionAmount>\n" +
+          "    <cbc:TaxExclusiveAmount currencyID=\"EUR\">" + net + "</cbc:TaxExclusiveAmount>\n" +
+          "    <cbc:TaxInclusiveAmount currencyID=\"EUR\">" + pay + "</cbc:TaxInclusiveAmount>\n" +
+          "    <cbc:PayableAmount currencyID=\"EUR\">" + pay + "</cbc:PayableAmount>\n" +
+          "  </cac:LegalMonetaryTotal>\n" +
+          "  <cac:InvoiceLine>\n" +
+          "    <cbc:ID>1</cbc:ID>\n" +
+          "    <cbc:InvoicedQuantity unitCode=\"HUR\">" + qty + "</cbc:InvoicedQuantity>\n" +
+          "    <cbc:LineExtensionAmount currencyID=\"EUR\">" + net + "</cbc:LineExtensionAmount>\n" +
+          "    <cac:Item><cbc:Name>" + xmlEsc(m.item) + "</cbc:Name>\n" +
+          "      <cac:ClassifiedTaxCategory><cbc:ID>S</cbc:ID><cbc:Percent>" + m.pct + "</cbc:Percent><cac:TaxScheme><cbc:ID>VAT</cbc:ID></cac:TaxScheme></cac:TaxCategory>\n" +
+          "    </cac:Item>\n" +
+          "    <cac:Price><cbc:PriceAmount currencyID=\"EUR\">" + price + "</cbc:PriceAmount></cac:Price>\n" +
+          "  </cac:InvoiceLine>\n" +
+          "</Invoice>\n";
+      }
+
+      function downloadXml() {
+        var status = document.getElementById("xmlStatus");
+        var m = model();
+        if (m.netC === null || m.vatC === null) {
+          status.textContent = "Zet aantal en prijs als getal (max. 2 decimalen).";
+          return;
+        }
+        var blob = new Blob([buildXml(m)], { type: "application/xml;charset=utf-8" });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = "peppol-voorbeeld-" + m.invId.replace(/[^\w.-]+/g, "-") + ".xml";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        status.textContent = "SAMPLE XML gedownload (VOORBEELD). Niet verzenden via Peppol. Geen FACTUUR-stempel. Geen KBO-cijfers.";
+      }
+
+      var i;
+      for (i = 0; i < ids.length; i++) {
+        document.getElementById(ids[i]).addEventListener("input", render);
+        document.getElementById(ids[i]).addEventListener("change", render);
+      }
+      document.getElementById("xmlBtn").addEventListener("click", downloadXml);
+      document.getElementById("printBtn").addEventListener("click", function () { window.print(); });
+      render();
+    })();
+  </script>
+</body>
+</html>

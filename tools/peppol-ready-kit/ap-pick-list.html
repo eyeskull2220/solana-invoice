@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AP-keuzelijst — Peppol Ready Kit</title>
+  <link rel="stylesheet" href="pack.css">
+</head>
+<body>
+  <main class="wrap">
+    <nav class="pack-nav" aria-label="Kit">
+      <a href="index.html">Start</a>
+      <a href="screening.html">Screening</a>
+      <a href="template.html">Template</a>
+      <a href="ap-pick-list.html" aria-current="page">AP-keuzelijst</a>
+      <a href="DISCLAIMER.html">Disclaimer</a>
+    </nav>
+
+    <p class="kicker">Stap 3 · wij zijn het AP niet</p>
+    <h1>Access Point-keuzelijst</h1>
+    <p class="lead">Dit kit is <strong>geen Access Point</strong>. U hebt een <em>gecertificeerde</em> dienstverlener nodig. Onderstaande namen zijn openbare voorbeelden om te vergelijken — geen affiliates, geen commissie, <strong>geen FOD- of Peppol-stempel van ons</strong>.</p>
+
+    <div class="banner danger">
+      Opname hier is geen aanbeveling, geen kwaliteitsbeoordeling en geen “u bent aangesloten”.
+      Alleen OpenPeppol (filter Peppol Authority <strong>BOSA</strong> voor België) en de FOD-softwarelijst tellen.
+    </div>
+
+    <section class="card">
+      <h2>Start bij de officiële lijsten</h2>
+      <ol>
+        <li>
+          <a href="https://peppol.org/members/peppol-certified-service-providers/" rel="noopener">Peppol Certified Service Providers — OpenPeppol</a>
+          — sorteer op land België of Peppol Authority BOSA. Dat is de AP-lijst.
+        </li>
+        <li>
+          <a href="https://efactuur.belgium.be/nl/article/softwareoplossingen-voor-het-verzenden-ontvangen-en-verwerken-van-elektronische-facturen" rel="noopener">Softwareoplossingen — FOD Financiën / efactuur.belgium.be</a>
+          — eindgebruikerssoftware. De FOD certificeert die producten niet inhoudelijk.
+        </li>
+        <li>
+          <a href="https://digital.belgium.be/e-invoicing/PEPPOLinBelgium.html" rel="noopener">Belgische Peppol-autoriteit (BOSA)</a>
+          — wijst door naar dezelfde twee bronnen.
+        </li>
+        <li>
+          <a href="https://directory.peppol.eu/public/" rel="noopener">Peppol Directory</a>
+          — zoek <span class="mono">0208:</span> + 10-cijferig KBO (zonder BE, zonder punten).
+        </li>
+        <li>
+          <a href="https://kbopub.economie.fgov.be/" rel="noopener">KBO public search</a>
+          — ondernemingsnummer opzoeken.
+        </li>
+      </ol>
+    </section>
+
+    <section class="card">
+      <h2>Filter op situatie (toont voorbeelden)</h2>
+      <div class="choices">
+        <label><input type="radio" name="sit" value="all" checked> Alles tonen</label>
+        <label><input type="radio" name="sit" value="freelancer"> Eenmanszaak / freelancer — portaal, weinig ERP</label>
+        <label><input type="radio" name="sit" value="kmo"> KMO met facturatiepakket</label>
+        <label><input type="radio" name="sit" value="erp"> Al een ERP / boekhoudpakket</label>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Voorbeelden van gecertificeerde AP’s (BOSA) — check OpenPeppol vandaag</h2>
+      <p>Bedrijfsnamen en publieke sites. Geen persoonsnamen, geen privémail, geen telefoon. Controleer AP Certified / SMP Certified zelf op peppol.org.</p>
+      <table class="ap" id="apTable">
+        <thead>
+          <tr>
+            <th>Naam</th>
+            <th>Typisch</th>
+            <th>Publieke site</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr data-sit="freelancer kmo">
+            <td>Billit</td>
+            <td>KMO-facturatie + Peppol-portaal</td>
+            <td><a href="https://www.billit.eu/" rel="noopener">billit.eu</a></td>
+          </tr>
+          <tr data-sit="freelancer kmo">
+            <td>e-invoice.be</td>
+            <td>Peppol-gerichte e-facturatie</td>
+            <td><a href="https://www.e-invoice.be/" rel="noopener">e-invoice.be</a></td>
+          </tr>
+          <tr data-sit="kmo erp">
+            <td>Digiteal</td>
+            <td>E-factuur / betalingen</td>
+            <td><a href="https://www.digiteal.eu/" rel="noopener">digiteal.eu</a></td>
+          </tr>
+          <tr data-sit="kmo erp">
+            <td>Odoo</td>
+            <td>ERP met Peppol-module</td>
+            <td><a href="https://www.odoo.com/" rel="noopener">odoo.com</a></td>
+          </tr>
+          <tr data-sit="freelancer kmo erp">
+            <td>Octopus</td>
+            <td>Belgisch boekhouden</td>
+            <td><a href="https://www.octopus.be/" rel="noopener">octopus.be</a></td>
+          </tr>
+          <tr data-sit="kmo">
+            <td>Teamleader</td>
+            <td>CRM + facturen</td>
+            <td><a href="https://www.teamleader.eu/" rel="noopener">teamleader.eu</a></td>
+          </tr>
+          <tr data-sit="kmo erp">
+            <td>Unifiedpost / Banqup</td>
+            <td>Netwerk-AP, grotere stromen</td>
+            <td><a href="https://www.unifiedpost.com/" rel="noopener">unifiedpost.com</a></td>
+          </tr>
+          <tr data-sit="kmo erp">
+            <td>Horus Software</td>
+            <td>Boekhouden</td>
+            <td><a href="https://www.horus-software.be/" rel="noopener">horus-software.be</a></td>
+          </tr>
+          <tr data-sit="freelancer kmo">
+            <td>Winfakt</td>
+            <td>Facturatie</td>
+            <td><a href="https://www.winfakt.be/" rel="noopener">winfakt.be</a></td>
+          </tr>
+          <tr data-sit="kmo erp">
+            <td>Accai Software</td>
+            <td>AP / software</td>
+            <td><a href="https://www.accai.be/" rel="noopener">accai.be</a></td>
+          </tr>
+          <tr data-sit="kmo erp">
+            <td>Tigron</td>
+            <td>AP / integratie</td>
+            <td><a href="https://www.tigron.be/" rel="noopener">tigron.be</a></td>
+          </tr>
+          <tr data-sit="kmo erp">
+            <td>Flowin (Wolters Kluwer)</td>
+            <td>Boekhouden / e-invoicing</td>
+            <td><a href="https://www.wolterskluwer.com/nl-be" rel="noopener">wolterskluwer.com/nl-be</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <h2>Hoe kiezen (zonder ons)</h2>
+      <ol>
+        <li>Vraag uw boekhouder welk pakket <em>zij</em> al ontvangen — voorkom dubbele tools.</li>
+        <li>Eis send <strong>en</strong> receive, publicatie in de Directory onder <span class="mono">0208:</span> + KBO.</li>
+        <li>Vraag prijs: portaal vs. API, inkomende facturen, archivering.</li>
+        <li>Onboarding (itsme, eID, volmacht) doet het AP, niet dit kit.</li>
+        <li>Als uw ERP al een AP laat kiezen: gebruik de OpenPeppol-lijst, niet deze verkorte tabel.</li>
+      </ol>
+    </section>
+
+    <section class="card">
+      <h2>Wat u hier niet krijgt</h2>
+      <ul>
+        <li>Geen account, geen registratie, geen testzending.</li>
+        <li>Geen OpenPeppol-lidmaatschap, geen eigen Access Point.</li>
+        <li>Geen groene badge “Peppol ready” na het aankruisen van een naam.</li>
+      </ul>
+    </section>
+
+    <p class="fine">Lees <a href="DISCLAIMER.html">DISCLAIMER</a>. Dit kit blijft een keuzelijst, geen AP.</p>
+  </main>
+  <script>
+    (function () {
+      var radios = document.querySelectorAll('input[name="sit"]');
+      var rows = document.querySelectorAll("#apTable tbody tr");
+      function apply() {
+        var sit = "all";
+        var i;
+        for (i = 0; i < radios.length; i++) {
+          if (radios[i].checked) { sit = radios[i].value; break; }
+        }
+        for (i = 0; i < rows.length; i++) {
+          var tags = rows[i].getAttribute("data-sit") || "";
+          var show = sit === "all" || (" " + tags + " ").indexOf(" " + sit + " ") !== -1;
+          rows[i].style.display = show ? "" : "none";
+        }
+      }
+      var j;
+      for (j = 0; j < radios.length; j++) {
+        radios[j].addEventListener("change", apply);
+      }
+      apply();
+    })();
+  </script>
+</body>
+</html>
