@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Opvolgmail — NL + korte FR</title>
+  <meta name="description" content="Mailto-concepten na een winkelbezoek. Nederlands primair, Frans optioneel. Demo: hello@bakkerij.example.">
+  <link rel="stylesheet" href="pack.css">
+</head>
+<body>
+  <main class="wrap">
+    <nav class="pack-nav no-print" aria-label="Pack">
+      <a href="index.html">Start</a>
+      <a href="review-link.html">Reviewlink</a>
+      <a href="follow-up.html" aria-current="page">Opvolgmail</a>
+      <a href="qr.html">QR</a>
+      <a href="reminder.html">Herinnering</a>
+      <a href="weekly-report.html">Rapport</a>
+      <a href="HANDOFF.html">Handoff</a>
+    </nav>
+
+    <p class="kicker">Copy-paste · u stuurt dit zelf</p>
+    <h1>Opvolgmail na een bezoek</h1>
+    <p class="lead">Nederlands is de standaard. Frans is een korte extra. Geen Gmail, geen echte inbox. Ondertekening: <span class="mono">hello@bakkerij.example</span>. De To-regel laat u leeg — mailto opent uw eigen mailprogramma.</p>
+    <div class="banner warn no-print">Wij versturen deze mails niet. Geen automatische Google-posts.</div>
+
+    <section class="card no-print">
+      <label for="reviewUrl">Google review-URL in de mail</label>
+      <input id="reviewUrl" type="url" value="https://search.google.com/local/writereview?placeid=REPLACE_WITH_YOUR_PLACE_ID" spellcheck="false" autocomplete="off">
+      <p class="copy-row">
+        <button type="button" id="refreshBtn">Vernieuw concepten</button>
+        <a class="btn ghost" id="mailtoNl" href="mailto:?subject=Bedankt%20voor%20uw%20bezoek">Open mailto (NL)</a>
+        <a class="btn ghost" id="mailtoFr" href="mailto:?subject=Merci%20pour%20votre%20visite">Open mailto (FR)</a>
+      </p>
+    </section>
+
+    <h2>Nederlands</h2>
+    <p class="no-print copy-row">
+      <button type="button" id="copyNl">Kopieer NL</button>
+      <span class="copy-ok" id="statusNl"></span>
+    </p>
+    <pre class="mail" id="mailNl"></pre>
+
+    <h2>Français <span class="fr-note">(optionnel · court)</span></h2>
+    <p class="no-print copy-row">
+      <button type="button" id="copyFr">Kopieer FR</button>
+      <span class="copy-ok" id="statusFr"></span>
+    </p>
+    <pre class="mail" id="mailFr"></pre>
+  </main>
+  <script>
+    (function () {
+      var DEFAULT_URL = "https://search.google.com/local/writereview?placeid=REPLACE_WITH_YOUR_PLACE_ID";
+      var urlEl = document.getElementById("reviewUrl");
+
+      function nlBody(url) {
+        return (
+          "Onderwerp: Bedankt voor uw bezoek — één Google-beoordeling helpt\n\n" +
+          "Beste,\n\n" +
+          "Bedankt voor uw bezoek aan Bakkerij Noord.\n\n" +
+          "Als u tevreden was, helpt een korte Google-beoordeling andere buurtbewoners. Minder dan een minuut:\n\n" +
+          url + "\n\n" +
+          "Liever niet? Geen probleem — u mag deze mail negeren.\n\n" +
+          "Vriendelijke groeten,\n" +
+          "Bakkerij Noord\n" +
+          "hello@bakkerij.example\n"
+        );
+      }
+
+      function frBody(url) {
+        return (
+          "Objet : Merci pour votre visite — un avis Google aide le quartier\n\n" +
+          "Bonjour,\n\n" +
+          "Merci pour votre visite à Bakkerij Noord.\n\n" +
+          "Si vous êtes satisfait, un avis Google prend moins d’une minute :\n\n" +
+          url + "\n\n" +
+          "Pas d’obligation.\n\n" +
+          "Bien à vous,\n" +
+          "Bakkerij Noord\n" +
+          "hello@bakkerij.example\n"
+        );
+      }
+
+      function nlMailtoBody(url) {
+        return (
+          "Beste,\n\n" +
+          "Bedankt voor uw bezoek aan Bakkerij Noord.\n\n" +
+          "Als u tevreden was, helpt een korte Google-beoordeling andere buurtbewoners. Minder dan een minuut:\n\n" +
+          url + "\n\n" +
+          "Liever niet? Geen probleem — u mag deze mail negeren.\n\n" +
+          "Vriendelijke groeten,\n" +
+          "Bakkerij Noord\n" +
+          "hello@bakkerij.example"
+        );
+      }
+
+      function frMailtoBody(url) {
+        return (
+          "Bonjour,\n\n" +
+          "Merci pour votre visite à Bakkerij Noord.\n\n" +
+          "Si vous êtes satisfait, un avis Google prend moins d’une minute :\n\n" +
+          url + "\n\n" +
+          "Pas d’obligation.\n\n" +
+          "Bien à vous,\n" +
+          "Bakkerij Noord\n" +
+          "hello@bakkerij.example"
+        );
+      }
+
+      function url() {
+        return (urlEl.value || "").trim() || DEFAULT_URL;
+      }
+
+      function render() {
+        var u = url();
+        document.getElementById("mailNl").textContent = nlBody(u);
+        document.getElementById("mailFr").textContent = frBody(u);
+        document.getElementById("mailtoNl").href =
+          "mailto:?subject=" + encodeURIComponent("Bedankt voor uw bezoek — één Google-beoordeling helpt") +
+          "&body=" + encodeURIComponent(nlMailtoBody(u));
+        document.getElementById("mailtoFr").href =
+          "mailto:?subject=" + encodeURIComponent("Merci pour votre visite — un avis Google aide le quartier") +
+          "&body=" + encodeURIComponent(frMailtoBody(u));
+      }
+
+      function copy(id, statusId) {
+        var text = document.getElementById(id).textContent;
+        var status = document.getElementById(statusId);
+        function ok() { status.textContent = "Gekopieerd."; }
+        function fail() { status.textContent = "Selecteer de tekst en kopieer handmatig."; }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(ok).catch(fail);
+        } else { fail(); }
+      }
+
+      document.getElementById("copyNl").addEventListener("click", function () { copy("mailNl", "statusNl"); });
+      document.getElementById("copyFr").addEventListener("click", function () { copy("mailFr", "statusFr"); });
+      document.getElementById("refreshBtn").addEventListener("click", render);
+      urlEl.addEventListener("change", render);
+      render();
+    })();
+  </script>
+</body>
+</html>
