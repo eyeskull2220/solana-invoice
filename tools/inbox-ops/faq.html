@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FAQ — Studio Noord</title>
+  <meta name="description" content="Client FAQ for Studio Noord. B2C PDF-by-mail is still allowed. B2B PDF is not a legal invoice since 1 Jan 2026 (Peppol). We do not make them compliant." />
+  <!-- Rebrand: Studio Noord, hello@studio.example. Keep the Peppol answers. See README.md -->
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #eef2f4;
+      --card: #fffcf7;
+      --ink: #14202a;
+      --muted: #5b6570;
+      --line: #d3dbe1;
+      --accent: #163d52;
+      --accent-ink: #f3fbff;
+      --soft: #dce8ef;
+      --warn-bg: #fff6e8;
+      --warn-line: #ecd4a4;
+      --shadow: 0 14px 40px rgba(20, 32, 42, 0.07);
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(900px 320px at 0% -10%, #dce8ef 0%, transparent 55%),
+        var(--bg);
+    }
+    .wrap { width: min(720px, 100%); margin: 0 auto; padding: 28px 16px 72px; }
+    .brand {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px 16px;
+      margin: 0 0 18px;
+    }
+    .brand strong { letter-spacing: 0.14em; text-transform: uppercase; font-size: 12px; }
+    .brand span { color: var(--muted); font-size: 13px; }
+    nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 22px; }
+    nav a {
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 650;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: var(--card);
+    }
+    nav a[aria-current="page"] {
+      background: var(--accent);
+      color: var(--accent-ink);
+      border-color: var(--accent);
+    }
+    h1 { margin: 0 0 8px; font-size: clamp(1.55rem, 4vw, 2rem); letter-spacing: -0.03em; }
+    .lead { margin: 0 0 18px; color: var(--muted); }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      box-shadow: var(--shadow);
+      margin: 0 0 12px;
+    }
+    .card h2 { margin: 0 0 8px; font-size: 1.02rem; letter-spacing: -0.02em; }
+    .card p { margin: 0 0 10px; color: var(--muted); }
+    .card p:last-child { margin-bottom: 0; }
+    .warn {
+      background: var(--warn-bg);
+      border: 1px solid var(--warn-line);
+      border-radius: 12px;
+      padding: 12px 14px;
+      color: #6b3d0c;
+      margin: 0 0 16px;
+    }
+    .warn h2 { margin: 0 0 8px; font-size: 1.02rem; color: var(--ink); }
+    .warn p { margin: 0 0 8px; }
+    .warn p:last-child { margin-bottom: 0; }
+    ul { margin: 0; padding: 0 0 0 1.15em; color: var(--muted); }
+    li { margin: 0 0 6px; }
+    footer { margin-top: 22px; color: var(--muted); font-size: 13px; }
+    footer a { color: inherit; }
+    a { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="brand">
+      <strong>Studio Noord</strong>
+      <span>hello@studio.example</span>
+    </div>
+    <nav aria-label="Pack">
+      <a href="index.html">Pack</a>
+      <a href="intake.html">Intake</a>
+      <a href="invoice.html">Factuur</a>
+      <a href="reminder.html">Reminder</a>
+      <a href="faq.html" aria-current="page">FAQ</a>
+    </nav>
+
+    <header>
+      <h1>Client FAQ</h1>
+      <p class="lead">Demo answers for Studio Noord. Replace the studio name and mail when you rebrand this pack for one client. Keep the Peppol answers.</p>
+    </header>
+
+    <section class="warn" id="peppol">
+      <h2>PDF invoices and Peppol</h2>
+      <p><strong>B2C PDF-by-mail is still allowed.</strong> If you are a private person (not a VAT-registered business), Studio Noord can send a PDF or this HTML factuur by mail. That remains a usable invoice for B2C.</p>
+      <p><strong>B2B PDF is NOT a legal invoice since 1 Jan 2026 (Peppol).</strong> If you are a Belgian VAT-registered business, a PDF or HTML file is not a legally valid invoice. Structured e-invoicing via Peppol is required.</p>
+      <p><strong>We do not make them compliant.</strong> Studio Noord does not run a Peppol Access Point. We do not send live Peppol documents. If you need a legal B2B e-invoice, use your accountant or a certified Peppol Access Point. This pack will not do that for you.</p>
+    </section>
+
+    <section class="card">
+      <h2>How do I start a job?</h2>
+      <p>Open the <a href="intake.html">intake form</a>. One job per form. Download the brief or send a mailto draft to hello@studio.example. Studio Noord replies with a scope and a factuur — not with a weekly admin seat.</p>
+    </section>
+
+    <section class="card">
+      <h2>What does a factuur look like?</h2>
+      <p>Belgian layout: seller, client, sequential number, date, due date, line items, <strong>21% BTW</strong> unless a different rate applies. Demo: Studio Noord → Client BV. Open the <a href="invoice.html">factuur</a> and download a standalone HTML file.</p>
+      <p>That file is a human-readable copy. It is not tax advice. Confirm the BTW rate that applies to the work.</p>
+    </section>
+
+    <section class="card">
+      <h2>When is payment due?</h2>
+      <p>Demo terms: 14 days after the invoice date. Pay in euro with the factuurnummer as the message. If the date passes, Studio Noord sends a polite <a href="reminder.html">reminder</a> — not a collections agency, not bookkeeping follow-up.</p>
+    </section>
+
+    <section class="card">
+      <h2>Who is Studio Noord?</h2>
+      <p>Fake demo freelancer. Voorbeeldlaan 1, 2000 Antwerpen. BTW/KBO BE 0999.999.992. Mail hello@studio.example (RFC 2606). Not a real company inbox. Agents rebrand this pack for one real client; they must not paste Gmail or harvested live mailboxes into the demo.</p>
+    </section>
+
+    <section class="card">
+      <h2>What Studio Noord / this pack will not do</h2>
+      <ul>
+        <li>Peppol Access Point setup or hosting</li>
+        <li>Live Peppol send or receive</li>
+        <li>Bookkeeping, VAT returns, or accountant work</li>
+        <li>Azure AD / Entra identity jobs</li>
+        <li>A leftover 9 USDC restack of a single invoice toy</li>
+        <li>Applying as a coding-job candidate</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>NL — kort</h2>
+      <p>B2C: PDF per mail blijft toegelaten. B2B: sinds 1 januari 2026 is een PDF geen wettelijke factuur in België (Peppol). Wij maken jullie daar niet compliant voor. Geen Access Point, geen live Peppol-verzending.</p>
+    </section>
+
+    <footer>
+      Studio Noord · <a href="intake.html">Start an intake</a> · Pack sell page: <a href="index.html">299 USDC</a>
+    </footer>
+  </div>
+</body>
+</html>
