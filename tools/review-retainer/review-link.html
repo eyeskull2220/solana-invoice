@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reviewlink — Bakkerij Noord (demo)</title>
+  <meta name="description" content="Klantpagina voor een Google-beoordeling. Placeholders en werkblad. Geen Google-API.">
+  <link rel="stylesheet" href="pack.css">
+</head>
+<body>
+  <main class="wrap">
+    <nav class="pack-nav no-print" aria-label="Pack">
+      <a href="index.html">Start</a>
+      <a href="review-link.html" aria-current="page">Reviewlink</a>
+      <a href="follow-up.html">Opvolgmail</a>
+      <a href="qr.html">QR</a>
+      <a href="reminder.html">Herinnering</a>
+      <a href="weekly-report.html">Rapport</a>
+      <a href="HANDOFF.html">Handoff</a>
+    </nav>
+
+    <p class="kicker">Demo-winkel · plak hier úw Google-link</p>
+    <h1>Laat een Google-beoordeling achter voor Bakkerij Noord</h1>
+    <p class="lead">Eén minuut. Geen account bij ons. U gaat naar Google. Deze pagina is een placeholder tot de zaakvoerder de echte review-URL plakt.</p>
+
+    <section class="card">
+      <h2>Naar Google</h2>
+      <p>Demo-link (vervang Place ID):</p>
+      <p><a id="reviewAnchor" href="https://search.google.com/local/writereview?placeid=REPLACE_WITH_YOUR_PLACE_ID">Google-beoordeling schrijven</a></p>
+      <p class="fine" id="urlNote">URL: <span class="mono" id="urlOut">https://search.google.com/local/writereview?placeid=REPLACE_WITH_YOUR_PLACE_ID</span></p>
+    </section>
+
+    <section class="card no-print">
+      <h2>Werkblad — Google review-URL (geen API)</h2>
+      <p>Wij halen geen Place ID op. U kopieert de link uit Google Maps (Delen) of uit Google Business. Plak hier. Niets wordt naar een server gestuurd.</p>
+      <div class="grid-2">
+        <div>
+          <label for="shopName">Winkelnaam</label>
+          <input id="shopName" type="text" value="Bakkerij Noord" autocomplete="off">
+        </div>
+        <div>
+          <label for="placeId">Place ID (optioneel)</label>
+          <input id="placeId" type="text" value="REPLACE_WITH_YOUR_PLACE_ID" spellcheck="false" autocomplete="off">
+        </div>
+      </div>
+      <label for="reviewUrl">Google review-URL</label>
+      <input id="reviewUrl" type="url" value="https://search.google.com/local/writereview?placeid=REPLACE_WITH_YOUR_PLACE_ID" spellcheck="false" autocomplete="off">
+      <ol class="steps">
+        <li>Open Google Maps in de browser.</li>
+        <li>Zoek uw zaak. Kies Delen, of de knop voor een beoordeling.</li>
+        <li>Plak de URL hierboven. Typische vorm: <span class="mono">https://search.google.com/local/writereview?placeid=…</span></li>
+        <li>Zelfde URL op <a href="qr.html">qr.html</a> voor de toonbanksticker.</li>
+      </ol>
+      <p class="copy-row">
+        <button type="button" id="applyBtn">Toon op deze pagina</button>
+        <span class="copy-ok" id="applyStatus"></span>
+      </p>
+    </section>
+
+    <p class="fine no-print">Demo-mail: <span class="mono">hello@bakkerij.example</span>. Geen Google-login, geen scraping.</p>
+  </main>
+  <script>
+    (function () {
+      var urlEl = document.getElementById("reviewUrl");
+      var placeEl = document.getElementById("placeId");
+      var anchor = document.getElementById("reviewAnchor");
+      var out = document.getElementById("urlOut");
+      var status = document.getElementById("applyStatus");
+
+      function apply() {
+        var url = (urlEl.value || "").trim();
+        var place = (placeEl.value || "").trim();
+        if (place && place !== "REPLACE_WITH_YOUR_PLACE_ID" && url.indexOf("REPLACE_WITH_YOUR_PLACE_ID") !== -1) {
+          url = "https://search.google.com/local/writereview?placeid=" + encodeURIComponent(place);
+          urlEl.value = url;
+        }
+        if (!url) {
+          status.textContent = "Plak eerst een Google review-URL.";
+          return;
+        }
+        anchor.href = url;
+        out.textContent = url;
+        status.textContent = "Link bijgewerkt op deze pagina. Print of sla op als u wilt bewaren.";
+      }
+
+      document.getElementById("applyBtn").addEventListener("click", apply);
+    })();
+  </script>
+</body>
+</html>

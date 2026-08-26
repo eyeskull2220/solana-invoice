@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Toonbank-QR — Google-review URL</title>
+  <meta name="description" content="Client-side QR van de Google-review-URL. Geen derde-partij API-sleutel. Offline.">
+  <link rel="stylesheet" href="pack.css">
+</head>
+<body>
+  <main class="wrap">
+    <nav class="pack-nav no-print" aria-label="Pack">
+      <a href="index.html">Start</a>
+      <a href="review-link.html">Reviewlink</a>
+      <a href="follow-up.html">Opvolgmail</a>
+      <a href="qr.html" aria-current="page">QR</a>
+      <a href="reminder.html">Herinnering</a>
+      <a href="weekly-report.html">Rapport</a>
+      <a href="HANDOFF.html">Handoff</a>
+    </nav>
+
+    <p class="kicker no-print">Toonbank · lokaal gegenereerd</p>
+    <h1 class="no-print">QR van uw Google-review-URL</h1>
+    <p class="lead no-print">Geen API-sleutel, geen qrserver, geen Reviewi.be-account. De code wordt in deze browser getekend. Reviewi.be is goedkoper als u alléén een QR wilt — dit pack is de setup vóór de maandelijkse arbeid.</p>
+    <div class="banner warn no-print">Plak de echte Google-link. De demo-Place ID is geen echte zaak.</div>
+
+    <section class="card no-print">
+      <label for="shopName">Winkelnaam op de sticker</label>
+      <input id="shopName" type="text" value="Bakkerij Noord" autocomplete="off">
+      <label for="reviewUrl">Google review-URL</label>
+      <input id="reviewUrl" type="url" value="https://search.google.com/local/writereview?placeid=REPLACE_WITH_YOUR_PLACE_ID" spellcheck="false" autocomplete="off">
+      <p class="copy-row">
+        <button type="button" id="drawBtn">Teken QR</button>
+        <button type="button" class="ghost" id="printBtn">Print sticker</button>
+        <span class="copy-ok" id="qrStatus"></span>
+      </p>
+    </section>
+
+    <article class="qr-card" id="sticker">
+      <div class="shop" id="shopOut">Bakkerij Noord</div>
+      <h2>Beoordeel ons op Google</h2>
+      <div id="qr" aria-label="QR-code van de Google-review-URL"></div>
+      <p>Scan en laat een beoordeling achter.</p>
+      <p class="qr-url" id="urlOut"></p>
+    </article>
+  </main>
+  <script src="qrcode.js"></script>
+  <script>
+    (function () {
+      var qrEl = document.getElementById("qr");
+      var qrCode = null;
+      var last = "";
+      var status = document.getElementById("qrStatus");
+
+      function draw() {
+        var name = (document.getElementById("shopName").value || "").trim() || "Bakkerij Noord";
+        var url = (document.getElementById("reviewUrl").value || "").trim();
+        document.getElementById("shopOut").textContent = name;
+        document.getElementById("urlOut").textContent = url;
+        if (!url) {
+          qrEl.innerHTML = "";
+          qrCode = null;
+          last = "";
+          status.textContent = "Plak een Google review-URL.";
+          return;
+        }
+        if (typeof QRCode === "undefined") {
+          status.textContent = "QR-bibliotheek ontbreekt (qrcode.js).";
+          return;
+        }
+        if (url === last && qrCode) {
+          status.textContent = "QR staat klaar. Print of sla de pagina op.";
+          return;
+        }
+        qrEl.innerHTML = "";
+        qrCode = new QRCode(qrEl, {
+          text: url,
+          width: 184,
+          height: 184,
+          colorDark: "#1b1a17",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.M
+        });
+        last = url;
+        if (url.indexOf("REPLACE_WITH_YOUR_PLACE_ID") !== -1) {
+          status.textContent = "Demo-URL. Vervang Place ID voor een echte sticker.";
+        } else {
+          status.textContent = "QR getekend in deze browser. Geen externe API.";
+        }
+      }
+
+      document.getElementById("drawBtn").addEventListener("click", draw);
+      document.getElementById("printBtn").addEventListener("click", function () {
+        draw();
+        window.print();
+      });
+      draw();
+    })();
+  </script>
+</body>
+</html>

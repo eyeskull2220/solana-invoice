@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Review-retainer voor lokale winkels — 199 + 199/maand USDC</title>
+  <meta name="description" content="199 USDC setup + 199 USDC per maand done-for-you: wekelijkse Google-review scan, conceptantwoorden, één-pagina rapport. Geen QR-dump, geen SaaS.">
+  <link rel="stylesheet" href="pack.css">
+</head>
+<body>
+  <main class="wrap">
+    <nav class="pack-nav" aria-label="Pack">
+      <a href="index.html" aria-current="page">Start</a>
+      <a href="review-link.html">Reviewlink</a>
+      <a href="follow-up.html">Opvolgmail</a>
+      <a href="qr.html">QR</a>
+      <a href="reminder.html">Herinnering</a>
+      <a href="weekly-report.html">Rapport</a>
+      <a href="HANDOFF.html">Handoff</a>
+    </nav>
+
+    <p class="kicker">Lokale winkel · België · Google-reviews</p>
+    <h1>Reviews opvolgen is werk. Dit pack is de setup. De maandprijs is de arbeid.</h1>
+    <p class="lead">199 USDC eenmalig voor de bestanden. 199 USDC per maand daarna: wij scannen, schrijven conceptantwoorden, sturen een één-pagina rapport. U plaatst zelf op Google. Geen QR-dump. Geen self-serve SaaS — Reviewi.be doet QR al goedkoper.</p>
+    <p>
+      <span class="price">199 USDC setup</span>
+      <span class="price">199 USDC / maand DFY</span>
+    </p>
+
+    <div class="banner warn">
+      <strong>Geen automatische Google-posts.</strong>
+      Wij scrapen niet en hebben geen Google-API. Na de setup-bestanden start de wekelijkse ronde pas als de <strong>199 USDC/maand</strong> binnen is. Zie <a href="HANDOFF.html">HANDOFF</a>.
+    </div>
+
+    <section class="card" id="pay">
+      <h2>Betaal USDC op Solana</h2>
+      <p>Alleen USDC. Niet SOL, niet Base, niet ETH, niet XRP. Copy-address — geen wallet-connect.</p>
+      <p>Stuur exact <strong>199 USDC</strong> naar:</p>
+      <div class="addr" id="addr">96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</div>
+      <p class="net">Netwerk: Solana · Token: USDC · mint EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v</p>
+      <p class="net">Memo setup: <code>review-setup-199</code> · Memo maand: <code>review-monthly-199</code></p>
+      <div class="copy-row">
+        <button type="button" id="copySetup">Kopieer adres (setup 199)</button>
+        <button type="button" class="ghost" id="copyMonthly">Kopieer adres (maand 199)</button>
+        <span class="copy-ok" id="copyStatus"></span>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Wat u krijgt (setup-bestanden)</h2>
+      <ul class="file-list">
+        <li><a href="review-link.html">review-link.html</a> <small>Klantpagina + Place ID-werkblad</small></li>
+        <li><a href="follow-up.html">follow-up.html</a> <small>Mailto-concepten NL + korte FR</small></li>
+        <li><a href="qr.html">qr.html</a> <small>Toonbank-QR van uw Google-review-URL, lokaal</small></li>
+        <li><a href="reminder.ics">reminder.ics</a> <small>Wekelijkse agenda · ma 09:00 Brussel</small></li>
+        <li><a href="weekly-report.html">weekly-report.html</a> <small>Eén-pagina rapport + conceptantwoorden</small></li>
+        <li><a href="HANDOFF.html">HANDOFF.html</a> <small>Na de maandprijs: scan / concept / rapport</small></li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Wat de 199 USDC/maand wél is</h2>
+      <ol class="steps">
+        <li>Wekelijkse Google-review scan (handmatig, met de publieke link die u ons geeft).</li>
+        <li>Conceptantwoorden in het rapport. <strong>U</strong> plakt ze in Google.</li>
+        <li>Eén pagina rapport per week.</li>
+      </ol>
+      <p>Dat is agent-arbeid ná de setup-bestanden. Geen login-product. Geen QR-sticker als enige levering.</p>
+    </section>
+
+    <section class="card">
+      <h2>Wat dit pack niet is</h2>
+      <ul>
+        <li>Geen QR-dump. Reviewi.be is goedkoper als u alleen een sticker wilt.</li>
+        <li>Geen self-serve SaaS, geen account, geen Google OAuth.</li>
+        <li>Geen automatische posts naar Google, geen scraping-code.</li>
+        <li>Geen restack van de 9 USDC Solana Invoice.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Demo-winkel in de voorbeelden</h2>
+      <p>Bakkerij Noord · <span class="mono">hello@bakkerij.example</span> (RFC 2606). Geen echte inboxen. Geen Gmail.</p>
+    </section>
+
+    <p class="fine">Setup 199 USDC + 199 USDC/maand DFY-arbeid. Pay-to staat hierboven. Lees <a href="HANDOFF.html">HANDOFF.html</a> voor de wekelijkse ronde.</p>
+  </main>
+  <script>
+    (function () {
+      var ADDR = "96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3";
+      var status = document.getElementById("copyStatus");
+      function copy(kind) {
+        var msg = kind === "monthly"
+          ? "Gekopieerd. Stuur exact 199 USDC op Solana (maand)."
+          : "Gekopieerd. Stuur exact 199 USDC op Solana (setup).";
+        function ok() { status.textContent = msg; }
+        function fail() { status.textContent = "Selecteer het adres en kopieer handmatig."; }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(ADDR).then(ok).catch(fail);
+        } else { fail(); }
+      }
+      document.getElementById("copySetup").addEventListener("click", function () { copy("setup"); });
+      document.getElementById("copyMonthly").addEventListener("click", function () { copy("monthly"); });
+    })();
+  </script>
+</body>
+</html>
