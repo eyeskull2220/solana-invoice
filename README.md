@@ -16,6 +16,6 @@ Live catalog: https://treasury-tools.surge.sh/
 - [CSV Cleaner](https://csv-cleaner-treasury.surge.sh/) — trim, drop empty/duplicate rows, pick columns. 49 USDC.
 - [Form to Email](https://form-to-email-treasury.surge.sh/) — mailto + copy form builder. 49 USDC.
 - [RSS to Webhook](https://rss-to-webhook-treasury.surge.sh/) — check a feed, POST new items as JSON. 49 USDC.
-- [EUR receive log](tools/eur-receive-log/) — record inbound USDC as EUR same-day (date, chain, tx last-6, USDC, EUR mid, source memo). 49 USDC or free internal. No baked exchange rate.
+- [EUR receive log](tools/eur-receive-log/) — record inbound USDC as EUR same-day. CSV columns: date, usdc, eur_mid, memo, tx, notes. 49 USDC or free internal. No baked rate. Not a tax filing.
 
 Send USDC on Solana to the treasury address above (or copy it from the pay page). These pages do not trade.
