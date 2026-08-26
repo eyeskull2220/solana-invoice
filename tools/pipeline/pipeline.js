@@ -1118,7 +1118,9 @@
     if (reset) {
       reset.addEventListener("click", function () {
         resetState();
-        status.textContent = "Demo reset. Open Form to start the chain.";
+        var mount = $("mount");
+        if (mount) mountWizard(mount);
+        status.textContent = "Demo reset to Studio Noord / Client BV.";
       });
     }
   }
