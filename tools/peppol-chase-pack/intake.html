@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Intake — Peppol Client-Chase Pack</title>
+  <link rel="stylesheet" href="pack.css">
+</head>
+<body>
+  <main class="wrap">
+    <nav class="pack-nav" aria-label="Pack">
+      <a href="index.html">Start</a>
+      <a href="intake.html" aria-current="page">Intake</a>
+      <a href="sample-ubl-invoice.xml">Sample UBL</a>
+      <a href="ap-shortlist.html">AP shortlist</a>
+      <a href="handoff-checklist.html">Handoff</a>
+    </nav>
+
+    <p class="kicker">Step 1 · paste from official records</p>
+    <h1>Intake (stays on this device)</h1>
+    <p class="lead">Fill this in locally. The form does not submit anywhere. It does not register a Peppol ID. Empty identifier fields are intentional — do not invent VAT or KBO numbers.</p>
+
+    <div class="banner danger">
+      We are not an Access Point. Paste enterprise numbers from the
+      <a href="https://kbopub.economie.fgov.be/" rel="noopener">KBO public search</a>
+      or from the enterprise’s own records. Leave a field blank if you do not have the official value yet.
+    </div>
+
+    <form class="card" id="seller" onsubmit="return false;">
+      <h2>Seller (the enterprise that will invoice)</h2>
+      <div class="grid-2">
+        <div>
+          <label for="legalName">Legal name (as in KBO)</label>
+          <input id="legalName" type="text" autocomplete="organization" placeholder="Paste legal name from KBO">
+        </div>
+        <div>
+          <label for="kbo">KBO / BCE enterprise number</label>
+          <input id="kbo" type="text" inputmode="numeric" placeholder="10 digits from KBO public search — leave blank if unknown">
+        </div>
+        <div>
+          <label for="vat">VAT number</label>
+          <input id="vat" type="text" placeholder="Official VAT as issued — leave blank if unknown">
+        </div>
+        <div>
+          <label for="peppolStatus">Already on Peppol?</label>
+          <select id="peppolStatus">
+            <option value="">Not checked yet</option>
+            <option value="unknown">Unknown — look up later in the Directory</option>
+            <option value="yes">Yes — an Access Point already registered them</option>
+            <option value="no">No — they still need an Access Point</option>
+          </select>
+        </div>
+      </div>
+      <label for="street">Street and number (as in KBO)</label>
+      <input id="street" type="text" placeholder="Paste from KBO — leave blank if unknown">
+      <div class="grid-2">
+        <div>
+          <label for="postcode">Postal code</label>
+          <input id="postcode" type="text" placeholder="As in KBO">
+        </div>
+        <div>
+          <label for="city">Municipality</label>
+          <input id="city" type="text" placeholder="As in KBO">
+        </div>
+      </div>
+      <label for="iban">IBAN for later AP setup (optional)</label>
+      <input id="iban" type="text" placeholder="Paste the account they will print on invoices — leave blank if unknown">
+      <label for="software">Current invoicing / accounting software</label>
+      <input id="software" type="text" placeholder="Name of the package they use today">
+      <div class="grid-2">
+        <div>
+          <label for="need">What they need an Access Point for</label>
+          <select id="need">
+            <option value="">Not chosen</option>
+            <option value="both">Send and receive</option>
+            <option value="send">Send only</option>
+            <option value="receive">Receive only</option>
+          </select>
+        </div>
+        <div>
+          <label for="volume">Rough monthly invoice volume</label>
+          <select id="volume">
+            <option value="">Not chosen</option>
+            <option value="lt20">Under 20</option>
+            <option value="20-200">20 to 200</option>
+            <option value="gt200">Over 200</option>
+          </select>
+        </div>
+      </div>
+      <label for="note">Notes for the Access Point (no identifiers unless pasted from official records)</label>
+      <textarea id="note" placeholder="Who signs invoices? Does the accountant already receive Peppol? Any deadline?"></textarea>
+    </form>
+
+    <section class="card">
+      <h2>Buyers to chase (optional, max 5)</h2>
+      <p class="lead">Only Belgian B2B counterparties you will later look up as <span class="mono">0208:</span> plus 10 KBO digits in the <a href="https://directory.peppol.eu/public/" rel="noopener">Peppol Directory</a>. Leave KBO blank until you have the official number.</p>
+      <div id="buyers"></div>
+    </section>
+
+    <section class="card">
+      <h2>Identifier rules (Belgium)</h2>
+      <ul>
+        <li>Peppol participant ID for a Belgian enterprise is scheme <span class="mono">0208</span> plus the 10-digit KBO/BCE number, no <span class="mono">BE</span> prefix, no dots. Source: FPS Finance Peppol FAQ.</li>
+        <li>You cannot register that ID here. An approved Access Point does it after their own identity check.</li>
+        <li>This form stores nothing. Print or save the page if you need a copy.</li>
+      </ul>
+    </section>
+
+    <p class="fine">Next: <a href="sample-ubl-invoice.xml">sample UBL shape</a> · <a href="ap-shortlist.html">public BE AP shortlist</a>.</p>
+  </main>
+  <script>
+    (function () {
+      var host = document.getElementById("buyers");
+      var i;
+      for (i = 1; i <= 5; i++) {
+        host.insertAdjacentHTML("beforeend",
+          '<article class="card" style="box-shadow:none;margin:0 0 12px">' +
+          "<h3>Buyer " + i + "</h3>" +
+          '<div class="grid-2">' +
+          "<div><label for=\"b" + i + "name\">Legal name</label>" +
+          "<input id=\"b" + i + "name\" type=\"text\" placeholder=\"Paste from KBO\"></div>" +
+          "<div><label for=\"b" + i + "kbo\">KBO (10 digits)</label>" +
+          "<input id=\"b" + i + "kbo\" type=\"text\" placeholder=\"Leave blank until you have the official number\"></div>" +
+          "</div>" +
+          "<label for=\"b" + i + "peppol\">Directory lookup (you do this, not us)</label>" +
+          "<select id=\"b" + i + "peppol\">" +
+          '<option value="">Not checked</option>' +
+          '<option value="found">Found in Directory — can receive</option>' +
+          '<option value="missing">Not found — they still need an AP</option>' +
+          '<option value="oos">Out of scope (for example B2C)</option>' +
+          "</select></article>"
+        );
+      }
+    })();
+  </script>
+</body>
+</html>

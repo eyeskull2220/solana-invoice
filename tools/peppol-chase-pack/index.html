@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Peppol Client-Chase Pack — 399 USDC</title>
+  <meta name="description" content="399 USDC. Not a Peppol Access Point. Intake, sample UBL, public Belgian AP shortlist, handoff. No compliance claim.">
+  <link rel="stylesheet" href="pack.css">
+</head>
+<body>
+  <main class="wrap">
+    <nav class="pack-nav" aria-label="Pack">
+      <a href="index.html" aria-current="page">Start</a>
+      <a href="intake.html">Intake</a>
+      <a href="sample-ubl-invoice.xml">Sample UBL</a>
+      <a href="ap-shortlist.html">AP shortlist</a>
+      <a href="handoff-checklist.html">Handoff</a>
+    </nav>
+
+    <p class="kicker">Client-Chase Pack · Belgium · 2026-08-26</p>
+    <h1>Prepare a Belgian client to talk to a real Peppol Access Point.</h1>
+    <p class="lead">399 USDC. Static files: intake, sample UBL shape, public Belgian AP shortlist, handoff checklist. We are not an Access Point. These files are not compliance.</p>
+    <p><span class="price">399 USDC</span></p>
+
+    <div class="banner danger">
+      <strong>We are not a Peppol Access Point.</strong>
+      We cannot register a Peppol ID. We cannot send or receive Peppol documents.
+      Opening this pack is <strong>not</strong> certification and <strong>not</strong> a legal Belgian B2B invoice.
+      Do not invent VAT or KBO numbers.
+    </div>
+
+    <section class="card" id="pay">
+      <h2>Pay 399 USDC on Solana</h2>
+      <p>USDC only. Not SOL, not Base, not ETH, not XRP. Copy-address. No wallet connect.</p>
+      <p>Send exactly 399 USDC to:</p>
+      <div class="addr" id="addr">96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</div>
+      <p class="net">Network: Solana · Token: USDC · mint EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v</p>
+      <p class="net">Memo (optional): peppol-chase-pack</p>
+      <div class="copy-row">
+        <button type="button" id="copyBtn">Copy address</button>
+        <span class="copy-ok" id="copyStatus"></span>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>What you get</h2>
+      <ul class="file-list">
+        <li><a href="intake.html">intake.html</a> <small>Local form. Empty identifier fields. Nothing is submitted.</small></li>
+        <li><a href="sample-ubl-invoice.xml">sample-ubl-invoice.xml</a> <small>BIS Billing 3.0 shape with REPLACE_WITH_* tokens. Not for transmission.</small></li>
+        <li><a href="ap-shortlist.html">ap-shortlist.html</a> <small>Public BE Access Points from OpenPeppol. Snapshot 2026-08-26. Not an endorsement.</small></li>
+        <li><a href="handoff-checklist.html">handoff-checklist.html</a> <small>What to hand a real AP. What we did not do.</small></li>
+        <li><a href="README.md">README.md</a> <small>HARD limits and official source links.</small></li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>What this pack is not</h2>
+      <ul>
+        <li>Not a certified Access Point. Not OpenPeppol membership.</li>
+        <li>Not live Peppol send or receive.</li>
+        <li>Not registration of your Peppol ID (Belgium uses scheme 0208 + KBO digits — an AP does that).</li>
+        <li>Not a claim that you or your client is compliant after download.</li>
+        <li>Not invented VAT, KBO, IBAN, or personal contact details.</li>
+      </ul>
+    </section>
+
+    <p class="fine">Pack date 2026-08-26. Recheck the live OpenPeppol list before you contact an Access Point.</p>
+  </main>
+  <script>
+    (function () {
+      var ADDR = "96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3";
+      document.getElementById("copyBtn").addEventListener("click", function () {
+        var status = document.getElementById("copyStatus");
+        function ok() { status.textContent = "Copied."; }
+        function fail() { status.textContent = "Select the address and copy it."; }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(ADDR).then(ok).catch(fail);
+        } else { fail(); }
+      });
+    })();
+  </script>
+</body>
+</html>

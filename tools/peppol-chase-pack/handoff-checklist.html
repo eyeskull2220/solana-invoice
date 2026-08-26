@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Handoff checklist — Peppol Client-Chase Pack</title>
+  <link rel="stylesheet" href="pack.css">
+</head>
+<body>
+  <main class="wrap">
+    <nav class="pack-nav" aria-label="Pack">
+      <a href="index.html">Start</a>
+      <a href="intake.html">Intake</a>
+      <a href="sample-ubl-invoice.xml">Sample UBL</a>
+      <a href="ap-shortlist.html">AP shortlist</a>
+      <a href="handoff-checklist.html" aria-current="page">Handoff</a>
+    </nav>
+
+    <p class="kicker">End of this pack · 2026-08-26</p>
+    <h1>Handoff to a real Access Point</h1>
+    <p class="lead">Screens differ per provider. This is the order of work at <em>their</em> product, not a click-path we run for you. We click nothing. We send nothing on Peppol.</p>
+
+    <div class="banner danger">
+      Until a certified Access Point delivers a document on the Peppol network, you do not have a structured Belgian B2B e-invoice from this pack.
+      The HTML and SAMPLE UBL here do not count. We are not an Access Point. This checklist is not a compliance certificate.
+    </div>
+
+    <section class="card">
+      <h2>Give the Access Point (from official records only)</h2>
+      <ul class="check">
+        <li><input type="checkbox"> Legal name matching <a href="https://kbopub.economie.fgov.be/" rel="noopener">KBO public search</a> — not a trading name you invented</li>
+        <li><input type="checkbox"> KBO/BCE: 10 digits, no dots, for Peppol scheme <span class="mono">0208</span> — pasted from KBO, not guessed</li>
+        <li><input type="checkbox"> VAT number as issued — leave blank in our intake until you have it</li>
+        <li><input type="checkbox"> Registered address as in KBO</li>
+        <li><input type="checkbox"> IBAN they want on invoices (their bank, not ours)</li>
+        <li><input type="checkbox"> Who is authorised to onboard (their process: identity check is theirs)</li>
+        <li><input type="checkbox"> Whether they need send, receive, or both</li>
+        <li><input type="checkbox"> Current invoicing/accounting software name</li>
+        <li><input type="checkbox"> Buyer list with official KBO values only, plus Directory lookup notes they made themselves</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>What they do at the Access Point (not here)</h2>
+      <ol class="steps">
+        <li>Pick a certified AP from the live OpenPeppol list. Our <a href="ap-shortlist.html">shortlist</a> is a 2026-08-26 snapshot of public BE APs, not a ranking.</li>
+        <li>Create an account on <em>that</em> website. Complete their identity check. We do not run itsme, eID, or KYC.</li>
+        <li>Ask them to register the participant as <span class="mono">0208:</span> + 10-digit KBO. We cannot register a Peppol ID.</li>
+        <li>If they want a test document, they may copy <a href="sample-ubl-invoice.xml">sample-ubl-invoice.xml</a> and replace every <span class="mono">REPLACE_WITH_*</span> token. Do not transmit the file with tokens still in it. Do not invent VAT or KBO to make it “validate”.</li>
+        <li>Look buyers up in the <a href="https://directory.peppol.eu/public/" rel="noopener">Peppol Directory</a> as <span class="mono">0208:</span> plus official KBO digits. The Directory does not prove they can send, only that a receive capability may be published.</li>
+        <li>Send the first live invoice from the Access Point product. Keep <em>their</em> receipt / message id. A print of this pack is not a receipt.</li>
+      </ol>
+    </section>
+
+    <section class="card">
+      <h2>What we did not do</h2>
+      <ul>
+        <li>No Access Point, no OpenPeppol membership, no SMP/SML, no live send/receive.</li>
+        <li>No Peppol ID registered for you or your clients.</li>
+        <li>No claim that you are compliant after opening these files.</li>
+        <li>No invented VAT, KBO, IBAN, or personal contact details in this pack.</li>
+        <li>No emails sent to buyers. No inboxes. No SMTP.</li>
+        <li>No bookkeeping, VAT advice, or identity onboarding.</li>
+      </ul>
+    </section>
+
+    <p class="fine">Price of this pack: 399 USDC on Solana. Pay-to is on <a href="index.html">index.html</a>.</p>
+  </main>
+</body>
+</html>
