@@ -19,4 +19,4 @@ Live catalog: https://treasury-tools.surge.sh/
 
 Send USDC on Solana to the treasury address above (or copy it from the pay page). These pages do not trade.
 
-Solana Pay transfer URLs for 249 / 299 / 399 / 490 / 900 USDC invoices: [`docs/solana-pay-urls.md`](docs/solana-pay-urls.md) (builders in [`solana-pay-urls.js`](solana-pay-urls.js)). Not Helio. Not wallet-connect.
+Solana Pay transfer URLs for 199 / 249 / 299 / 399 pipeline / 399 peppol-chase / 490 / 900 USDC invoices: [`docs/solana-pay-urls.md`](docs/solana-pay-urls.md). Not Helio. Not wallet-connect.

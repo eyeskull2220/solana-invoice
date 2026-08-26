@@ -1,6 +1,5 @@
-// Solana Pay transfer-request URL builders for treasury USDC invoices.
-// Recipient is the public pay-page address only. Do not invent or swap it.
-// USDC on Solana only. Transfer request URLs — not a hosted checkout.
+// Solana Pay transfer-request URLs. Recipient is the public pay-page address only.
+// Same construction as solanaPayUrl in solana-invoice.html. USDC on Solana only.
 
 (function (root, factory) {
   if (typeof module === "object" && module.exports) {
@@ -12,76 +11,72 @@
   var TREASURY_SOLANA_USDC = "96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3";
   var USDC_MINT = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
   var INVOICE_DATE = "2026-08-26";
-  var INVOICE_AMOUNTS = [249, 299, 399, 490, 900];
-  var LABEL = "Solana Invoice";
 
-  function isAllowedAmount(amountUsdc) {
-    var n = Number(amountUsdc);
+  // Wallet-drafted invoice list. Do not add amounts or a second address.
+  var INVOICES = [
+    { id: "199", amount: 199, memo: "" },
+    { id: "249", amount: 249, memo: "" },
+    { id: "299", amount: 299, memo: "" },
+    { id: "399-pipeline", amount: 399, memo: "pipeline" },
+    { id: "399-peppol-chase", amount: 399, memo: "peppol-chase" },
+    { id: "490", amount: 490, memo: "" },
+    { id: "900", amount: 900, memo: "" }
+  ];
+
+  function findInvoice(id) {
     var i;
-    for (i = 0; i < INVOICE_AMOUNTS.length; i++) {
-      if (INVOICE_AMOUNTS[i] === n) return true;
+    for (i = 0; i < INVOICES.length; i++) {
+      if (INVOICES[i].id === id) return INVOICES[i];
     }
-    return false;
+    return null;
   }
 
-  function memoFor(amountUsdc) {
-    return "invoice-" + String(amountUsdc) + "-" + INVOICE_DATE;
+  function buildTransferUrl(amount, memo) {
+    var q = [
+      "amount=" + encodeURIComponent(String(amount)),
+      "spl-token=" + encodeURIComponent(USDC_MINT)
+    ];
+    if (memo) q.push("memo=" + encodeURIComponent(memo));
+    return "solana:" + TREASURY_SOLANA_USDC + "?" + q.join("&");
   }
 
-  function encodePair(key, value) {
-    return encodeURIComponent(key) + "=" + encodeURIComponent(String(value));
-  }
-
-  // Transfer request (solana:<recipient>?…). Not an HTTPS checkout URL
-  // and not a session URI.
-  function buildUsdcInvoiceUrl(amountUsdc) {
-    if (!isAllowedAmount(amountUsdc)) {
-      throw new Error(
-        "Unsupported invoice amount. Allowed USDC: " + INVOICE_AMOUNTS.join(", ")
-      );
+  function buildUsdcInvoiceUrl(id) {
+    var inv = findInvoice(String(id));
+    if (!inv) {
+      throw new Error("Unsupported invoice id. Wallet list only.");
     }
-    var amount = String(Number(amountUsdc));
-    var query = [
-      encodePair("amount", amount),
-      encodePair("spl-token", USDC_MINT),
-      encodePair("label", LABEL),
-      encodePair("memo", memoFor(amount))
-    ].join("&");
-    return "solana:" + TREASURY_SOLANA_USDC + "?" + query;
+    return buildTransferUrl(inv.amount, inv.memo);
   }
 
   function buildAllInvoiceUrls() {
     var i;
     var out = {};
-    for (i = 0; i < INVOICE_AMOUNTS.length; i++) {
-      out[INVOICE_AMOUNTS[i]] = buildUsdcInvoiceUrl(INVOICE_AMOUNTS[i]);
+    for (i = 0; i < INVOICES.length; i++) {
+      out[INVOICES[i].id] = buildTransferUrl(INVOICES[i].amount, INVOICES[i].memo);
     }
     return out;
   }
 
-  var builders = {
-    249: function () { return buildUsdcInvoiceUrl(249); },
-    299: function () { return buildUsdcInvoiceUrl(299); },
-    399: function () { return buildUsdcInvoiceUrl(399); },
-    490: function () { return buildUsdcInvoiceUrl(490); },
-    900: function () { return buildUsdcInvoiceUrl(900); }
-  };
+  var builders = {};
+  INVOICES.forEach(function (inv) {
+    builders[inv.id] = function () {
+      return buildTransferUrl(inv.amount, inv.memo);
+    };
+  });
 
   var api = {
     TREASURY_SOLANA_USDC: TREASURY_SOLANA_USDC,
     USDC_MINT: USDC_MINT,
     INVOICE_DATE: INVOICE_DATE,
-    INVOICE_AMOUNTS: INVOICE_AMOUNTS.slice(),
-    LABEL: LABEL,
-    memoFor: memoFor,
+    INVOICES: INVOICES.slice(),
     buildUsdcInvoiceUrl: buildUsdcInvoiceUrl,
     buildAllInvoiceUrls: buildAllInvoiceUrls,
     builders: builders
   };
 
   if (typeof require !== "undefined" && require.main === module) {
-    INVOICE_AMOUNTS.forEach(function (amount) {
-      process.stdout.write(String(amount) + " USDC\t" + buildUsdcInvoiceUrl(amount) + "\n");
+    INVOICES.forEach(function (inv) {
+      process.stdout.write(inv.id + "\t" + buildTransferUrl(inv.amount, inv.memo) + "\n");
     });
   }
 
