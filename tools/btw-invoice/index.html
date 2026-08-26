@@ -638,7 +638,8 @@
 
       function renderPreview(inv) {
         var err = validate(inv);
-        errorEl.classList.toggle("hidden", !err);
+        var blank = !inv.sellerName && !inv.clientName && inv.lines.length === 0;
+        errorEl.classList.toggle("hidden", !err || blank);
         errorEl.textContent = err;
         $("downloadBtn").disabled = Boolean(err);
         var tot = (inv.vatRate === null)
