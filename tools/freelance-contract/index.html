@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Freelance contract — 9 USDC</title>
+  <meta name="description" content="Fill two parties, scope, price, optional 21% BTW, delivery, and pay-to. Download a standalone HTML one-pager. Not legal advice.">
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f4efe6;
+      --sheet: #fffcf7;
+      --ink: #1b1a17;
+      --muted: #5e5a53;
+      --line: #d9d3c7;
+      --accent: #0c4a36;
+      --accent-ink: #f4fff9;
+      --accent-soft: #e4f0ea;
+      --warn: #8a4b12;
+      --buy: #12241c;
+      --shadow: 0 18px 50px rgba(40, 32, 18, 0.08);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      font: 16px/1.45 ui-sans-serif, system-ui, -apple-system, sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+    }
+    .app {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 24px 16px 56px;
+      display: grid;
+      gap: 24px;
+    }
+    @media (min-width: 920px) {
+      .app { grid-template-columns: 340px 1fr; align-items: start; padding: 36px 24px 72px; }
+    }
+    .editor {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px 18px 20px;
+    }
+    .editor h1 {
+      margin: 0 0 4px;
+      font-size: 1.2rem;
+      letter-spacing: -0.03em;
+    }
+    .lead {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+    .buy {
+      background: var(--buy);
+      color: #e8f6ee;
+      border-radius: 12px;
+      padding: 14px;
+      margin: 0 0 16px;
+    }
+    .buy h2 {
+      margin: 0 0 6px;
+      font-size: 0.95rem;
+    }
+    .buy p {
+      margin: 0 0 8px;
+      font-size: 12px;
+      color: #b7cfc3;
+    }
+    .buy .addr {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      word-break: break-all;
+      background: #0b1712;
+      border-radius: 8px;
+      padding: 10px;
+      margin: 0 0 8px;
+    }
+    .buy button {
+      width: 100%;
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+    .buy .ok {
+      min-height: 1.2em;
+      margin: 8px 0 0;
+      font-size: 12px;
+      color: #9fe0c0;
+    }
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 12px 0 6px;
+    }
+    input, textarea, select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font: 15px/1.4 ui-sans-serif, system-ui, sans-serif;
+      color: var(--ink);
+      background: #fff;
+    }
+    textarea { min-height: 88px; resize: vertical; }
+    input:focus, textarea:focus, select:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 1px;
+    }
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .check {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 12px 0 0;
+      font-size: 14px;
+    }
+    .check input { width: auto; }
+    .check label {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 550;
+      letter-spacing: 0;
+      text-transform: none;
+      color: var(--ink);
+    }
+    .curr {
+      display: flex;
+      gap: 12px;
+      margin-top: 4px;
+    }
+    .curr label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin: 0;
+      font-size: 14px;
+      font-weight: 550;
+      letter-spacing: 0;
+      text-transform: none;
+      color: var(--ink);
+    }
+    .curr input { width: auto; }
+    .hint {
+      font-size: 12px;
+      color: var(--muted);
+      margin: 6px 0 0;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    button {
+      appearance: none;
+      font: 650 14px/1.2 ui-sans-serif, system-ui, sans-serif;
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 14px;
+      cursor: pointer;
+    }
+    .primary { background: var(--accent); color: var(--accent-ink); flex: 1; }
+    .ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+    .sheet-wrap { display: flex; justify-content: center; }
+    .sheet {
+      width: min(720px, 100%);
+      background: var(--sheet);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      box-shadow: var(--shadow);
+      padding: 36px 32px 28px;
+      font-family: "Iowan Old Style", Palatino, "Palatino Linotype", Georgia, serif;
+    }
+    .top {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 18px;
+      margin-bottom: 22px;
+    }
+    .brand {
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-family: ui-sans-serif, system-ui, sans-serif;
+    }
+    .word { font-size: 1.85rem; letter-spacing: 0.08em; margin-top: 4px; }
+    .meta {
+      text-align: right;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .meta strong { display: block; color: var(--ink); font-weight: 650; }
+    .parties {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 0 0 22px;
+    }
+    @media (max-width: 560px) {
+      .parties { grid-template-columns: 1fr; }
+      .sheet { padding: 24px 18px 20px; }
+    }
+    .kicker {
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0 0 6px;
+    }
+    .party-name { font-size: 1.15rem; }
+    .party-note { margin: 4px 0 0; color: var(--muted); font-size: 0.95rem; white-space: pre-wrap; }
+    section.block { margin: 0 0 20px; }
+    .block p, .terms li {
+      margin: 0;
+      white-space: pre-wrap;
+    }
+    .terms { margin: 0; padding: 0 0 0 1.15em; }
+    .terms li { margin: 0 0 8px; }
+    .price-box {
+      background: var(--accent-soft);
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin: 0 0 20px;
+    }
+    .price-lines {
+      display: grid;
+      gap: 6px;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 14px;
+    }
+    .price-lines div {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .price-lines .total {
+      margin-top: 6px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(12, 74, 54, 0.18);
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+    .pay-box {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin: 0 0 20px;
+    }
+    .addr {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      word-break: break-all;
+      line-height: 1.45;
+    }
+    .copy-row { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .copy-row button { background: var(--accent); color: var(--accent-ink); }
+    .copy-row .ok { font-family: ui-sans-serif, system-ui, sans-serif; font-size: 13px; color: var(--accent); }
+    .hidden { display: none !important; }
+    .empty { color: var(--muted); font-style: italic; }
+    .agreed {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 28px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 13px;
+    }
+    @media (max-width: 560px) { .agreed { grid-template-columns: 1fr; } }
+    .sign-line {
+      margin-top: 28px;
+      border-bottom: 1px solid var(--line);
+    }
+    .foot {
+      margin-top: 28px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    body.standalone {
+      background: #fff;
+      padding: 24px 12px;
+    }
+    body.standalone .sheet { box-shadow: none; margin: 0 auto; }
+    @media print {
+      body { background: #fff; }
+      .no-print { display: none !important; }
+      .app { display: block; padding: 0; }
+      .sheet { box-shadow: none; border: 0; width: 100%; padding: 10mm; }
+      .copy-row { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="editor no-print">
+      <h1>Freelance contract</h1>
+      <p class="lead">Fill the fields. Download a standalone HTML one-pager. Not legal advice. Works offline.</p>
+
+      <section class="buy" aria-label="Pay for this tool">
+        <h2>This tool · 9 USDC on Solana</h2>
+        <p>USDC only. Not SOL. Not Base. Copy-address only. No wallet connect.</p>
+        <div class="addr" id="toolAddr">96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</div>
+        <p>Mint: EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v</p>
+        <button type="button" id="copyToolBtn">Copy address</button>
+        <p class="ok" id="copyToolStatus"></p>
+      </section>
+
+      <label for="contractor">Contractor</label>
+      <input id="contractor" type="text" autocomplete="off" placeholder="Ada North" value="Ada North">
+      <label for="contractorNote">Contractor note (optional)</label>
+      <input id="contractorNote" type="text" autocomplete="off" placeholder="Independent designer, North Harbor Studio" value="Independent designer, North Harbor Studio">
+
+      <label for="client">Client</label>
+      <input id="client" type="text" autocomplete="off" placeholder="Koen Linden" value="Koen Linden">
+      <label for="clientNote">Client note (optional)</label>
+      <input id="clientNote" type="text" autocomplete="off" placeholder="Linden &amp; Birch BV (example party)" value="Linden &amp; Birch BV (example party)">
+
+      <label for="scope">Scope</label>
+      <textarea id="scope" placeholder="What is in and out of the job.">Design and hand off one marketing landing page (desktop and mobile). Two rounds of visual revisions. Client supplies copy and photos. Hosting and domain are out of scope.</textarea>
+
+      <label for="amount">Price</label>
+      <div class="row">
+        <input id="amount" type="text" inputmode="decimal" autocomplete="off" placeholder="900" value="900">
+        <div class="curr" role="radiogroup" aria-label="Currency">
+          <label><input type="radio" name="currency" value="EUR" checked> EUR</label>
+          <label><input type="radio" name="currency" value="USDC"> USDC</label>
+        </div>
+      </div>
+      <label class="check">
+        <input id="btw" type="checkbox">
+        <span>Add 21% BTW (VAT)</span>
+      </label>
+
+      <label for="delivery">Delivery</label>
+      <textarea id="delivery" placeholder="When and what is delivered.">Preview URL and source files within 21 days of kickoff.</textarea>
+
+      <label for="payTo">Pay-to (invoice address)</label>
+      <input id="payTo" type="text" spellcheck="false" autocomplete="off" value="96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3">
+      <p class="hint">USDC on Solana. Leave as-is to print this address on the one-pager, or replace it.</p>
+
+      <div class="actions">
+        <button class="primary" type="button" id="downloadBtn">Download HTML one-pager</button>
+        <button class="ghost" type="button" id="printBtn">Print / Save PDF</button>
+      </div>
+      <p class="hint" id="dlStatus"></p>
+    </aside>
+
+    <div class="sheet-wrap">
+      <article class="sheet" id="sheet">
+        <header class="top">
+          <div>
+            <div class="brand">Freelance one-pager</div>
+            <div class="word">AGREEMENT</div>
+          </div>
+          <div class="meta">
+            Issued <strong id="issued"></strong>
+          </div>
+        </header>
+
+        <div class="parties">
+          <div>
+            <div class="kicker">Contractor</div>
+            <div class="party-name" id="contractorOut"></div>
+            <p class="party-note" id="contractorNoteOut"></p>
+          </div>
+          <div>
+            <div class="kicker">Client</div>
+            <div class="party-name" id="clientOut"></div>
+            <p class="party-note" id="clientNoteOut"></p>
+          </div>
+        </div>
+
+        <section class="block">
+          <div class="kicker">1. Scope</div>
+          <p id="scopeOut"></p>
+        </section>
+
+        <section class="price-box">
+          <div class="kicker">2. Price</div>
+          <div class="price-lines" id="priceOut"></div>
+        </section>
+
+        <section class="block">
+          <div class="kicker">3. Delivery</div>
+          <p id="deliveryOut"></p>
+        </section>
+
+        <section class="pay-box" id="payWrap">
+          <div class="kicker">Pay-to</div>
+          <div class="addr" id="payToOut"></div>
+          <p class="hint" id="payHint"></p>
+          <div class="copy-row">
+            <button type="button" id="copyPayBtn">Copy address</button>
+            <span class="ok" id="copyPayStatus"></span>
+          </div>
+        </section>
+
+        <section class="block">
+          <div class="kicker">4. Terms</div>
+          <ol class="terms">
+            <li>This is a working one-pager of terms, not legal advice and not a substitute for a lawyer-drafted contract.</li>
+            <li>The price above is the fee for the scoped work. If 21% BTW is shown, it is added on top of that fee.</li>
+            <li>Payment is due on delivery unless the scope says otherwise. USDC, if used, is on Solana only — not SOL, not another chain.</li>
+            <li>Intellectual property in the delivered work transfers to the client after full payment.</li>
+            <li>Either party may stop the work in writing. Work already done is payable in proportion to the scope.</li>
+          </ol>
+        </section>
+
+        <div class="agreed">
+          <div>
+            <div class="kicker">Contractor</div>
+            <div id="signContractor"></div>
+            <div class="sign-line"></div>
+          </div>
+          <div>
+            <div class="kicker">Client</div>
+            <div id="signClient"></div>
+            <div class="sign-line"></div>
+          </div>
+        </div>
+
+        <footer class="foot">
+          Not legal advice. Example parties on the editor are fake. Keep a copy of this file.
+        </footer>
+      </article>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var TOOL_PAY_TO = "96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3";
+      var USDC_MINT = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
+      var ids = ["contractor", "contractorNote", "client", "clientNote", "scope", "amount", "delivery", "payTo", "btw"];
+
+      function el(id) { return document.getElementById(id); }
+
+      function todayISO() {
+        var d = new Date();
+        var m = String(d.getMonth() + 1);
+        var day = String(d.getDate());
+        if (m.length < 2) m = "0" + m;
+        if (day.length < 2) day = "0" + day;
+        return d.getFullYear() + "-" + m + "-" + day;
+      }
+
+      function formatDate(iso) {
+        if (!iso) return "";
+        var p = iso.split("-");
+        if (p.length !== 3) return iso;
+        var months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+        var mi = parseInt(p[1], 10) - 1;
+        return months[mi] + " " + parseInt(p[2], 10) + ", " + p[0];
+      }
+
+      function currency() {
+        var n = document.querySelector('input[name="currency"]:checked');
+        return n ? n.value : "EUR";
+      }
+
+      function parseAmount(raw) {
+        var s = String(raw || "").trim().replace(",", ".");
+        if (!s) return null;
+        if (!/^\d+(\.\d{0,2})?$/.test(s)) return false;
+        var n = Number(s);
+        if (!isFinite(n) || n < 0) return false;
+        return n;
+      }
+
+      function money(n) {
+        return n.toFixed(2);
+      }
+
+      function setText(id, value, fallback) {
+        var node = el(id);
+        var v = String(value || "").trim();
+        if (!v) {
+          node.innerHTML = '<span class="empty">' + fallback + "</span>";
+        } else {
+          node.textContent = v;
+        }
+      }
+
+      function copyText(text, statusEl, emptyMsg) {
+        if (!text) {
+          statusEl.textContent = emptyMsg || "Nothing to copy.";
+          return;
+        }
+        function ok() { statusEl.textContent = "Copied."; }
+        function fail() { statusEl.textContent = "Copy failed. Select the address instead."; }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(ok).catch(fail);
+        } else {
+          fail();
+        }
+      }
+
+      function render() {
+        el("issued").textContent = formatDate(todayISO());
+        setText("contractorOut", el("contractor").value, "Contractor name");
+        setText("contractorNoteOut", el("contractorNote").value, "");
+        if (!String(el("contractorNote").value || "").trim()) el("contractorNoteOut").textContent = "";
+        setText("clientOut", el("client").value, "Client name");
+        setText("clientNoteOut", el("clientNote").value, "");
+        if (!String(el("clientNote").value || "").trim()) el("clientNoteOut").textContent = "";
+        setText("scopeOut", el("scope").value, "Describe the work.");
+        setText("deliveryOut", el("delivery").value, "When and what is delivered.");
+        setText("signContractor", el("contractor").value, "—");
+        setText("signClient", el("client").value, "—");
+
+        var cur = currency();
+        var amt = parseAmount(el("amount").value);
+        var box = el("priceOut");
+        box.innerHTML = "";
+        function line(label, value, total) {
+          var div = document.createElement("div");
+          if (total) div.className = "total";
+          var a = document.createElement("span");
+          a.textContent = label;
+          var b = document.createElement("span");
+          b.textContent = value;
+          div.appendChild(a);
+          div.appendChild(b);
+          box.appendChild(div);
+        }
+        if (el("amount").value.trim() === "") {
+          line("Total", "Add a price");
+        } else if (amt === false) {
+          line("Total", "Use a number, up to 2 decimals");
+        } else {
+          var withBtw = el("btw").checked;
+          if (withBtw) {
+            var vat = amt * 0.21;
+            line("Fee", money(amt) + " " + cur);
+            line("BTW 21%", money(vat) + " " + cur);
+            line("Total", money(amt + vat) + " " + cur, true);
+          } else {
+            line("Total", money(amt) + " " + cur, true);
+          }
+        }
+
+        var pay = el("payTo").value.trim();
+        var payWrap = el("payWrap");
+        if (!pay) {
+          payWrap.classList.add("hidden");
+        } else {
+          payWrap.classList.remove("hidden");
+          el("payToOut").textContent = pay;
+          el("payHint").textContent = cur === "USDC"
+            ? "USDC on Solana. Mint: " + USDC_MINT
+            : "Invoice pay-to. If this is a Solana address, send USDC only.";
+        }
+      }
+
+      function sheetCss() {
+        var sheets = document.querySelectorAll("style");
+        var css = "";
+        var i;
+        for (i = 0; i < sheets.length; i++) css += sheets[i].textContent;
+        return css;
+      }
+
+      function downloadOnePager() {
+        render();
+        var sheet = el("sheet").cloneNode(true);
+        var html = "<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n" +
+          "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n" +
+          "<title>Freelance agreement</title>\n<style>\n" + sheetCss() + "\n</style>\n</head>\n" +
+          "<body class=\"standalone\">\n" + sheet.outerHTML + "\n<script>\n" +
+          "(function(){var b=document.getElementById(\"copyPayBtn\");var a=document.getElementById(\"payToOut\");var s=document.getElementById(\"copyPayStatus\");if(!b||!a)return;b.addEventListener(\"click\",function(){var t=(a.textContent||\"\").trim();function ok(){if(s)s.textContent=\"Copied.\";}function fail(){if(s)s.textContent=\"Copy failed. Select the address instead.\";}if(!t){fail();return;}if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(ok).catch(fail);}else{fail();}});})();\n" +
+          "</scr" + "ipt>\n</body>\n</html>\n";
+        var blob = new Blob([html], { type: "text/html;charset=utf-8" });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = "freelance-contract.html";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+        el("dlStatus").textContent = "Downloaded freelance-contract.html. That file works offline.";
+      }
+
+      ids.forEach(function (id) {
+        var node = el(id);
+        node.addEventListener("input", render);
+        node.addEventListener("change", render);
+      });
+      var radios = document.querySelectorAll('input[name="currency"]');
+      var r;
+      for (r = 0; r < radios.length; r++) {
+        radios[r].addEventListener("change", render);
+      }
+      el("copyToolBtn").addEventListener("click", function () {
+        copyText(TOOL_PAY_TO, el("copyToolStatus"), "Address missing.");
+      });
+      el("copyPayBtn").addEventListener("click", function () {
+        copyText(el("payTo").value.trim(), el("copyPayStatus"), "Add a pay-to address first.");
+      });
+      el("downloadBtn").addEventListener("click", downloadOnePager);
+      el("printBtn").addEventListener("click", function () { window.print(); });
+      render();
+    })();
+  </script>
+</body>
+</html>
