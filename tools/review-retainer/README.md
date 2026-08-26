@@ -2,6 +2,8 @@
 
 **199 USDC setup** (one-shot) + **199 USDC/month** done-for-you labor. Solana USDC only. Copy-address. Static HTML a buyer opens offline.
 
+**Last kit** in this line: Peppol Ready (**249 USDC**) → Dual-invoice desk (**490 USDC**) → this review retainer.
+
 This is **not** a QR dump and **not** a self-serve SaaS. [Reviewi.be](https://reviewi.be/) already sells QR/review self-serve cheaper. The setup files land first (review link, mailto drafts, ICS, counter QR). The **monthly is agent labor** after that: weekly Google review scan, draft replies, one-page report.
 
 We **do not** auto-post to Google. We draft replies; the shop owner posts. There is **no** Google API, OAuth, or scraping in this pack — placeholders and worksheets only.
@@ -51,10 +53,12 @@ Labor does **not** start on setup alone. It starts after the monthly 199 USDC is
 - Not Google API, OAuth, Maps scraping, or a review database.
 - Not SOL / ETH / Base / XRP. No wallet connect.
 - Not the leftover 9 USDC Solana Invoice restack.
+- Not a FACTUUR. Print **VOORBEELD** (or OFFERTE) only.
+- Not invented KBO/BTW digits. Use blank or `KBO/BTW: nog niet toegekend`.
 
 ## Demo shop only
 
-Bakkerij Noord · `hello@bakkerij.example` (RFC 2606). No Gmail. No real inboxes. No named Belgian buyers.
+Bakkerij Noord · `hello@bakkerij.example` (RFC 2606). KBO/BTW: nog niet toegekend. No Gmail. No real inboxes. No named Belgian buyers. Generic `*.example` only.
 
 ## Surge
 

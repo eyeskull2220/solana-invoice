@@ -39,8 +39,18 @@
           <input id="shopName" type="text" value="Bakkerij Noord" autocomplete="off">
         </div>
         <div>
+          <label for="kbo">KBO/BTW</label>
+          <input id="kbo" type="text" value="nog niet toegekend" readonly autocomplete="off">
+        </div>
+      </div>
+      <div class="grid-2">
+        <div>
           <label for="placeId">Place ID (optioneel)</label>
           <input id="placeId" type="text" value="REPLACE_WITH_YOUR_PLACE_ID" spellcheck="false" autocomplete="off">
+        </div>
+        <div>
+          <label for="shopMail">Domeinmail (demo)</label>
+          <input id="shopMail" type="email" value="hello@bakkerij.example" readonly autocomplete="off">
         </div>
       </div>
       <label for="reviewUrl">Google review-URL</label>
@@ -57,7 +67,7 @@
       </p>
     </section>
 
-    <p class="fine no-print">Demo-mail: <span class="mono">hello@bakkerij.example</span>. Geen Google-login, geen scraping.</p>
+    <p class="fine no-print">Demo-mail: <span class="mono">hello@bakkerij.example</span>. KBO/BTW: nog niet toegekend. Geen Google-login, geen scraping, geen FACTUUR.</p>
   </main>
   <script>
     (function () {

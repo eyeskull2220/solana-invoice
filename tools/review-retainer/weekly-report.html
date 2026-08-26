@@ -19,9 +19,10 @@
       <a href="HANDOFF.html">Handoff</a>
     </nav>
 
-    <p class="kicker">Eén pagina · weekrapport</p>
+    <p class="kicker">Eén pagina · weekrapport · VOORBEELD</p>
     <h1>Wekelijks Google-review rapport</h1>
-    <p class="lead">Sjabloon + demo-invulling voor Bakkerij Noord. Cijfers zijn placeholders. Geen Google-API. Concepten zijn niet gepost.</p>
+    <p class="lead">Sjabloon + demo-invulling voor Bakkerij Noord. Cijfers zijn placeholders. Geen Google-API. Concepten zijn niet gepost. Dit is geen factuur.</p>
+    <p class="stamp">VOORBEELD</p>
     <p class="stamp">CONCEPT — zaakvoerder plaatst zelf</p>
     <p class="no-print copy-row">
       <button type="button" class="ghost" id="printBtn">Print / PDF</button>
@@ -38,9 +39,11 @@
           <input id="week" type="text" value="18–24 augustus 2026" autocomplete="off">
         </div>
       </div>
+      <label for="kbo">KBO/BTW</label>
+      <input id="kbo" type="text" value="nog niet toegekend" readonly autocomplete="off">
       <label for="listing">Publieke Google-listing (URL die de zaak gaf)</label>
       <input id="listing" type="url" value="https://search.google.com/local/writereview?placeid=REPLACE_WITH_YOUR_PLACE_ID" spellcheck="false" autocomplete="off">
-      <p class="fine">Scanmethode: handmatig in de browser. Geen OAuth, geen scrape-script.</p>
+      <p class="fine">Scanmethode: handmatig in de browser. Geen OAuth, geen scrape-script. Geen verzonnen KBO-cijfers — leeg of “nog niet toegekend”.</p>
     </section>
 
     <section class="card">
@@ -135,7 +138,7 @@ Spijtig dat de bestelling niet compleet was. Mail hello@bakkerij.example met het
       </ul>
     </section>
 
-    <p class="fine">199 USDC/maand DFY-arbeid. Demo: <span class="mono">hello@bakkerij.example</span>.</p>
+    <p class="fine">199 USDC/maand DFY-arbeid. Demo: <span class="mono">hello@bakkerij.example</span>. Print: VOORBEELD — nooit FACTUUR.</p>
   </main>
   <script>
     (function () {

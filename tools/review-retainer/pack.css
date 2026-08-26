@@ -204,6 +204,10 @@ input:focus, select:focus, textarea:focus {
   line-height: 1.55;
 }
 
+input[readonly] {
+  background: #f3efe8;
+  color: var(--muted);
+}
 .stamp {
   display: inline-block;
   border: 2px solid var(--danger-ink);
@@ -212,7 +216,7 @@ input:focus, select:focus, textarea:focus {
   letter-spacing: 0.12em;
   padding: 4px 8px;
   font-size: 12px;
-  margin: 0 0 12px;
+  margin: 0 8px 12px 0;
 }
 
 .check { list-style: none; padding: 0; }
