@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VOORBEELD — paper journaal dca-paper</title>
+  <meta name="description" content="Statisch paper journaal en operator-checklist. Geen live handel. Geen FACTUUR. Geen INVOICE.">
+  <style>
+    :root {
+      --paper: #f4efe6;
+      --sheet: #fffdf8;
+      --ink: #1c1915;
+      --muted: #5c564c;
+      --rule: #d4cbbd;
+      --stamp: #b42318;
+      --stamp-soft: rgba(180, 35, 24, 0.08);
+      --lock: #3d2a12;
+      --lock-bg: #f3e6d0;
+      --ok: #1f4d38;
+      --ok-bg: #e7f2ea;
+      --ban: #7a1c16;
+      --ban-bg: #f8e8e4;
+      --note: #6a4a12;
+      --note-bg: #fff3d8;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(900px 280px at 50% -80px, #efe6d4 0%, transparent 70%),
+        var(--paper);
+      font: 16px/1.5 "Iowan Old Style", Palatino, "Palatino Linotype", Georgia, serif;
+    }
+    .wrap {
+      width: min(880px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 28px 0 72px;
+    }
+    .sheet {
+      background: var(--sheet);
+      border: 1px solid var(--rule);
+      box-shadow: 0 18px 50px rgba(40, 32, 18, 0.08);
+      padding: 28px 24px 36px;
+    }
+    .stamp-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+    .stamp {
+      display: inline-block;
+      border: 4px double var(--stamp);
+      color: var(--stamp);
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-weight: 800;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      font-size: 1.15rem;
+      padding: 8px 14px 7px 18px;
+      transform: rotate(-4deg);
+      background: var(--stamp-soft);
+    }
+    .doc-type {
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: right;
+    }
+    h1 {
+      margin: 18px 0 6px;
+      font-size: clamp(1.55rem, 4vw, 2.05rem);
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+    }
+    .lead { margin: 0 0 18px; color: var(--muted); max-width: 42rem; }
+    h2 {
+      margin: 28px 0 10px;
+      font-size: 1.12rem;
+      letter-spacing: -0.02em;
+      border-bottom: 1px solid var(--rule);
+      padding-bottom: 6px;
+    }
+    h3 { margin: 0 0 6px; font-size: 1rem; }
+    .kicker {
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0 0 4px;
+    }
+    .card {
+      border: 1px solid var(--rule);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin: 0 0 12px;
+    }
+    .id-grid {
+      display: grid;
+      gap: 8px 18px;
+      grid-template-columns: 9.5rem 1fr;
+    }
+    .id-grid dt {
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .id-grid dd { margin: 0; }
+    .lock {
+      background: var(--lock-bg);
+      border-color: #c9b089;
+    }
+    .lock ol { margin: 8px 0 0; padding: 0 0 0 1.2em; }
+    .lock li { margin: 0 0 10px; }
+    .pill {
+      display: inline-block;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-radius: 999px;
+      padding: 3px 8px;
+      margin-right: 6px;
+      vertical-align: 1px;
+    }
+    .pill-paper { background: var(--ok-bg); color: var(--ok); }
+    .pill-hold { background: #ece6dc; color: var(--lock); }
+    .pill-sep { background: #eadfce; color: #5a3d12; }
+    .pill-kill { background: var(--ban-bg); color: var(--ban); }
+    .warn, .ban, .tax, .sim {
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 0.95rem;
+    }
+    .sim { background: var(--ok-bg); border-color: #b7d4c4; }
+    .ban { background: var(--ban-bg); border-color: #e3b6af; color: var(--ban); }
+    .tax { background: var(--note-bg); border-color: #ead7a2; color: var(--note); }
+    .ban ul, .tax ul, .check ul { margin: 8px 0 0; padding: 0 0 0 1.15em; }
+    .ban li, .tax li { margin: 0 0 6px; }
+    code, .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.88em;
+      word-break: break-all;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 13px;
+    }
+    th, td {
+      text-align: left;
+      border-bottom: 1px solid var(--rule);
+      padding: 7px 8px 7px 0;
+      vertical-align: top;
+    }
+    th {
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .totals {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+      margin: 12px 0 0;
+    }
+    .stat {
+      border: 1px solid var(--rule);
+      border-radius: 8px;
+      padding: 10px 12px;
+      background: #faf7f1;
+    }
+    .stat b {
+      display: block;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 1.05rem;
+      margin-top: 2px;
+    }
+    .check label {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      margin: 0 0 9px;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    .check input { margin-top: 4px; flex: 0 0 auto; }
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0 0; }
+    button {
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-weight: 650;
+      border: 1px solid var(--rule);
+      background: #fff;
+      color: var(--ink);
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+    .fine {
+      margin: 22px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+    }
+    @media print {
+      body { background: #fff; }
+      .wrap { width: auto; padding: 0; }
+      .sheet { box-shadow: none; border: 0; padding: 0; }
+      .no-print { display: none !important; }
+      .stamp { transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <article class="sheet">
+      <header class="stamp-row">
+        <div class="stamp" aria-label="Documentstempel">VOORBEELD</div>
+        <div class="doc-type">
+          Journaal / checklist<br>
+          Paper / simulated<br>
+          Geen FACTUUR · geen INVOICE
+        </div>
+      </header>
+
+      <h1>Paper journaal — Kraken workspace <span class="mono">dca-paper</span></h1>
+      <p class="lead">Statische operator-checklist. Paper only. Openen, afvinken, bewaren. Geen login, geen backend, geen API-sleutels. Niet live-handelsadvies. Niet resetten: <span class="mono">dca-paper</span>.</p>
+
+      <section class="card" aria-labelledby="id-title">
+        <p class="kicker" id="id-title">Identiteit</p>
+        <dl class="id-grid">
+          <dt>Operator</dt>
+          <dd>Natuurlijke persoon (geen vennootschap, geen firmanaam)</dd>
+          <dt>Plaats</dt>
+          <dd>Geel</dd>
+          <dt>KBO / BTW</dt>
+          <dd><strong>nog niet toegekend</strong> — geen BE0…, geen verzonnen KBO/BTW</dd>
+          <dt>Document</dt>
+          <dd>VOORBEELD-journaal. Geen verkoopkopij. Indien ooit verkooptekst: label <strong>OFFERTE</strong>, nooit FACTUUR/INVOICE.</dd>
+        </dl>
+      </section>
+
+      <section class="card lock" aria-labelledby="lock-title">
+        <p class="kicker" id="lock-title">CEO style lock</p>
+        <h2 style="margin-top:0;border:0;padding:0;">Vijf tracks — paper only. Niet resetten: dca-paper.</h2>
+        <ol>
+          <li>
+            <span class="pill pill-paper">Paper</span><span class="pill pill-hold">Hold</span>
+            <strong>DCA</strong> — bestaande workspace <code>dca-paper</code>. Vijf paper BTC-slices (snapshot hieronder). <strong>Hold.</strong> Nooit <code>init</code>/<code>reset</code> op deze workspace.
+          </li>
+          <li>
+            <span class="pill pill-paper">Paper recipe</span>
+            <strong>Fibonacci</strong> — paper recipe in een <em>nieuwe</em> spot-workspace <code>fib-paper</code>. Nooit <code>init</code> of <code>reset</code> van <code>dca-paper</code> om Fibonacci te starten.
+          </li>
+          <li>
+            <span class="pill pill-paper">Paper recipe</span>
+            <strong>Grids</strong> — paper recipe in een <em>nieuwe</em> spot-workspace <code>grid-paper</code>. Niet mengen met de DCA-stack.
+          </li>
+          <li>
+            <span class="pill pill-hold">Long-term</span>
+            <strong>Long-term holds</strong> — de <code>dca-paper</code>-stack niet verkopen tenzij de CEO dat zegt.
+          </li>
+          <li>
+            <span class="pill pill-sep">Separate sleeve</span><span class="pill pill-kill">Kill switch</span>
+            <strong>Moderate-leverage paper sleeve</strong> — <em>apart</em> futures-paper, hefboomcap <strong>3x</strong>. Kill switch: flatten + cancel-all bij (a) kill file, (b) 10% sleeve-drawdown, of (c) leverage &gt; 3x. <strong>Nooit deze PnL in het DCA-journaal mengen.</strong>
+          </li>
+        </ol>
+      </section>
+
+      <section aria-labelledby="snap-title">
+        <h2 id="snap-title">Snapshot <code>dca-paper</code> — paper / simulated</h2>
+        <p class="lead" style="margin-bottom:10px;">Datum: <strong>2026-08-26 08:38 Europe/Brussels</strong>. Mode <strong>paper</strong>. Start <strong>10000 USD</strong>. Fee <strong>0.26%</strong>. Slippage <strong>0</strong>. Open orders <strong>0</strong>. Dit is geen belastingfeit.</p>
+        <div class="card sim">
+          <p style="margin:0 0 8px;"><strong>Niet resetten.</strong> Workspace <code>dca-paper</code> blijft staan. Wallet noteerde eerst <strong>−3.25</strong> bij fill (fees); later bewoog de mark met spot.</p>
+        </div>
+        <div style="overflow-x:auto;">
+          <table>
+            <caption class="kicker" style="text-align:left;margin:0 0 8px;">Vijf filled paper BTCUSD market buys</caption>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Side</th>
+                <th>Type</th>
+                <th>Pair</th>
+                <th class="num">BTC</th>
+                <th class="num">Price</th>
+                <th class="num">Cost USD</th>
+                <th class="num">Fee USD</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>Buy</td><td>Market</td><td>BTCUSD</td><td class="num">0.00317</td><td class="num">78900.6</td><td class="num">250.114902</td><td class="num">0.6502987452</td></tr>
+              <tr><td>2</td><td>Buy</td><td>Market</td><td>BTCUSD</td><td class="num">0.00317</td><td class="num">78900.6</td><td class="num">250.114902</td><td class="num">0.6502987452</td></tr>
+              <tr><td>3</td><td>Buy</td><td>Market</td><td>BTCUSD</td><td class="num">0.00317</td><td class="num">78900.6</td><td class="num">250.114902</td><td class="num">0.6502987452</td></tr>
+              <tr><td>4</td><td>Buy</td><td>Market</td><td>BTCUSD</td><td class="num">0.00317</td><td class="num">78900.6</td><td class="num">250.114902</td><td class="num">0.6502987452</td></tr>
+              <tr><td>5</td><td>Buy</td><td>Market</td><td>BTCUSD</td><td class="num">0.00317</td><td class="num">78900.6</td><td class="num">250.114902</td><td class="num">0.6502987452</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="totals">
+          <div class="stat"><span class="kicker">BTC total</span><b>0.01585</b></div>
+          <div class="stat"><span class="kicker">Mark BTC last</span><b>78835.2</b></div>
+          <div class="stat"><span class="kicker">Equity</span><b>9995.71</b></div>
+          <div class="stat"><span class="kicker">Unrealized PnL</span><b>−4.29 (−0.043%)</b></div>
+          <div class="stat"><span class="kicker">Open orders</span><b>0</b></div>
+          <div class="stat"><span class="kicker">Futures sleeve PnL</span><b>Niet hier</b></div>
+        </div>
+      </section>
+
+      <section class="card check" aria-labelledby="ops-title">
+        <h2 id="ops-title" style="margin-top:0;">Operator-checklist</h2>
+        <label><input type="checkbox" data-k="paper-until-ceo"> Paper blijven tot de CEO live zegt. Geen live keys op deze pagina.</label>
+        <label><input type="checkbox" data-k="own-kraken"> Operator opent zelf een eigen Kraken-account.</label>
+        <label><input type="checkbox" data-k="sepa"> SEPA 200–3000 EUR van de eigen bank. 10k is een doel, geen storting.</label>
+        <label><input type="checkbox" data-k="no-phantom-usdc"> Geen Phantom USDC/SOL en geen sales-USDC naar Kraken sturen.</label>
+        <label><input type="checkbox" data-k="keys-later"> Live keys later, nooit Withdraw Funds, nooit keys plakken (geen sleutelvelden op dit journaal).</label>
+        <label><input type="checkbox" data-k="cap-later"> CAP + Vak XIII pas ná een echt account. Paper = geen CAP.</label>
+        <label><input type="checkbox" data-k="exports"> Operator exporteert zelf Trades / Ledgers / Balances.</label>
+        <label><input type="checkbox" data-k="accountant"> Accountant kiest cost basis. Geen verzonnen FIFO.</label>
+        <label><input type="checkbox" data-k="no-reset"> Workspace <code>dca-paper</code> niet resetten. Fibonacci/grids in <code>fib-paper</code> / <code>grid-paper</code>.</label>
+        <label><input type="checkbox" data-k="no-mix-pnl"> Leverage-sleeve PnL nooit in dit DCA-journaal mengen.</label>
+        <div class="actions no-print">
+          <button type="button" id="printBtn">Afdrukken</button>
+          <button type="button" id="clearBtn">Checklist wissen</button>
+        </div>
+      </section>
+
+      <section class="card ban" aria-labelledby="ban-title">
+        <h2 id="ban-title" style="margin-top:0;border-color:#e3b6af;">Hard bans</h2>
+        <ul>
+          <li>Nooit Phantom <code>96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</code> of Base <code>0x9eb954b567ef3616424a6e1bf42c63724930aa54</code> uitgeven / naar Kraken sturen.</li>
+          <li>Geen sales-USDC naar Kraken.</li>
+          <li>Geen perps / leverage boven de 3x-sleeve-cap / geen memecoins. Geen Capital.com.</li>
+          <li>Geen broker-keyvelden op deze pagina.</li>
+          <li>Geen leftover 9 USDC HTML. Dit is geen shop/cataloguskaart.</li>
+          <li>Geen nep-KBO/BTW. KBO/BTW: <strong>nog niet toegekend</strong>.</li>
+          <li>Geen FACTUUR- of INVOICE-titel.</li>
+        </ul>
+      </section>
+
+      <section class="card tax" aria-labelledby="tax-title">
+        <h2 id="tax-title" style="margin-top:0;border-color:#ead7a2;">Fiscale splitsing — herinnering, geen advies</h2>
+        <ul>
+          <li>Phantom sales-USDC is <strong>beroepsinkomen</strong>.</li>
+          <li>Kraken is een <strong>apart handelsdossier</strong>.</li>
+          <li>Paper is <strong>geen belastingfeit</strong>.</li>
+          <li>Dit is geen advocaat. Dit is geen live-handelsadvies. Builder bezit kits/shop; dit journaal is operator-paper.</li>
+        </ul>
+      </section>
+
+      <p class="fine">VOORBEELD · paper / simulated · workspace <code>dca-paper</code> · 2026-08-26 08:38 Europe/Brussels · niet resetten.</p>
+    </article>
+  </main>
+  <script>
+    (function () {
+      var KEY = "dca-paper-journal-checks-v1";
+      var boxes = document.querySelectorAll("input[data-k]");
+      var saved = {};
+      try { saved = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { saved = {}; }
+      boxes.forEach(function (el) {
+        el.checked = !!saved[el.getAttribute("data-k")];
+        el.addEventListener("change", persist);
+      });
+      function persist() {
+        var next = {};
+        boxes.forEach(function (el) { next[el.getAttribute("data-k")] = el.checked; });
+        try { localStorage.setItem(KEY, JSON.stringify(next)); } catch (e) {}
+      }
+      document.getElementById("printBtn").addEventListener("click", function () { window.print(); });
+      document.getElementById("clearBtn").addEventListener("click", function () {
+        boxes.forEach(function (el) { el.checked = false; });
+        persist();
+      });
+    })();
+  </script>
+</body>
+</html>
