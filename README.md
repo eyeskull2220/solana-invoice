@@ -18,3 +18,5 @@ Live catalog: https://treasury-tools.surge.sh/
 - [RSS to Webhook](https://rss-to-webhook-treasury.surge.sh/) — check a feed, POST new items as JSON. 49 USDC.
 
 Send USDC on Solana to the treasury address above (or copy it from the pay page). These pages do not trade.
+
+Solana Pay transfer URLs for 249 / 299 / 399 / 490 / 900 USDC invoices: [`docs/solana-pay-urls.md`](docs/solana-pay-urls.md) (builders in [`solana-pay-urls.js`](solana-pay-urls.js)). Not Helio. Not wallet-connect.
