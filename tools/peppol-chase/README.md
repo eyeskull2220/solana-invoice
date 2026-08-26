@@ -59,7 +59,7 @@ Do not sell or do any of these from this pack:
 
 ## Demo parties only
 
-Studio Noord / Client BV / `hello@studio.example` / fake KBO `BE0123.456.789`. No Gmail. No real inboxes.
+Studio Noord / Client BV / `hello@studio.example` / `KBO/BTW: nog niet toegekend`. No invented KBO, VAT, or IBAN digits in HTML or sample XML. Document stamp is **VOORBEELD**, not FACTUUR. No Gmail. No real inboxes.
 
 ## Official links (not us)
 

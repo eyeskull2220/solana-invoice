@@ -23,7 +23,7 @@
     <p class="kicker">Stap 1 · placeholders</p>
     <h1>Intake: u + tot 10 B2B-kopers</h1>
     <p class="lead">Vul dit in bij u. Niets wordt verzonden. Dit formulier registreert geen Peppol-ID en is geen wettelijke factuur.</p>
-    <div class="banner warn">Placeholders en demo-hints alleen (Studio Noord / BE0123.456.789). Gebruik uw echte KBO later in een gecertificeerd AP-pakket — niet hier.</div>
+    <div class="banner warn">Placeholders zonder verzonnen KBO/BTW/IBAN-cijfers. Laat KBO/BTW leeg of vul later <span class="mono">KBO/BTW: nog niet toegekend</span>. Gebruik echte nummers alleen in een gecertificeerd AP-pakket — niet hier. Dit pack is geen Access Point.</div>
 
     <form class="card" id="company" onsubmit="return false;">
       <h2>Uw onderneming</h2>
@@ -34,11 +34,11 @@
         </div>
         <div>
           <label for="kbo">Ondernemingsnummer KBO</label>
-          <input id="kbo" type="text" inputmode="numeric" placeholder="0123.456.789 (demo)">
+          <input id="kbo" type="text" inputmode="text" placeholder="KBO/BTW: nog niet toegekend">
         </div>
         <div>
           <label for="vat">BTW-nummer</label>
-          <input id="vat" type="text" placeholder="BE0123.456.789 (demo)">
+          <input id="vat" type="text" placeholder="KBO/BTW: nog niet toegekend">
         </div>
         <div>
           <label for="email">Bedrijfs-e-mail (geen Gmail)</label>
@@ -60,11 +60,11 @@
       <div class="grid-2">
         <div>
           <label for="iban">IBAN</label>
-          <input id="iban" type="text" placeholder="BE00 0000 0123 4567 (demo)">
+          <input id="iban" type="text" placeholder="nog niet toegekend">
         </div>
         <div>
           <label for="bic">BIC (optioneel)</label>
-          <input id="bic" type="text" placeholder="DEMOBEXX">
+          <input id="bic" type="text" placeholder="nog niet toegekend">
         </div>
       </div>
       <label for="companyNote">Notitie voor later in het AP-pakket</label>
@@ -103,9 +103,9 @@
         html += '<div><label for="b' + i + 'name">Juridische naam</label>';
         html += '<input id="b' + i + 'name" type="text" placeholder="Client BV"></div>';
         html += '<div><label for="b' + i + 'kbo">KBO (10 cijfers)</label>';
-        html += '<input id="b' + i + 'kbo" type="text" placeholder="0987.654.321 (demo)"></div>';
+        html += '<input id="b' + i + 'kbo" type="text" placeholder="KBO/BTW: nog niet toegekend"></div>';
         html += '<div><label for="b' + i + 'vat">BTW</label>';
-        html += '<input id="b' + i + 'vat" type="text" placeholder="BE0987.654.321 (demo)"></div>';
+        html += '<input id="b' + i + 'vat" type="text" placeholder="KBO/BTW: nog niet toegekend"></div>';
         html += '<div><label for="b' + i + 'mail">Facturatie-e-mail</label>';
         html += '<input id="b' + i + 'mail" type="email" placeholder="facturatie@client.example"></div>';
         html += "</div>";

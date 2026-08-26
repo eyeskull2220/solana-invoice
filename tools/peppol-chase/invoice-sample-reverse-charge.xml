@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  SAMPLE ONLY — Peppol BIS Billing 3.0 / UBL 2.1
+  SAMPLE / VOORBEELD ONLY — Peppol BIS Billing 3.0 / UBL 2.1
   VAT category AE (reverse charge / BTW verlegd), 0% on the invoice.
-  Demo parties only. Not sent on Peppol. Not a legal invoice.
+  Demo parties only. Not sent on Peppol. Not a legal invoice. Not compliance.
+  CustomizationID is the official BIS URN (includes #compliant# as the spec id).
+  CompanyID / EndpointID: empty or "KBO/BTW: nog niet toegekend". No invented KBO/BTW/IBAN digits.
 -->
 <Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
          xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
@@ -18,9 +20,9 @@
   <cbc:BuyerReference>DEMO-PO-RC-001</cbc:BuyerReference>
   <cac:AccountingSupplierParty>
     <cac:Party>
-      <cbc:EndpointID schemeID="0208">0123456789</cbc:EndpointID>
+      <cbc:EndpointID schemeID="0208"></cbc:EndpointID>
       <cac:PartyIdentification>
-        <cbc:ID schemeID="0208">0123456789</cbc:ID>
+        <cbc:ID schemeID="0208"></cbc:ID>
       </cac:PartyIdentification>
       <cac:PartyName>
         <cbc:Name>Studio Noord</cbc:Name>
@@ -34,14 +36,14 @@
         </cac:Country>
       </cac:PostalAddress>
       <cac:PartyTaxScheme>
-        <cbc:CompanyID>BE0123456789</cbc:CompanyID>
+        <cbc:CompanyID>KBO/BTW: nog niet toegekend</cbc:CompanyID>
         <cac:TaxScheme>
           <cbc:ID>VAT</cbc:ID>
         </cac:TaxScheme>
       </cac:PartyTaxScheme>
       <cac:PartyLegalEntity>
         <cbc:RegistrationName>Studio Noord</cbc:RegistrationName>
-        <cbc:CompanyID schemeID="0208">0123456789</cbc:CompanyID>
+        <cbc:CompanyID>KBO/BTW: nog niet toegekend</cbc:CompanyID>
       </cac:PartyLegalEntity>
       <cac:Contact>
         <cbc:Name>Facturatie (demo)</cbc:Name>
@@ -51,9 +53,9 @@
   </cac:AccountingSupplierParty>
   <cac:AccountingCustomerParty>
     <cac:Party>
-      <cbc:EndpointID schemeID="0208">0987654321</cbc:EndpointID>
+      <cbc:EndpointID schemeID="0208"></cbc:EndpointID>
       <cac:PartyIdentification>
-        <cbc:ID schemeID="0208">0987654321</cbc:ID>
+        <cbc:ID schemeID="0208"></cbc:ID>
       </cac:PartyIdentification>
       <cac:PartyName>
         <cbc:Name>Client BV</cbc:Name>
@@ -67,14 +69,14 @@
         </cac:Country>
       </cac:PostalAddress>
       <cac:PartyTaxScheme>
-        <cbc:CompanyID>BE0987654321</cbc:CompanyID>
+        <cbc:CompanyID>KBO/BTW: nog niet toegekend</cbc:CompanyID>
         <cac:TaxScheme>
           <cbc:ID>VAT</cbc:ID>
         </cac:TaxScheme>
       </cac:PartyTaxScheme>
       <cac:PartyLegalEntity>
         <cbc:RegistrationName>Client BV</cbc:RegistrationName>
-        <cbc:CompanyID schemeID="0208">0987654321</cbc:CompanyID>
+        <cbc:CompanyID>KBO/BTW: nog niet toegekend</cbc:CompanyID>
       </cac:PartyLegalEntity>
       <cac:Contact>
         <cbc:ElectronicMail>facturatie@client.example</cbc:ElectronicMail>
@@ -84,16 +86,9 @@
   <cac:PaymentMeans>
     <cbc:PaymentMeansCode>58</cbc:PaymentMeansCode>
     <cbc:PaymentID>INV-DEMO-2026-RC-001</cbc:PaymentID>
-    <cac:PayeeFinancialAccount>
-      <cbc:ID>BE00000001234567</cbc:ID>
-      <cbc:Name>Studio Noord</cbc:Name>
-      <cac:FinancialInstitutionBranch>
-        <cbc:ID>DEMOBEXX</cbc:ID>
-      </cac:FinancialInstitutionBranch>
-    </cac:PayeeFinancialAccount>
   </cac:PaymentMeans>
   <cac:PaymentTerms>
-    <cbc:Note>30 dagen. SAMPLE — demo IBAN, niet betalen. BTW te voldoen door de medecontractant.</cbc:Note>
+    <cbc:Note>30 dagen. SAMPLE / VOORBEELD — geen IBAN in dit bestand, niet betalen. BTW te voldoen door de medecontractant.</cbc:Note>
   </cac:PaymentTerms>
   <cac:TaxTotal>
     <cbc:TaxAmount currencyID="EUR">0.00</cbc:TaxAmount>

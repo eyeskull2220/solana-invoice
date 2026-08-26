@@ -27,8 +27,8 @@
     <section class="card">
       <h2>Stappen</h2>
       <ol class="steps">
-        <li>Haal het ondernemingsnummer uit de <a href="https://kbopub.economie.fgov.be/" rel="noopener">KBO publieke zoekfunctie</a> of van hun briefhoofd. Noteer 10 cijfers. Demo in dit pack: <span class="mono">0123456789</span> (Studio Noord, vals).</li>
-        <li>Bouw het ID: <span class="mono">0208:</span> + die 10 cijfers. Demo: <span class="mono">0208:0123456789</span>. Fout: <span class="mono">0208:BE0123.456.789</span>.</li>
+        <li>Haal het ondernemingsnummer uit de <a href="https://kbopub.economie.fgov.be/" rel="noopener">KBO publieke zoekfunctie</a> of van hun briefhoofd. Noteer 10 cijfers. Dit pack vult <strong>geen</strong> voorbeeldcijfers in.</li>
+        <li>Bouw het ID: <span class="mono">0208:</span> + die 10 cijfers, zonder <span class="mono">BE</span>, zonder punten, zonder spaties. Geen demo-nummer in dit pack.</li>
         <li>Open de officiële Peppol Directory: <a href="https://directory.peppol.eu/public/" rel="noopener">directory.peppol.eu/public</a>.</li>
         <li>Plak het ID in het zoekveld (of zoek op exacte juridische naam + land BE). Kijk of er een participant staat die Peppol BIS Billing kan ontvangen.</li>
         <li>Noteer het resultaat op <a href="intake.html">intake.html</a>: gevonden / niet gevonden / B2C.</li>
@@ -45,11 +45,11 @@
         </div>
         <div>
           <label for="wKbo">KBO 10 cijfers</label>
-          <input id="wKbo" type="text" placeholder="0987654321">
+          <input id="wKbo" type="text" placeholder="KBO/BTW: nog niet toegekend">
         </div>
       </div>
       <label for="wId">ID om te zoeken</label>
-      <input id="wId" type="text" class="mono" placeholder="0208:0987654321" readonly>
+      <input id="wId" type="text" class="mono" placeholder="0208:" readonly>
       <label for="wResult">Resultaat Directory</label>
       <select id="wResult">
         <option value="">—</option>
