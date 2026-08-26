@@ -193,7 +193,13 @@ No Lemmy JWT, no Mastodon access token, no browser cookies for these hosts.
 1. API: `POST https://mastodon.social/api/v1/statuses` (no auth)
    - HTTP 401
    - Same token wall: `{"error":"The access token is invalid"}` with `WWW-Authenticate: Bearer realm="Doorkeeper", error="invalid_token", error_description="The access token is invalid"`
-2. Registrations are open (`enabled: true`, `min_age: 16`) but that is a **new account**, not an existing session. Not used.
+2. Browser compose URL: `https://mastodon.social/publish` (logged out)
+   - Exact sidebar wall:
+     - `Mastodon is the best way to keep up with what's happening.`
+     - `Follow anyone across the fediverse and see it all in chronological order. No algorithms, ads, or clickbait in sight.`
+     - Link: `Create account` → `/auth/sign_up`
+     - Link: `Login` → `/auth/sign_in`
+3. Registrations are open (`enabled: true`, `min_age: 16`) but that is a **new account**, not an existing session. Not used.
 
 ## Copy ready for a later session (do not post from this sweep)
 
