@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Factuur — Studio Noord</title>
+  <meta name="description" content="Belgian BTW invoice for Studio Noord. 21% default. Download a standalone HTML factuur. Not a Peppol document." />
+  <!-- Rebrand: Studio Noord, you@studio.example. See README.md -->
+  <link rel="stylesheet" href="pack.css" />
+</head>
+<body>
+  <div class="wrap wide">
+    <div class="brand">
+      <strong>Studio Noord</strong>
+      <span>Belgian BTW factuur · demo</span>
+    </div>
+    <nav class="pack-nav" aria-label="Pack">
+      <a href="index.html">Pack</a>
+      <a href="intake.html">Intake</a>
+      <a href="invoice.html" aria-current="page">Factuur</a>
+      <a href="reminder.html">Reminder</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+
+    <header>
+      <h1>Factuur met 21% BTW</h1>
+      <p class="lead">Demo for Studio Noord → Client BV. Edit, then download a standalone HTML file. Totals are arithmetic only. This is not tax advice and not a Peppol document.</p>
+    </header>
+
+    <p class="disclaimer">B2C PDF-by-mail is still allowed. B2B PDF is NOT a legal invoice since 1 Jan 2026 (Peppol). We do not make them compliant. We do not send Peppol.</p>
+
+    <div class="layout">
+      <div class="stack">
+        <section class="card">
+          <h2>Verkoper</h2>
+          <label class="field">
+            <span>Naam</span>
+            <input id="sellerName" type="text" autocomplete="off" value="Studio Noord" />
+          </label>
+          <label class="field">
+            <span>Adres</span>
+            <textarea id="sellerAddress" autocomplete="off">Voorbeeldlaan 1
+2000 Antwerpen</textarea>
+          </label>
+          <label class="field">
+            <span>BE BTW / KBO</span>
+            <input id="sellerVat" type="text" autocomplete="off" spellcheck="false" value="BE 0999.999.992" />
+          </label>
+          <label class="field">
+            <span>Mail</span>
+            <input id="sellerMail" type="email" autocomplete="off" value="you@studio.example" />
+          </label>
+        </section>
+
+        <section class="card">
+          <h2>Klant</h2>
+          <label class="field">
+            <span>Naam</span>
+            <input id="clientName" type="text" autocomplete="off" value="Client BV" />
+          </label>
+          <label class="field">
+            <span>Adres</span>
+            <textarea id="clientAddress" autocomplete="off">Klantplein 8
+1000 Brussel</textarea>
+          </label>
+          <label class="field">
+            <span>BE BTW / KBO</span>
+            <input id="clientVat" type="text" autocomplete="off" spellcheck="false" value="BE 0888.888.888" />
+          </label>
+        </section>
+
+        <section class="card">
+          <h2>Factuur</h2>
+          <p class="error hidden" id="error"></p>
+          <div class="row two">
+            <label class="field">
+              <span>Nummer</span>
+              <input id="invoiceNo" type="text" autocomplete="off" value="F-202607-001" />
+            </label>
+            <label class="field">
+              <span>Datum</span>
+              <input id="invoiceDate" type="date" value="2026-07-15" />
+            </label>
+          </div>
+          <div class="row two">
+            <label class="field">
+              <span>Vervaldatum</span>
+              <input id="dueDate" type="date" value="2026-07-29" />
+            </label>
+            <label class="field">
+              <span>BTW-tarief (%)</span>
+              <input id="vatRate" type="text" inputmode="decimal" value="21" autocomplete="off" />
+            </label>
+          </div>
+          <p class="note">Belgium’s standard rate is 21%. Confirm the rate that applies to this job.</p>
+
+          <h2 style="margin-top:14px">Lijnen</h2>
+          <div class="lines" id="lines"></div>
+          <div class="actions">
+            <button type="button" class="ghost" id="addLineBtn">Add line</button>
+          </div>
+
+          <div class="totals" style="margin-top:12px">
+            <div><span>Excl. BTW</span><span id="sumExcl">0,00 €</span></div>
+            <div><span id="sumVatLabel">BTW 21%</span><span id="sumVat">0,00 €</span></div>
+            <div class="grand"><span>Incl. BTW</span><span id="sumIncl">0,00 €</span></div>
+          </div>
+        </section>
+      </div>
+
+      <div class="stack">
+        <section class="card">
+          <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px">
+            <h2 style="margin:0">Preview</h2>
+            <div class="actions" style="margin:0">
+              <button type="button" class="primary" id="downloadBtn">Download HTML invoice</button>
+            </div>
+          </div>
+          <article class="sheet" id="preview" lang="nl"></article>
+          <p class="ok hidden" id="status"></p>
+          <p class="note">The downloaded file is self-contained. No scripts. No treasury address. Print it or mail the HTML. For B2B it is still not a legal Peppol invoice.</p>
+        </section>
+      </div>
+    </div>
+
+    <footer class="page">Studio Noord demo pack. Not bookkeeping. Not a Peppol Access Point. Not a leftover 9 USDC restack.</footer>
+  </div>
+
+  <script>
+    (function () {
+      var MONTHS_NL = ["januari", "februari", "maart", "april", "mei", "juni", "juli", "augustus", "september", "oktober", "november", "december"];
+      var TREASURY = "96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3";
+      var $ = function (id) { return document.getElementById(id); };
+      var linesEl = $("lines");
+      var errorEl = $("error");
+      var statusEl = $("status");
+      var lineSeq = 0;
+
+      function escapeHtml(value) {
+        return String(value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      function parseDecimal(raw) {
+        var s = String(raw == null ? "" : raw).trim().replace(/\s/g, "").replace(",", ".");
+        if (!s) return null;
+        if (!/^\d+(\.\d+)?$/.test(s)) return null;
+        var n = Number(s);
+        if (!isFinite(n) || n < 0) return null;
+        return n;
+      }
+
+      function toCents(n) { return Math.round(n * 100); }
+
+      function formatEur(cents) {
+        var neg = cents < 0;
+        var abs = Math.abs(cents);
+        var euro = Math.floor(abs / 100);
+        var ct = String(abs % 100);
+        if (ct.length < 2) ct = "0" + ct;
+        var intStr = String(euro).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        return (neg ? "−" : "") + intStr + "," + ct + " €";
+      }
+
+      function formatDateNl(iso) {
+        if (!iso) return "";
+        var p = String(iso).split("-");
+        if (p.length !== 3) return iso;
+        var mi = parseInt(p[1], 10) - 1;
+        var month = MONTHS_NL[mi] || p[1];
+        return parseInt(p[2], 10) + " " + month + " " + p[0];
+      }
+
+      function addLine(desc, qty, price) {
+        lineSeq += 1;
+        var wrap = document.createElement("div");
+        wrap.className = "line";
+        wrap.innerHTML =
+          "<div class=\"line-head\"><span>Item</span>" +
+          "<button type=\"button\" class=\"danger remove\">Remove</button></div>" +
+          "<label class=\"field\"><span>Omschrijving</span>" +
+          "<input class=\"desc\" type=\"text\" autocomplete=\"off\" placeholder=\"Website-onderhoud\" /></label>" +
+          "<div class=\"row two\">" +
+          "<label class=\"field\"><span>Aantal</span>" +
+          "<input class=\"qty\" type=\"text\" inputmode=\"decimal\" autocomplete=\"off\" placeholder=\"8\" /></label>" +
+          "<label class=\"field\"><span>Prijs excl. BTW</span>" +
+          "<input class=\"price\" type=\"text\" inputmode=\"decimal\" autocomplete=\"off\" placeholder=\"75,00\" /></label>" +
+          "</div>";
+        if (desc) wrap.querySelector(".desc").value = desc;
+        if (qty) wrap.querySelector(".qty").value = qty;
+        if (price) wrap.querySelector(".price").value = price;
+        wrap.querySelector(".remove").addEventListener("click", function () {
+          if (linesEl.querySelectorAll(".line").length <= 1) {
+            wrap.querySelector(".desc").value = "";
+            wrap.querySelector(".qty").value = "";
+            wrap.querySelector(".price").value = "";
+            refresh();
+            return;
+          }
+          wrap.remove();
+          refresh();
+        });
+        wrap.querySelector(".desc").addEventListener("input", refresh);
+        wrap.querySelector(".qty").addEventListener("input", refresh);
+        wrap.querySelector(".price").addEventListener("input", refresh);
+        linesEl.appendChild(wrap);
+      }
+
+      function readLines() {
+        var nodes = linesEl.querySelectorAll(".line");
+        var out = [];
+        var i, el, desc, qty, price, unitCents;
+        for (i = 0; i < nodes.length; i++) {
+          el = nodes[i];
+          desc = el.querySelector(".desc").value.trim();
+          qty = parseDecimal(el.querySelector(".qty").value);
+          price = parseDecimal(el.querySelector(".price").value);
+          if (!desc && qty === null && price === null) continue;
+          if (qty === null || price === null) {
+            out.push({ desc: desc, qty: qty, price: price, exclCents: null, invalid: true });
+            continue;
+          }
+          unitCents = toCents(price);
+          out.push({
+            desc: desc,
+            qty: qty,
+            price: price,
+            unitCents: unitCents,
+            exclCents: Math.round(qty * unitCents),
+            invalid: false
+          });
+        }
+        return out;
+      }
+
+      function readInvoice() {
+        return {
+          sellerName: $("sellerName").value.trim(),
+          sellerAddress: $("sellerAddress").value.trim(),
+          sellerVat: $("sellerVat").value.trim(),
+          sellerMail: $("sellerMail").value.trim(),
+          clientName: $("clientName").value.trim(),
+          clientAddress: $("clientAddress").value.trim(),
+          clientVat: $("clientVat").value.trim(),
+          invoiceNo: $("invoiceNo").value.trim(),
+          invoiceDate: $("invoiceDate").value.trim(),
+          dueDate: $("dueDate").value.trim(),
+          vatRate: parseDecimal($("vatRate").value),
+          lines: readLines()
+        };
+      }
+
+      function validate(inv) {
+        if (!inv.sellerName) return "Enter the seller name.";
+        if (!inv.clientName) return "Enter the client name.";
+        if (!inv.invoiceNo) return "Enter an invoice number.";
+        if (!inv.invoiceDate) return "Enter an invoice date.";
+        if (inv.vatRate === null) return "BTW rate must be a number 0 or greater.";
+        if (inv.vatRate > 100) return "BTW rate must be 100 or less.";
+        var i, filled = 0;
+        for (i = 0; i < inv.lines.length; i++) {
+          if (inv.lines[i].invalid) return "Each line needs a quantity and a unit price (use 0 or more).";
+          if (!inv.lines[i].desc) return "Each filled line needs a description.";
+          filled += 1;
+        }
+        if (filled < 1) return "Add at least one line item.";
+        return "";
+      }
+
+      function totalsOf(inv) {
+        var excl = 0;
+        var i;
+        for (i = 0; i < inv.lines.length; i++) {
+          if (!inv.lines[i].invalid) excl += inv.lines[i].exclCents;
+        }
+        var vat = Math.round(excl * inv.vatRate / 100);
+        return { exclCents: excl, vatCents: vat, inclCents: excl + vat };
+      }
+
+      function partyHtml(name, address, vat, mail, emptyName) {
+        var parts = [];
+        parts.push(name ? escapeHtml(name) : "<span class=\"empty\">" + emptyName + "</span>");
+        if (address) parts.push(escapeHtml(address));
+        if (vat) parts.push("BTW/KBO " + escapeHtml(vat));
+        if (mail) parts.push(escapeHtml(mail));
+        return parts.join("\n");
+      }
+
+      function qtyLabel(n) {
+        if (Math.abs(n - Math.round(n)) < 1e-9) return String(Math.round(n));
+        return String(n).replace(".", ",");
+      }
+
+      function linesTableHtml(inv) {
+        var rows = "";
+        var i, line, usable = [];
+        for (i = 0; i < inv.lines.length; i++) {
+          if (!inv.lines[i].invalid) usable.push(inv.lines[i]);
+        }
+        if (!usable.length) {
+          rows = "<tr><td colspan=\"4\"><span class=\"empty\">Nog geen lijnen</span></td></tr>";
+        } else {
+          for (i = 0; i < usable.length; i++) {
+            line = usable[i];
+            rows += "<tr>" +
+              "<td>" + (line.desc ? escapeHtml(line.desc) : "<span class=\"empty\">—</span>") + "</td>" +
+              "<td class=\"num\">" + escapeHtml(qtyLabel(line.qty)) + "</td>" +
+              "<td class=\"num\">" + escapeHtml(formatEur(line.unitCents)) + "</td>" +
+              "<td class=\"num\">" + escapeHtml(formatEur(line.exclCents)) + "</td>" +
+              "</tr>";
+          }
+        }
+        return "<table class=\"items\"><thead><tr>" +
+          "<th>Omschrijving</th><th class=\"num\">Aantal</th>" +
+          "<th class=\"num\">Prijs excl.</th><th class=\"num\">Totaal excl.</th>" +
+          "</tr></thead><tbody>" + rows + "</tbody></table>";
+      }
+
+      function sheetHtml(inv, tot) {
+        var rateLabel = (inv.vatRate == null ? "—" : String(inv.vatRate).replace(".", ",")) + "%";
+        return "" +
+          "<div class=\"sheet-top\">" +
+            "<div><div class=\"kicker\">" + escapeHtml(inv.sellerName || "Studio Noord") + "</div><div class=\"word\">FACTUUR</div></div>" +
+            "<div class=\"meta\"><div>Nr. <strong>" + escapeHtml(inv.invoiceNo || "—") + "</strong></div>" +
+            "<div>Datum <strong>" + escapeHtml(formatDateNl(inv.invoiceDate) || "—") + "</strong></div>" +
+            (inv.dueDate ? "<div>Vervaldatum <strong>" + escapeHtml(formatDateNl(inv.dueDate)) + "</strong></div>" : "") +
+            "</div>" +
+          "</div>" +
+          "<div class=\"parties\">" +
+            "<div><div class=\"k\">Verkoper</div><div class=\"v\">" +
+              partyHtml(inv.sellerName, inv.sellerAddress, inv.sellerVat, inv.sellerMail, "Studio Noord") +
+            "</div></div>" +
+            "<div><div class=\"k\">Klant</div><div class=\"v\">" +
+              partyHtml(inv.clientName, inv.clientAddress, inv.clientVat, "", "Client BV") +
+            "</div></div>" +
+          "</div>" +
+          linesTableHtml(inv) +
+          "<div class=\"sum-box\">" +
+            "<div><span>Totaal excl. BTW</span><span>" + escapeHtml(formatEur(tot.exclCents)) + "</span></div>" +
+            "<div><span>BTW " + escapeHtml(rateLabel) + "</span><span>" + escapeHtml(formatEur(tot.vatCents)) + "</span></div>" +
+            "<div class=\"grand\"><span>Totaal incl. BTW</span><span>" + escapeHtml(formatEur(tot.inclCents)) + "</span></div>" +
+          "</div>" +
+          "<p class=\"pay-note\">Betaal binnen de vermelde termijn. Vermeld factuurnummer " + escapeHtml(inv.invoiceNo || "—") + " als mededeling. Bedragen in euro.</p>";
+      }
+
+      function renderPreview(inv) {
+        var err = validate(inv);
+        errorEl.classList.toggle("hidden", !err);
+        errorEl.textContent = err;
+        $("downloadBtn").disabled = Boolean(err);
+        var tot = (inv.vatRate === null)
+          ? { exclCents: 0, vatCents: 0, inclCents: 0 }
+          : totalsOf(inv);
+        var rateText = inv.vatRate === null ? "—" : String(inv.vatRate).replace(".", ",") + "%";
+        $("sumExcl").textContent = formatEur(tot.exclCents);
+        $("sumVat").textContent = formatEur(tot.vatCents);
+        $("sumIncl").textContent = formatEur(tot.inclCents);
+        $("sumVatLabel").textContent = "BTW " + rateText;
+        $("preview").innerHTML = sheetHtml(inv, tot);
+      }
+
+      function buildInvoiceCss() {
+        return "html,body{margin:0;padding:0}body{min-height:100vh;background:#eef2f4;color:#14202a;font:16px/1.5 \"Iowan Old Style\",Palatino,\"Palatino Linotype\",Georgia,serif}main{width:min(760px,100%);margin:0 auto;padding:28px 16px 64px}.sheet{background:#fffcf7;border:1px solid #d3dbe1;border-radius:4px;padding:32px 28px 24px}.top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;border-bottom:2px solid #14202a;padding-bottom:14px;margin-bottom:18px}.kicker{font-family:ui-sans-serif,system-ui,sans-serif;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#5b6570}.word{font-size:1.85rem;letter-spacing:.1em;margin-top:2px}.meta{text-align:right;font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px;color:#5b6570}.meta strong{display:block;color:#14202a;font-weight:650}.parties{display:grid;gap:16px;margin-bottom:20px}@media(min-width:560px){.parties{grid-template-columns:1fr 1fr}}.k{font-family:ui-sans-serif,system-ui,sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#5b6570;margin-bottom:4px}.v{white-space:pre-wrap;word-break:break-word}table{width:100%;border-collapse:collapse;font:14px/1.4 ui-sans-serif,system-ui,sans-serif;margin:0 0 16px}th,td{text-align:left;padding:8px 0;border-bottom:1px solid #d3dbe1;vertical-align:top}th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#5b6570}td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}.sum{margin-left:auto;width:min(280px,100%);font:14px/1.4 ui-sans-serif,system-ui,sans-serif}.sum div{display:flex;justify-content:space-between;gap:12px;padding:6px 0;font-variant-numeric:tabular-nums}.sum .grand{border-top:2px solid #14202a;margin-top:4px;padding-top:10px;font-weight:750;font-size:1.05rem}.note{margin-top:22px;color:#5b6570;font-family:ui-sans-serif,system-ui,sans-serif;font-size:12px}@media print{body{background:#fff}main{padding:0}.sheet{border:0;width:100%;padding:12mm}}";
+      }
+
+      function buildInvoiceHtml(inv) {
+        var tot = totalsOf(inv);
+        var rateLabel = String(inv.vatRate).replace(".", ",") + "%";
+        return "<!doctype html>\n<html lang=\"nl\">\n<head>\n" +
+          "<meta charset=\"utf-8\" />\n" +
+          "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n" +
+          "<title>Factuur " + escapeHtml(inv.invoiceNo) + "</title>\n" +
+          "<style>\n" + buildInvoiceCss() + "\n</style>\n</head>\n<body>\n<main>\n<div class=\"sheet\">\n" +
+          "<div class=\"top\"><div><div class=\"kicker\">" + escapeHtml(inv.sellerName) + "</div><div class=\"word\">FACTUUR</div></div>" +
+          "<div class=\"meta\"><div>Nr. <strong>" + escapeHtml(inv.invoiceNo) + "</strong></div><div>Datum <strong>" +
+          escapeHtml(formatDateNl(inv.invoiceDate)) + "</strong></div>" +
+          (inv.dueDate ? "<div>Vervaldatum <strong>" + escapeHtml(formatDateNl(inv.dueDate)) + "</strong></div>" : "") +
+          "</div></div>\n" +
+          "<div class=\"parties\">\n<div><div class=\"k\">Verkoper</div><div class=\"v\">" +
+          partyHtml(inv.sellerName, inv.sellerAddress, inv.sellerVat, inv.sellerMail, "—") +
+          "</div></div>\n<div><div class=\"k\">Klant</div><div class=\"v\">" +
+          partyHtml(inv.clientName, inv.clientAddress, inv.clientVat, "", "—") +
+          "</div></div>\n</div>\n" +
+          linesTableHtml(inv) + "\n" +
+          "<div class=\"sum\">" +
+          "<div><span>Totaal excl. BTW</span><span>" + escapeHtml(formatEur(tot.exclCents)) + "</span></div>" +
+          "<div><span>BTW " + escapeHtml(rateLabel) + "</span><span>" + escapeHtml(formatEur(tot.vatCents)) + "</span></div>" +
+          "<div class=\"grand\"><span>Totaal incl. BTW</span><span>" + escapeHtml(formatEur(tot.inclCents)) + "</span></div>" +
+          "</div>\n" +
+          "<p class=\"note\">Betaal binnen de vermelde termijn. Vermeld factuurnummer " + escapeHtml(inv.invoiceNo) +
+          " als mededeling. Bedragen in euro. B2C: PDF per mail blijft toegelaten. B2B: sinds 1 januari 2026 is een PDF geen wettelijke factuur in België (Peppol). Dit bestand is geen Peppol-document.</p>\n" +
+          "</div>\n</main>\n</body>\n</html>\n";
+      }
+
+      function filenameFor(inv) {
+        var slug = (inv.invoiceNo || "factuur").replace(/[^A-Za-z0-9._-]+/g, "-");
+        return slug + ".html";
+      }
+
+      function refresh() {
+        statusEl.classList.add("hidden");
+        renderPreview(readInvoice());
+      }
+
+      ["sellerName", "sellerAddress", "sellerVat", "sellerMail", "clientName", "clientAddress", "clientVat", "invoiceNo", "invoiceDate", "dueDate", "vatRate"].forEach(function (id) {
+        $(id).addEventListener("input", refresh);
+        $(id).addEventListener("change", refresh);
+      });
+
+      $("addLineBtn").addEventListener("click", function () {
+        addLine("", "", "");
+        refresh();
+      });
+
+      $("downloadBtn").addEventListener("click", function () {
+        var inv = readInvoice();
+        var err = validate(inv);
+        if (err) {
+          errorEl.textContent = err;
+          errorEl.classList.remove("hidden");
+          return;
+        }
+        var html = buildInvoiceHtml(inv);
+        if (html.indexOf(TREASURY) !== -1 || /<script/i.test(html)) {
+          errorEl.textContent = "Download blocked: unexpected content.";
+          errorEl.classList.remove("hidden");
+          return;
+        }
+        var blob = new Blob([html], { type: "text/html;charset=utf-8" });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = filenameFor(inv);
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        statusEl.textContent = "Downloaded " + filenameFor(inv) + ".";
+        statusEl.classList.remove("hidden");
+      });
+
+      addLine("Website herwerking — homepage + contact", "8", "75,00");
+      refresh();
+    })();
+  </script>
+</body>
+</html>

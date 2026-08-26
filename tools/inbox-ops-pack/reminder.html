@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Herinnering — Studio Noord</title>
+  <meta name="description" content="Overdue invoice reminder for Studio Noord. Download a standalone HTML letter." />
+  <!-- Rebrand: Studio Noord, Client BV, you@studio.example. See README.md -->
+  <link rel="stylesheet" href="pack.css" />
+</head>
+<body>
+  <div class="wrap wide">
+    <div class="brand">
+      <strong>Studio Noord</strong>
+      <span>you@studio.example</span>
+    </div>
+    <nav class="pack-nav" aria-label="Pack">
+      <a href="index.html">Pack</a>
+      <a href="intake.html">Intake</a>
+      <a href="invoice.html">Factuur</a>
+      <a href="reminder.html" aria-current="page">Reminder</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+
+    <header>
+      <h1>Achterstallige factuur</h1>
+      <p class="lead">Demo reminder for Client BV on factuur F-202607-001 (726,00 € incl. BTW). Edit, download the letter, or open a mailto draft.</p>
+    </header>
+
+    <div class="layout">
+      <section class="card">
+        <h2>Gegevens</h2>
+        <p class="error hidden" id="error"></p>
+        <label class="field">
+          <span>Van</span>
+          <input id="fromName" type="text" value="Studio Noord" autocomplete="off" />
+        </label>
+        <label class="field">
+          <span>Van-mail</span>
+          <input id="fromMail" type="email" value="you@studio.example" autocomplete="off" />
+        </label>
+        <label class="field">
+          <span>Aan</span>
+          <input id="toName" type="text" value="Client BV" autocomplete="off" />
+        </label>
+        <label class="field">
+          <span>Aan-mail</span>
+          <input id="toMail" type="email" value="billing@client.example" autocomplete="off" />
+        </label>
+        <div class="row two">
+          <label class="field">
+            <span>Factuurnummer</span>
+            <input id="invoiceNo" type="text" value="F-202607-001" autocomplete="off" />
+          </label>
+          <label class="field">
+            <span>Vervaldatum</span>
+            <input id="dueDate" type="date" value="2026-07-29" />
+          </label>
+        </div>
+        <label class="field">
+          <span>Bedrag incl. BTW (EUR)</span>
+          <input id="amount" type="text" inputmode="decimal" value="726,00" autocomplete="off" />
+        </label>
+        <label class="field">
+          <span>Brief</span>
+          <textarea id="body">Beste Client BV,
+
+Onze factuur F-202607-001 van 15 juli 2026 is vervallen op 29 juli 2026. Het openstaande bedrag is 726,00 € incl. 21% BTW.
+
+Gelieve te betalen met vermelding van het factuurnummer. Vragen? Antwoord op dit bericht of gebruik you@studio.example.
+
+Met vriendelijke groeten,
+Studio Noord</textarea>
+        </label>
+        <div class="actions">
+          <button type="button" class="primary" id="downloadBtn">Download reminder</button>
+          <button type="button" class="ghost" id="mailBtn">Open mailto</button>
+        </div>
+        <p class="ok hidden" id="status"></p>
+        <p class="note">Mailto uses RFC 2606 addresses only in this demo (billing@client.example).</p>
+      </section>
+
+      <section class="card">
+        <h2>Preview</h2>
+        <article class="letter" id="preview"></article>
+      </section>
+    </div>
+
+    <footer>First reminder, polite. Not collections. Not bookkeeping. Not a leftover 9 USDC restack.</footer>
+  </div>
+  <script>
+    (function () {
+      var MONTHS_NL = ["januari", "februari", "maart", "april", "mei", "juni", "juli", "augustus", "september", "oktober", "november", "december"];
+      var TREASURY = "96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3";
+      var $ = function (id) { return document.getElementById(id); };
+
+      function escapeHtml(value) {
+        return String(value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      function parseDecimal(raw) {
+        var s = String(raw == null ? "" : raw).trim().replace(/\s/g, "").replace(",", ".");
+        if (!s) return null;
+        if (!/^\d+(\.\d+)?$/.test(s)) return null;
+        var n = Number(s);
+        if (!isFinite(n) || n < 0) return null;
+        return n;
+      }
+
+      function formatEur(n) {
+        var cents = Math.round(n * 100);
+        var euro = Math.floor(cents / 100);
+        var ct = String(cents % 100);
+        if (ct.length < 2) ct = "0" + ct;
+        var intStr = String(euro).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        return intStr + "," + ct + " €";
+      }
+
+      function formatDateNl(iso) {
+        if (!iso) return "";
+        var p = String(iso).split("-");
+        if (p.length !== 3) return iso;
+        var mi = parseInt(p[1], 10) - 1;
+        return parseInt(p[2], 10) + " " + (MONTHS_NL[mi] || p[1]) + " " + p[0];
+      }
+
+      function daysOverdue(iso) {
+        if (!iso) return null;
+        var due = new Date(iso + "T00:00:00");
+        if (isNaN(due.getTime())) return null;
+        var now = new Date();
+        var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        var diff = Math.round((today - due) / 86400000);
+        return diff;
+      }
+
+      function looksLikeEmail(value) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+      }
+
+      function readData() {
+        return {
+          fromName: $("fromName").value.trim(),
+          fromMail: $("fromMail").value.trim(),
+          toName: $("toName").value.trim(),
+          toMail: $("toMail").value.trim(),
+          invoiceNo: $("invoiceNo").value.trim(),
+          dueDate: $("dueDate").value.trim(),
+          amount: parseDecimal($("amount").value),
+          body: $("body").value.trim()
+        };
+      }
+
+      function validate(d) {
+        if (!d.fromName) return "Vul de afzender in.";
+        if (!d.toName) return "Vul de klant in.";
+        if (!d.toMail) return "Vul het klant-mailadres in.";
+        if (!looksLikeEmail(d.toMail)) return "Klant-mail ziet er niet geldig uit.";
+        if (d.fromMail && !looksLikeEmail(d.fromMail)) return "Afzender-mail ziet er niet geldig uit.";
+        if (!d.invoiceNo) return "Vul een factuurnummer in.";
+        if (!d.dueDate) return "Vul een vervaldatum in.";
+        if (d.amount === null) return "Bedrag moet een getal 0 of groter zijn.";
+        if (!d.body) return "Schrijf de brief.";
+        return "";
+      }
+
+      function letterInner(d) {
+        var overdue = daysOverdue(d.dueDate);
+        var badge = (overdue != null && overdue > 0)
+          ? "<span class=\"badge\">Achterstallig · " + overdue + " dagen</span>"
+          : "<span class=\"badge\" style=\"background:#dce8ef;color:#163d52\">Herinnering</span>";
+        var amt = d.amount === null ? "—" : formatEur(d.amount);
+        var paras = escapeHtml(d.body).split(/\n\n+/).map(function (p) {
+          return "<p>" + p.replace(/\n/g, "<br />") + "</p>";
+        }).join("");
+        return "<div class=\"kicker\">" + escapeHtml(d.fromName || "Studio Noord") + "</div>" +
+          "<h3>BETALINGSHERINNERING</h3>" +
+          badge +
+          "<div class=\"meta\">" +
+          "<div><span>Aan</span><strong>" + escapeHtml(d.toName || "—") + "</strong></div>" +
+          "<div><span>Factuur</span><strong>" + escapeHtml(d.invoiceNo || "—") + "</strong></div>" +
+          "<div><span>Vervaldatum</span><strong>" + escapeHtml(formatDateNl(d.dueDate) || "—") + "</strong></div>" +
+          "<div><span>Van</span><strong>" + escapeHtml(d.fromMail || "you@studio.example") + "</strong></div>" +
+          "</div>" +
+          "<div class=\"amount\">" + escapeHtml(amt) + "</div>" +
+          "<div class=\"body\">" + paras + "</div>";
+      }
+
+      function setError(msg) {
+        var el = $("error");
+        if (msg) {
+          el.textContent = msg;
+          el.classList.remove("hidden");
+          $("status").classList.add("hidden");
+        } else {
+          el.textContent = "";
+          el.classList.add("hidden");
+        }
+      }
+
+      function render() {
+        var d = readData();
+        var err = validate(d);
+        setError(err);
+        $("downloadBtn").disabled = Boolean(err);
+        $("mailBtn").disabled = Boolean(err);
+        $("preview").innerHTML = letterInner(d);
+      }
+
+      function downloadCss() {
+        return "html,body{margin:0;padding:0}body{min-height:100vh;background:#eef2f4;color:#14202a;font:16px/1.5 ui-sans-serif,system-ui,sans-serif}main{width:min(720px,100%);margin:0 auto;padding:28px 16px 64px}.letter{background:#fffcf7;border:1px solid #d3dbe1;border-radius:4px;padding:32px 28px}.kicker{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#5b6570}h1{margin:4px 0 16px;font-size:1.55rem;letter-spacing:.06em}.badge{display:inline-block;font-size:12px;font-weight:650;padding:4px 8px;border-radius:999px;background:#f8eadc;color:#8a4b12;margin:0 0 14px}.meta{display:grid;gap:10px;margin:0 0 18px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}.meta div{border:1px solid #d3dbe1;border-radius:10px;padding:10px 12px;background:#fff}.meta span{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#5b6570;margin:0 0 4px}.meta strong{font-size:1.02rem;word-break:break-word}.amount{font-size:2rem;letter-spacing:-.03em;margin:0 0 14px}.body p{margin:0 0 12px}@media print{body{background:#fff}main{padding:0}.letter{border:0;padding:12mm}}";
+      }
+
+      function buildHtml(d) {
+        return "<!doctype html>\n<html lang=\"nl\">\n<head>\n<meta charset=\"utf-8\" />\n" +
+          "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n" +
+          "<title>Herinnering " + escapeHtml(d.invoiceNo) + "</title>\n" +
+          "<style>\n" + downloadCss() + "\n</style>\n</head>\n<body>\n<main>\n<div class=\"letter\">\n" +
+          letterInner(d).replace("<h3>", "<h1>").replace("</h3>", "</h1>") +
+          "\n</div>\n</main>\n</body>\n</html>\n";
+      }
+
+      function filenameFor(d) {
+        var slug = (d.invoiceNo || "herinnering").replace(/[^A-Za-z0-9._-]+/g, "-");
+        return "herinnering-" + slug + ".html";
+      }
+
+      ["fromName", "fromMail", "toName", "toMail", "invoiceNo", "dueDate", "amount", "body"].forEach(function (id) {
+        $(id).addEventListener("input", render);
+        $(id).addEventListener("change", render);
+      });
+
+      $("downloadBtn").addEventListener("click", function () {
+        var d = readData();
+        var err = validate(d);
+        if (err) { setError(err); return; }
+        setError("");
+        var html = buildHtml(d);
+        if (html.indexOf(TREASURY) !== -1 || /<script/i.test(html)) {
+          setError("Download blocked: unexpected content.");
+          return;
+        }
+        var blob = new Blob([html], { type: "text/html;charset=utf-8" });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = filenameFor(d);
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        $("status").textContent = "Downloaded " + filenameFor(d) + ".";
+        $("status").classList.remove("hidden");
+      });
+
+      $("mailBtn").addEventListener("click", function () {
+        var d = readData();
+        var err = validate(d);
+        if (err) { setError(err); return; }
+        setError("");
+        var subject = "Herinnering " + d.invoiceNo + " — " + (d.amount === null ? "" : formatEur(d.amount));
+        var href = "mailto:" + d.toMail +
+          "?subject=" + encodeURIComponent(subject) +
+          "&body=" + encodeURIComponent(d.body);
+        window.location.href = href;
+        $("status").textContent = "Mailto opened to " + d.toMail + ".";
+        $("status").classList.remove("hidden");
+      });
+
+      render();
+    })();
+  </script>
+</body>
+</html>

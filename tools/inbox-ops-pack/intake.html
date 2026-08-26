@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Intake — Studio Noord</title>
+  <meta name="description" content="One-job intake for Studio Noord. Download a brief or open a mailto draft to you@studio.example." />
+  <!-- Rebrand: Studio Noord, you@studio.example (RFC 2606), Voorbeeldlaan. See README.md -->
+  <link rel="stylesheet" href="pack.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="brand">
+      <strong>Studio Noord</strong>
+      <span>you@studio.example</span>
+    </div>
+    <nav class="pack-nav" aria-label="Pack">
+      <a href="index.html">Pack</a>
+      <a href="intake.html" aria-current="page">Intake</a>
+      <a href="invoice.html">Factuur</a>
+      <a href="reminder.html">Reminder</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+
+    <header>
+      <h1>Eén job. Eén intake.</h1>
+      <p class="lead">Vertel wat er moet gebeuren. Niets wordt op een server bewaard. Je downloadt een brief of opent een mail naar Studio Noord.</p>
+    </header>
+
+    <form class="card" id="intake" novalidate>
+      <h2>Job intake</h2>
+      <p class="error hidden" id="error"></p>
+      <div class="row two">
+        <label class="field">
+          <span>Naam</span>
+          <input id="name" type="text" autocomplete="name" placeholder="Alex Example" />
+        </label>
+        <label class="field">
+          <span>Bedrijf (optioneel)</span>
+          <input id="company" type="text" autocomplete="organization" placeholder="Client BV" />
+        </label>
+      </div>
+      <div class="row two">
+        <label class="field">
+          <span>E-mail</span>
+          <input id="email" type="email" autocomplete="email" placeholder="billing@client.example" />
+        </label>
+        <label class="field">
+          <span>Telefoon (optioneel)</span>
+          <input id="phone" type="tel" autocomplete="tel" placeholder="+32 0 000 00 00" />
+        </label>
+      </div>
+      <label class="field">
+        <span>Wat moet er gebeuren?</span>
+        <textarea id="job" placeholder="Homepage herwerken, contactformulier, FAQ-pagina."></textarea>
+      </label>
+      <div class="row two">
+        <label class="field">
+          <span>Gewenste deadline</span>
+          <input id="deadline" type="date" />
+        </label>
+        <label class="field">
+          <span>Budget (indicatief, EUR)</span>
+          <input id="budget" type="text" inputmode="decimal" placeholder="1.200" autocomplete="off" />
+        </label>
+      </div>
+      <label class="field">
+        <span>Extra notities</span>
+        <textarea id="notes" placeholder="Links, merkkleuren, wie goedkeurt."></textarea>
+      </label>
+      <div class="actions">
+        <button type="button" class="primary" id="downloadBtn">Download brief</button>
+        <button type="button" class="ghost" id="mailBtn">Open mailto</button>
+      </div>
+      <p class="ok hidden" id="status"></p>
+      <p class="note">Mailto gaat naar you@studio.example (RFC 2606 placeholder). Geen Gmail, geen live inbox.</p>
+    </form>
+
+    <footer>
+      Studio Noord · Voorbeeldlaan 1, 2000 Antwerpen · <a href="faq.html">FAQ</a>
+    </footer>
+  </div>
+  <script>
+    (function () {
+      var STUDIO = "Studio Noord";
+      var MAILTO = "you@studio.example";
+      var $ = function (id) { return document.getElementById(id); };
+
+      function escapeHtml(value) {
+        return String(value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      function readForm() {
+        return {
+          name: $("name").value.trim(),
+          company: $("company").value.trim(),
+          email: $("email").value.trim(),
+          phone: $("phone").value.trim(),
+          job: $("job").value.trim(),
+          deadline: $("deadline").value.trim(),
+          budget: $("budget").value.trim(),
+          notes: $("notes").value.trim()
+        };
+      }
+
+      function looksLikeEmail(value) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+      }
+
+      function validate(data) {
+        if (!data.name) return "Vul een naam in.";
+        if (!data.email) return "Vul een e-mail in.";
+        if (!looksLikeEmail(data.email)) return "E-mail ziet er niet geldig uit.";
+        if (!data.job) return "Beschrijf de job.";
+        return "";
+      }
+
+      function setError(msg) {
+        var el = $("error");
+        var st = $("status");
+        if (msg) {
+          el.textContent = msg;
+          el.classList.remove("hidden");
+          st.classList.add("hidden");
+        } else {
+          el.textContent = "";
+          el.classList.add("hidden");
+        }
+      }
+
+      function line(label, value) {
+        if (!value) return "";
+        return label + ": " + value + "\n";
+      }
+
+      function bodyText(data) {
+        return (
+          "Intake voor " + STUDIO + "\n\n" +
+          line("Naam", data.name) +
+          line("Bedrijf", data.company) +
+          line("E-mail", data.email) +
+          line("Telefoon", data.phone) +
+          line("Deadline", data.deadline) +
+          line("Budget", data.budget) +
+          "\nJob\n" + data.job + "\n" +
+          (data.notes ? "\nNotities\n" + data.notes + "\n" : "")
+        );
+      }
+
+      function briefHtml(data) {
+        function row(label, value) {
+          if (!value) return "";
+          return "<div><div class=\"k\">" + escapeHtml(label) + "</div><div class=\"v\">" + escapeHtml(value) + "</div></div>";
+        }
+        return "<!doctype html>\n<html lang=\"nl\">\n<head>\n<meta charset=\"utf-8\" />\n" +
+          "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n" +
+          "<title>Intake — " + escapeHtml(data.name) + "</title>\n" +
+          "<style>\n" +
+          "body{margin:0;background:#eef2f4;color:#14202a;font:16px/1.5 ui-sans-serif,system-ui,sans-serif}" +
+          "main{width:min(680px,100%);margin:0 auto;padding:28px 16px 64px}" +
+          ".sheet{background:#fffcf7;border:1px solid #d3dbe1;border-radius:4px;padding:28px 24px;box-shadow:0 14px 40px rgba(20,32,42,.07)}" +
+          ".brand{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#5b6570}" +
+          "h1{margin:6px 0 18px;letter-spacing:-.03em}" +
+          ".grid{display:grid;gap:12px;margin:0 0 18px}" +
+          "@media(min-width:560px){.grid{grid-template-columns:1fr 1fr}}" +
+          ".k{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#5b6570;margin:0 0 4px}" +
+          ".v{white-space:pre-wrap;word-break:break-word}" +
+          ".job{border-top:1px solid #d3dbe1;padding-top:16px}" +
+          "footer{margin-top:22px;color:#5b6570;font-size:13px}" +
+          "</style>\n</head>\n<body>\n<main>\n<div class=\"sheet\">\n" +
+          "<div class=\"brand\">" + escapeHtml(STUDIO) + "</div>\n" +
+          "<h1>Job intake</h1>\n<div class=\"grid\">\n" +
+          row("Naam", data.name) +
+          row("Bedrijf", data.company) +
+          row("E-mail", data.email) +
+          row("Telefoon", data.phone) +
+          row("Deadline", data.deadline) +
+          row("Budget", data.budget) +
+          "</div>\n<div class=\"job\"><div class=\"k\">Job</div><div class=\"v\">" + escapeHtml(data.job) + "</div></div>\n" +
+          (data.notes ? "<div class=\"job\"><div class=\"k\">Notities</div><div class=\"v\">" + escapeHtml(data.notes) + "</div></div>\n" : "") +
+          "<footer>Mail: " + escapeHtml(MAILTO) + "</footer>\n" +
+          "</div>\n</main>\n</body>\n</html>\n";
+      }
+
+      function slug(name) {
+        var s = name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+        return s || "intake";
+      }
+
+      $("downloadBtn").addEventListener("click", function () {
+        var data = readForm();
+        var err = validate(data);
+        if (err) { setError(err); return; }
+        setError("");
+        var html = briefHtml(data);
+        if (html.indexOf("96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3") !== -1 || /<script/i.test(html)) {
+          setError("Download blocked: unexpected content.");
+          return;
+        }
+        var blob = new Blob([html], { type: "text/html;charset=utf-8" });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = "intake-" + slug(data.name) + ".html";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        $("status").textContent = "Downloaded " + a.download + ".";
+        $("status").classList.remove("hidden");
+      });
+
+      $("mailBtn").addEventListener("click", function () {
+        var data = readForm();
+        var err = validate(data);
+        if (err) { setError(err); return; }
+        setError("");
+        var subject = "Intake — " + data.name + (data.company ? " (" + data.company + ")" : "");
+        var href = "mailto:" + MAILTO +
+          "?subject=" + encodeURIComponent(subject) +
+          "&body=" + encodeURIComponent(bodyText(data));
+        window.location.href = href;
+        $("status").textContent = "Mailto opened to " + MAILTO + ".";
+        $("status").classList.remove("hidden");
+      });
+    })();
+  </script>
+</body>
+</html>
