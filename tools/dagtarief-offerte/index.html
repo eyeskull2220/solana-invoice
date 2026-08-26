@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dagtarief-offerte — 9 USDC</title>
+  <meta name="description" content="Belgian freelance day-rate quote. Dagtarief, days, optional 21% BTW. Download a standalone HTML offerte. 9 USDC on Solana. No account, no wallet connect. Not tax advice.">
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f4efe6;
+      --sheet: #fffcf7;
+      --ink: #1b1a17;
+      --muted: #5e5a53;
+      --line: #d9d3c7;
+      --accent: #0c4a36;
+      --accent-ink: #f4fff9;
+      --accent-soft: #e4f0ea;
+      --warn: #8a4b12;
+      --warn-bg: #fff6e8;
+      --warn-line: #ecd4a4;
+      --buy: #12241c;
+      --shadow: 0 18px 50px rgba(40, 32, 18, 0.08);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      font: 16px/1.45 ui-sans-serif, system-ui, -apple-system, sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+    }
+    .app {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 24px 16px 56px;
+      display: grid;
+      gap: 24px;
+    }
+    @media (min-width: 920px) {
+      .app { grid-template-columns: 340px 1fr; align-items: start; padding: 36px 24px 72px; }
+    }
+    .editor {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px 18px 20px;
+    }
+    .editor h1 {
+      margin: 0 0 4px;
+      font-size: 1.2rem;
+      letter-spacing: -0.03em;
+    }
+    .lead {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+    .buy {
+      background: var(--buy);
+      color: #e8f6ee;
+      border-radius: 12px;
+      padding: 14px;
+      margin: 0 0 16px;
+    }
+    .buy h2 {
+      margin: 0 0 6px;
+      font-size: 0.95rem;
+    }
+    .buy p {
+      margin: 0 0 8px;
+      font-size: 12px;
+      color: #b7cfc3;
+    }
+    .buy .addr {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      word-break: break-all;
+      background: #0b1712;
+      border-radius: 8px;
+      padding: 10px;
+      margin: 0 0 8px;
+    }
+    .buy button {
+      width: 100%;
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+    .buy .ok {
+      min-height: 1.2em;
+      margin: 8px 0 0;
+      font-size: 12px;
+      color: #9fe0c0;
+    }
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 12px 0 6px;
+    }
+    input, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font: 15px/1.4 ui-sans-serif, system-ui, sans-serif;
+      color: var(--ink);
+      background: #fff;
+    }
+    textarea { min-height: 72px; resize: vertical; }
+    input:focus, textarea:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 1px;
+    }
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .check {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 12px 0 0;
+      font-size: 14px;
+      font-weight: 550;
+      letter-spacing: 0;
+      text-transform: none;
+      color: var(--ink);
+    }
+    .check input { width: auto; }
+    .hint {
+      font-size: 12px;
+      color: var(--muted);
+      margin: 6px 0 0;
+    }
+    .disclaimer {
+      background: var(--warn-bg);
+      border: 1px solid var(--warn-line);
+      border-radius: 10px;
+      padding: 8px 10px;
+      color: var(--warn);
+      font-size: 12px;
+      margin: 12px 0 0;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    button {
+      appearance: none;
+      font: 650 14px/1.2 ui-sans-serif, system-ui, sans-serif;
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 14px;
+      cursor: pointer;
+    }
+    .primary { background: var(--accent); color: var(--accent-ink); flex: 1; }
+    .ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+    .sheet-wrap { display: flex; justify-content: center; }
+    .sheet {
+      width: min(720px, 100%);
+      background: var(--sheet);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      box-shadow: var(--shadow);
+      padding: 36px 32px 28px;
+      font-family: "Iowan Old Style", Palatino, "Palatino Linotype", Georgia, serif;
+    }
+    .top {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 18px;
+      margin-bottom: 22px;
+    }
+    .brand {
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-family: ui-sans-serif, system-ui, sans-serif;
+    }
+    .word { font-size: 1.85rem; letter-spacing: 0.08em; margin-top: 4px; }
+    .meta {
+      text-align: right;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .meta strong { display: block; color: var(--ink); font-weight: 650; }
+    .parties {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 0 0 22px;
+    }
+    @media (max-width: 560px) {
+      .parties { grid-template-columns: 1fr; }
+      .sheet { padding: 24px 18px 20px; }
+    }
+    .kicker {
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0 0 6px;
+    }
+    .party-name { font-size: 1.15rem; }
+    .party-note { margin: 4px 0 0; color: var(--muted); font-size: 0.95rem; white-space: pre-wrap; }
+    section.block { margin: 0 0 20px; }
+    .block p { margin: 0; white-space: pre-wrap; }
+    table.lines {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 14px;
+      margin: 0 0 8px;
+    }
+    table.lines th, table.lines td {
+      text-align: left;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+    table.lines th {
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 650;
+    }
+    table.lines .num { text-align: right; font-variant-numeric: tabular-nums; }
+    .price-box {
+      background: var(--accent-soft);
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin: 12px 0 20px;
+    }
+    .price-lines {
+      display: grid;
+      gap: 6px;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 14px;
+    }
+    .price-lines div {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .price-lines .total {
+      margin-top: 6px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(12, 74, 54, 0.18);
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+    .hidden { display: none !important; }
+    .empty { color: var(--muted); font-style: italic; }
+    .foot {
+      margin-top: 28px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    body.standalone {
+      background: #fff;
+      padding: 24px 12px;
+    }
+    body.standalone .sheet { box-shadow: none; margin: 0 auto; }
+    @media print {
+      body { background: #fff; }
+      .no-print { display: none !important; }
+      .app { display: block; padding: 0; }
+      .sheet { box-shadow: none; border: 0; width: 100%; padding: 10mm; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="editor no-print">
+      <h1>Dagtarief-offerte</h1>
+      <p class="lead">Belgian day-rate quote. Fill dagtarief, days, optional 21% BTW. Download a standalone HTML offerte. Works offline. Not tax advice.</p>
+
+      <section class="buy" aria-label="Pay for this tool">
+        <h2>This tool · 9 USDC on Solana</h2>
+        <p>USDC only. Not SOL. Not Base. Copy-address only. No wallet connect.</p>
+        <div class="addr" id="toolAddr">96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</div>
+        <p>Mint: EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v</p>
+        <button type="button" id="copyToolBtn">Copy address</button>
+        <p class="ok" id="copyToolStatus"></p>
+      </section>
+
+      <label for="freelancer">From (freelancer)</label>
+      <input id="freelancer" type="text" autocomplete="off" placeholder="Studio Noord" value="Studio Noord">
+
+      <label for="client">Client</label>
+      <input id="client" type="text" autocomplete="off" placeholder="Client BV" value="Client BV">
+
+      <label for="project">Project</label>
+      <input id="project" type="text" autocomplete="off" placeholder="Landing page" value="Landing page">
+
+      <label for="notes">Scope (optional)</label>
+      <textarea id="notes" placeholder="What the days cover.">Design and build one marketing landing page. Two revision rounds. Copy and photos supplied by the client.</textarea>
+
+      <div class="row">
+        <div>
+          <label for="rate">Dagtarief (EUR/day)</label>
+          <input id="rate" type="text" inputmode="decimal" autocomplete="off" placeholder="650" value="650">
+        </div>
+        <div>
+          <label for="days">Days</label>
+          <input id="days" type="text" inputmode="decimal" autocomplete="off" placeholder="8" value="8">
+        </div>
+      </div>
+      <label class="check">
+        <input id="btw" type="checkbox">
+        <span>Add 21% BTW (VAT)</span>
+      </label>
+      <p class="hint">Comma or dot decimals are fine (650,50 or 8,5).</p>
+
+      <div class="row">
+        <div>
+          <label for="issued">Date</label>
+          <input id="issued" type="date">
+        </div>
+        <div>
+          <label for="valid">Valid until (optional)</label>
+          <input id="valid" type="date">
+        </div>
+      </div>
+
+      <p class="disclaimer">Not tax advice. 21% is the common Belgian standard rate; confirm your own BTW regime before you send this offerte.</p>
+
+      <div class="actions">
+        <button class="primary" type="button" id="downloadBtn">Download HTML offerte</button>
+        <button class="ghost" type="button" id="printBtn">Print / Save PDF</button>
+      </div>
+      <p class="hint" id="dlStatus"></p>
+    </aside>
+
+    <div class="sheet-wrap">
+      <article class="sheet" id="sheet">
+        <header class="top">
+          <div>
+            <div class="brand">Dagtarief</div>
+            <div class="word">OFFERTE</div>
+          </div>
+          <div class="meta">
+            <div>Date <strong id="issuedOut"></strong></div>
+            <div id="validWrap" class="hidden">Valid until <strong id="validOut"></strong></div>
+          </div>
+        </header>
+
+        <div class="parties">
+          <div>
+            <div class="kicker">From</div>
+            <div class="party-name" id="freelancerOut"></div>
+          </div>
+          <div>
+            <div class="kicker">Client</div>
+            <div class="party-name" id="clientOut"></div>
+          </div>
+        </div>
+
+        <section class="block">
+          <div class="kicker">Project</div>
+          <p id="projectOut"></p>
+        </section>
+
+        <section class="block" id="notesWrap">
+          <div class="kicker">Scope</div>
+          <p id="notesOut"></p>
+        </section>
+
+        <table class="lines">
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th class="num">Days</th>
+              <th class="num">Dagtarief</th>
+              <th class="num">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Freelance days</td>
+              <td class="num" id="daysOut"></td>
+              <td class="num" id="rateOut"></td>
+              <td class="num" id="lineOut"></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <section class="price-box">
+          <div class="kicker">Totals (EUR)</div>
+          <div class="price-lines" id="priceOut"></div>
+        </section>
+
+        <footer class="foot">
+          Offerte in EUR. This is not an invoice and not tax advice. Confirm BTW with your accountant.
+        </footer>
+      </article>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var TOOL_PAY_TO = "96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3";
+      var PRICE_USDC = 9;
+      var ids = ["freelancer", "client", "project", "notes", "rate", "days", "btw", "issued", "valid"];
+
+      function el(id) { return document.getElementById(id); }
+
+      function todayISO() {
+        var d = new Date();
+        var m = String(d.getMonth() + 1);
+        var day = String(d.getDate());
+        if (m.length < 2) m = "0" + m;
+        if (day.length < 2) day = "0" + day;
+        return d.getFullYear() + "-" + m + "-" + day;
+      }
+
+      function formatDate(iso) {
+        if (!iso) return "";
+        var p = iso.split("-");
+        if (p.length !== 3) return iso;
+        var months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+        var mi = parseInt(p[1], 10) - 1;
+        return months[mi] + " " + parseInt(p[2], 10) + ", " + p[0];
+      }
+
+      function parseNumber(raw) {
+        var s = String(raw || "").trim().replace(/\s/g, "").replace(",", ".");
+        if (!s) return null;
+        if (!/^\d+(\.\d{0,2})?$/.test(s)) return false;
+        var n = Number(s);
+        if (!isFinite(n) || n < 0) return false;
+        return n;
+      }
+
+      function cents(n) {
+        return Math.round(n * 100);
+      }
+
+      function money(centsValue) {
+        var n = centsValue / 100;
+        var parts = n.toFixed(2).split(".");
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        return parts[0] + "," + parts[1] + " EUR";
+      }
+
+      function formatQty(n) {
+        if (n == null || n === false) return "";
+        if (Math.round(n * 100) % 100 === 0) return String(Math.round(n));
+        return n.toFixed(2).replace(".", ",");
+      }
+
+      function setText(id, value, fallback) {
+        var node = el(id);
+        var v = String(value || "").trim();
+        if (!v) {
+          node.innerHTML = '<span class="empty">' + fallback + "</span>";
+        } else {
+          node.textContent = v;
+        }
+      }
+
+      function copyText(text, statusEl, emptyMsg) {
+        if (!text) {
+          statusEl.textContent = emptyMsg || "Nothing to copy.";
+          return;
+        }
+        function ok() { statusEl.textContent = "Copied. Send exactly " + PRICE_USDC + " USDC on Solana."; }
+        function fail() { statusEl.textContent = "Copy failed. Select the address instead."; }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(ok).catch(fail);
+        } else {
+          fail();
+        }
+      }
+
+      function totals() {
+        var rate = parseNumber(el("rate").value);
+        var days = parseNumber(el("days").value);
+        if (el("rate").value.trim() === "" || el("days").value.trim() === "") {
+          return { ok: false, empty: true };
+        }
+        if (rate === false || days === false || rate <= 0 || days <= 0) {
+          return { ok: false, empty: false };
+        }
+        var excl = cents(rate * days);
+        var vat = el("btw").checked ? Math.round(excl * 21 / 100) : 0;
+        return {
+          ok: true,
+          rate: rate,
+          days: days,
+          excl: excl,
+          vat: vat,
+          incl: excl + vat,
+          withBtw: el("btw").checked
+        };
+      }
+
+      function line(box, label, value, total) {
+        var div = document.createElement("div");
+        if (total) div.className = "total";
+        var a = document.createElement("span");
+        a.textContent = label;
+        var b = document.createElement("span");
+        b.textContent = value;
+        div.appendChild(a);
+        div.appendChild(b);
+        box.appendChild(div);
+      }
+
+      function render() {
+        var issued = el("issued").value || todayISO();
+        el("issuedOut").textContent = formatDate(issued);
+        var valid = el("valid").value;
+        var validWrap = el("validWrap");
+        if (valid) {
+          validWrap.classList.remove("hidden");
+          el("validOut").textContent = formatDate(valid);
+        } else {
+          validWrap.classList.add("hidden");
+        }
+
+        setText("freelancerOut", el("freelancer").value, "Freelancer name");
+        setText("clientOut", el("client").value, "Client name");
+        setText("projectOut", el("project").value, "Project name");
+
+        var notes = el("notes").value.trim();
+        var notesWrap = el("notesWrap");
+        if (notes) {
+          notesWrap.classList.remove("hidden");
+          el("notesOut").textContent = notes;
+        } else {
+          notesWrap.classList.add("hidden");
+        }
+
+        var t = totals();
+        var box = el("priceOut");
+        box.innerHTML = "";
+        if (t.empty) {
+          el("daysOut").innerHTML = '<span class="empty">—</span>';
+          el("rateOut").innerHTML = '<span class="empty">—</span>';
+          el("lineOut").innerHTML = '<span class="empty">—</span>';
+          line(box, "excl. BTW", "Enter dagtarief and days");
+          line(box, "BTW 21%", "—");
+          line(box, "incl. BTW", "—", true);
+          return;
+        }
+        if (!t.ok) {
+          el("daysOut").innerHTML = '<span class="empty">—</span>';
+          el("rateOut").innerHTML = '<span class="empty">—</span>';
+          el("lineOut").innerHTML = '<span class="empty">—</span>';
+          line(box, "excl. BTW", "Use numbers, up to 2 decimals");
+          line(box, "BTW 21%", "—");
+          line(box, "incl. BTW", "—", true);
+          return;
+        }
+        el("daysOut").textContent = formatQty(t.days);
+        el("rateOut").textContent = money(cents(t.rate));
+        el("lineOut").textContent = money(t.excl);
+        line(box, "excl. BTW", money(t.excl));
+        line(box, t.withBtw ? "BTW 21%" : "BTW (not applied)", money(t.vat));
+        line(box, "incl. BTW", money(t.incl), true);
+      }
+
+      function sheetCss() {
+        var sheets = document.querySelectorAll("style");
+        var css = "";
+        var i;
+        for (i = 0; i < sheets.length; i++) css += sheets[i].textContent;
+        return css;
+      }
+
+      function slug(s) {
+        var t = String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+        return t || "dagtarief-offerte";
+      }
+
+      function downloadOfferte() {
+        render();
+        var sheet = el("sheet").cloneNode(true);
+        var title = (el("client").value.trim() || "offerte");
+        var html = "<!doctype html>\n<html lang=\"nl\">\n<head>\n<meta charset=\"utf-8\">\n" +
+          "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n" +
+          "<title>Offerte — " + title.replace(/[<>]/g, "") + "</title>\n<style>\n" + sheetCss() + "\n</style>\n</head>\n" +
+          "<body class=\"standalone\">\n" + sheet.outerHTML + "\n</body>\n</html>\n";
+        var blob = new Blob([html], { type: "text/html;charset=utf-8" });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = "offerte-" + slug(el("client").value) + ".html";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+        el("dlStatus").textContent = "Downloaded " + a.download + ". That file works offline.";
+      }
+
+      ids.forEach(function (id) {
+        var node = el(id);
+        node.addEventListener("input", render);
+        node.addEventListener("change", render);
+      });
+      el("copyToolBtn").addEventListener("click", function () {
+        copyText(TOOL_PAY_TO, el("copyToolStatus"), "Address missing.");
+      });
+      el("downloadBtn").addEventListener("click", downloadOfferte);
+      el("printBtn").addEventListener("click", function () { window.print(); });
+      el("toolAddr").textContent = TOOL_PAY_TO;
+      if (!el("issued").value) el("issued").value = todayISO();
+      render();
+    })();
+  </script>
+</body>
+</html>
