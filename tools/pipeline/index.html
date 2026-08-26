@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lead-to-invoice pipeline — 399 USDC</title>
+  <meta name="description" content="Offline lead form to offerte to Belgian BTW invoice to reminder. 399 USDC on Solana.">
+  <link rel="stylesheet" href="pipeline.css">
+</head>
+<body>
+  <div class="wrap">
+    <header class="brand">
+      <strong>Studio Noord</strong>
+      <span>Demo freelancer · Antwerpen</span>
+    </header>
+    <nav class="kit" aria-label="Kit">
+      <a href="index.html" aria-current="page">Kit</a>
+      <a href="form.html">Form</a>
+      <a href="offerte.html">Offerte</a>
+      <a href="invoice.html">Factuur</a>
+      <a href="reminder.html">Herinnering</a>
+    </nav>
+
+    <h1>Lead to invoice. One pipeline.</h1>
+    <p class="lead">
+      One offline flow: form → offerte → factuur → herinnering. Line items travel with the job.
+      Rebrand it and reuse it. Not four 9 USDC toys. Not a Peppol Access Point.
+      Not the 299 USDC one-client inbox pack.
+    </p>
+    <p class="price">399 USDC · Solana USDC</p>
+
+    <p class="warn">Pay USDC on Solana only. Copy the address. Do not send SOL, Base, ETH, or XRP. No wallet connect on this page.</p>
+
+    <section class="card" id="pay">
+      <h2>Pay 399 USDC on Solana</h2>
+      <p>Send exactly 399 USDC to:</p>
+      <div class="addr" id="addr">96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</div>
+      <p class="net">Network: Solana · Token: USDC · Mint: EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v</p>
+      <div class="actions">
+        <button type="button" class="primary" id="copyBtn">Copy address</button>
+        <button type="button" class="ghost" id="resetDemo">Reset demo</button>
+      </div>
+      <p class="ok" id="copyStatus"></p>
+    </section>
+
+    <section class="card">
+      <h2>What you get</h2>
+      <div class="chain" aria-hidden="true">
+        <span>1 Form</span><span class="arrow">→</span>
+        <span>2 Offerte</span><span class="arrow">→</span>
+        <span>3 Factuur</span><span class="arrow">→</span>
+        <span>4 Herinnering</span>
+      </div>
+      <div class="files">
+        <div class="file">
+          <div>
+            <h3>Lead form</h3>
+            <p>Capture the job. Download a brief. Push the lead into the offerte.</p>
+          </div>
+          <a class="btn ghost" href="form.html">Open form</a>
+        </div>
+        <div class="file">
+          <div>
+            <h3>Offerte</h3>
+            <p>Line items, 21% BTW default, live excl / BTW / incl. Download standalone HTML.</p>
+          </div>
+          <a class="btn ghost" href="offerte.html">Open offerte</a>
+        </div>
+        <div class="file">
+          <div>
+            <h3>Factuur</h3>
+            <p>Belgian BTW invoice. Same lines as the offerte. Download standalone HTML.</p>
+          </div>
+          <a class="btn ghost" href="invoice.html">Open factuur</a>
+        </div>
+        <div class="file">
+          <div>
+            <h3>Herinnering</h3>
+            <p>Overdue letter from the invoice totals. Download or mailto.</p>
+          </div>
+          <a class="btn ghost" href="reminder.html">Open reminder</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Demo only</h2>
+      <p>Fake studio: <strong>Studio Noord</strong>. Fake client: <strong>Client BV</strong>. Fake mail: <strong>hello@studio.example</strong> (RFC 2606). No Gmail. No live company inboxes. See <a href="README.md">README.md</a> to rebrand.</p>
+    </section>
+
+    <section class="card">
+      <h2>B2C PDF vs B2B Peppol</h2>
+      <p>B2C PDF-by-mail is still allowed. B2B PDF is <strong>not</strong> a legal invoice since 1 Jan 2026 (Peppol). We do not make them Peppol-compliant. We do not send Peppol. We do not run an Access Point.</p>
+    </section>
+
+    <section class="card">
+      <h2>What this is not</h2>
+      <ul class="plain refuse">
+        <li>Not a Peppol Access Point. We do not send live Peppol documents.</li>
+        <li>Not bookkeeping, VAT filings, or Azure AD work.</li>
+        <li>Not a leftover 9 USDC restack of Solana Invoice / BTW toy / dagtarief / reminder.</li>
+        <li>Not the 299 USDC inbox-ops pack (that one is one-client branding; this is the chained process).</li>
+        <li>We do not apply to coding jobs.</li>
+      </ul>
+    </section>
+
+    <section id="flow">
+      <h2>Probeer de pipeline</h2>
+      <p class="lead">Same demo data on this page. Form → offerte → factuur → herinnering. Totals stay in this browser only.</p>
+      <div id="mount"></div>
+    </section>
+
+    <footer class="page">
+      399 USDC on Solana. Pay-to <code>96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3</code>. Copy-address only.
+    </footer>
+  </div>
+  <script src="pipeline.js"></script>
+  <script>
+    Pipeline.bindSell();
+    Pipeline.mount("wizard");
+  </script>
+</body>
+</html>
