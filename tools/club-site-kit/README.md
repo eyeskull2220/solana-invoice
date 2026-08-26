@@ -6,9 +6,11 @@ Reusable static website kit for a Belgian club or vzw. One folder: HTML, CSS, JS
 
 **Pay-to:** `96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3`
 
+**Memo:** `club-site-900`
+
 **USDC mint:** `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`
 
-Copy-address on the demo (home pay box and footer). Do not send other assets.
+Copy-address on the demo (home pay box and footer). Solana Pay URI uses the same address, amount 900, mint, and memo. Do not send other assets.
 
 ## Demo
 
