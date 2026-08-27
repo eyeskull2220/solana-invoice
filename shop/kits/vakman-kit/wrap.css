@@ -1,0 +1,93 @@
+/* Chalkboard kit wrap. System stack. Not cream-card catalog. */
+:root {
+  --board: oklch(0.20 0.025 145);
+  --chalk: oklch(0.93 0.02 110);
+  --chalk-soft: oklch(0.82 0.03 110);
+  --brass: oklch(0.72 0.13 85);
+  --brass-ink: oklch(0.18 0.04 145);
+  --wood-edge: oklch(0.24 0.045 50);
+  --font-display: "Iowan Old Style", Palatino, "Palatino Linotype", Georgia, serif;
+  --font-body: "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  --gutter: clamp(1.15rem, 5vw, 2rem);
+  --measure: 42rem;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { font-size: 112.5%; }
+body {
+  margin: 0;
+  background: var(--board);
+  color: var(--chalk);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+a { color: inherit; text-underline-offset: 0.16em; }
+.wrap {
+  width: min(var(--measure), 100%);
+  margin-inline: auto;
+  padding: 1.2rem var(--gutter) 2.5rem;
+}
+.stamp {
+  display: inline-block;
+  margin: 0 0 0.65rem;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--brass);
+  color: var(--brass);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.45rem, 5vw, 2.1rem);
+  line-height: 1.15;
+}
+.lede { margin: 0.65rem 0 0; color: var(--chalk-soft); max-width: 36rem; }
+.price {
+  margin: 0.7rem 0 0;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.feat { margin: 1.1rem 0 0; padding-top: 0.85rem; border-top: 1px solid oklch(0.55 0.03 145); }
+.feat h2 {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.15rem;
+}
+.feat p, .feat li { color: var(--chalk-soft); }
+.feat ul { margin: 0.35rem 0 0; padding-left: 1.2rem; }
+.actions, .feat-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 1rem;
+  margin: 0.85rem 0 0;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.65rem 1.1rem;
+  background: var(--brass);
+  color: var(--brass-ink);
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 2px;
+  box-shadow: 0 2px 0 var(--wood-edge);
+}
+.btn.ghost {
+  background: transparent;
+  color: var(--chalk);
+  box-shadow: inset 0 0 0 1px var(--chalk-soft);
+}
+.colophon {
+  margin-top: 1.4rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid oklch(0.55 0.03 145);
+  color: var(--chalk-soft);
+  font-size: 0.95rem;
+}
+.colophon a { min-height: 44px; display: inline-flex; align-items: center; }

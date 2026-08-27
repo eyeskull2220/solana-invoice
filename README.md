@@ -1,20 +1,28 @@
-# Treasury tools
+# SovereignForge — OFFERTE-kits
 
-One-file HTML tools. No accounts. No wallet connect on these pages. No trading. USDC on Solana only — not XRP, not SOL.
+Public shop face (euro, chalkboard): [`shop/sovereignforge/`](shop/sovereignforge/). Same pages also sit at the repo root so a Surge project from `.` is the Belgian shop.
 
-**Treasury Solana USDC address:** `96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3`
+**Stempel: OFFERTE.** Geen wettelijke factuur. KBO/BTW: nog niet toegekend.
 
-**USDC mint:** `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`
+## Shop pages
 
-Pay page (this repo): [`index.html`](index.html) · Catalog: [`catalog.html`](catalog.html)
+- Home — [`shop/sovereignforge/index.html`](shop/sovereignforge/index.html)
+- Catalogus — [`shop/sovereignforge/catalog.html`](shop/sovereignforge/catalog.html)
+- Pakketten — [`shop/sovereignforge/pakketten.html`](shop/sovereignforge/pakketten.html)
+- Betalen — [`shop/sovereignforge/betalen.html`](shop/sovereignforge/betalen.html) (betaalgegevens na akkoord)
+- Contact — [`shop/sovereignforge/contact.html`](shop/sovereignforge/contact.html)
+- Privacy — [`shop/sovereignforge/privacy.html`](shop/sovereignforge/privacy.html)
+- `robots.txt` — `Allow: /`
 
-Live catalog: https://treasury-tools.surge.sh/
+Prijzen in hele euro: €199 / €249 / €299 / €349 / €900.
 
-## Live tools
+## Live voorbeelden
 
-- [Solana Invoice](https://solana-invoice-treasury.surge.sh/) — one HTML file, 9 USDC. Amount, QR, copy-address. Offline. No account. Source: [`solana-invoice.html`](solana-invoice.html)
-- [CSV Cleaner](https://csv-cleaner-treasury.surge.sh/) — trim, drop empty/duplicate rows, pick columns. 49 USDC.
-- [Form to Email](https://form-to-email-treasury.surge.sh/) — mailto + copy form builder. 49 USDC.
-- [RSS to Webhook](https://rss-to-webhook-treasury.surge.sh/) — check a feed, POST new items as JSON. 49 USDC.
+- [Club- of vzw-site](https://club-site-kit-treasury.surge.sh/) — €900
+- [Menukaart + allergenen](https://menu-kit-treasury.surge.sh/) — €199
+- [Sponsorblad vzw](https://sponsor-kit-treasury.surge.sh/) — €199
+- [Vakman one-pager](https://vakman-kit-treasury.surge.sh/) — €249
+- [Inbox-ops](https://inbox-ops-treasury.surge.sh/) — €299
+- [Lid-inschrijving](https://lid-kit-treasury.surge.sh/) — €349
 
-Send USDC on Solana to the treasury address above (or copy it from the pay page). These pages do not trade.
+The one-file editor remains [`solana-invoice.html`](solana-invoice.html). Kit checkout is [`kit-pay.html`](kit-pay.html), unlinked from the sales face.
