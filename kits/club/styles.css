@@ -413,48 +413,6 @@ table.train tbody tr:last-child td { border-bottom: 0; }
   font-family: ui-sans-serif, system-ui, sans-serif;
 }
 
-/* —— pay box (kit, not club) —— */
-.paybox {
-  background: var(--water-deep);
-  color: var(--foam);
-  border-radius: var(--radius);
-  padding: 18px 16px;
-  border: 1px solid #1c4a66;
-}
-
-.paybox h2,
-.paybox .kicker { color: var(--lane); }
-
-.paybox p { margin: 0 0 10px; color: #d5e0e8; }
-
-.addr {
-  display: block;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 13px;
-  word-break: break-all;
-  background: #081c2a;
-  border: 1px solid #1c4a66;
-  border-radius: 4px;
-  padding: 12px;
-  color: var(--foam);
-  margin: 0 0 12px;
-}
-
-.copy-status {
-  min-height: 1.2em;
-  margin: 8px 0 0;
-  font-size: 14px;
-  color: var(--lane);
-}
-
-.copy-status.is-err { color: #f0b4a8; }
-
-.paybox .fine {
-  margin: 10px 0 0;
-  font-size: 12px;
-  color: #9bb0be;
-}
-
 /* —— contact —— */
 .mailto {
   word-break: break-all;
@@ -489,15 +447,6 @@ table.train tbody tr:last-child td { border-bottom: 0; }
   font-family: Georgia, serif;
   font-size: 1.05rem;
   margin-bottom: 6px;
-}
-
-.foot-pay {
-  font-size: 13px;
-}
-
-.foot-pay .addr {
-  margin-top: 8px;
-  font-size: 12px;
 }
 
 /* —— editor extras —— */
