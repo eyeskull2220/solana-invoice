@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Contact — SovereignForge</title>
+  <meta name="description" content="Mail een OFFERTE. Formulier opent uw mailprogramma. Niets naar een server. hello@studio.example">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#inhoud">Naar inhoud</a>
+  <header class="site-header" data-header>
+    <div class="bar">
+      <a class="brand" href="index.html">
+        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+          <rect x="2" y="21" width="28" height="7" fill="#e8eef2"/>
+          <rect x="11" y="5" width="10" height="18" fill="#ff3d12"/>
+          <rect x="23" y="3" width="5" height="5" fill="#e0b44a"/>
+        </svg>
+        <span>SovereignForge<small>Kempen · HTML die u zelf host</small></span>
+      </a>
+      <button type="button" class="nav-toggle" data-nav-toggle aria-expanded="false" aria-controls="menu">Menu</button>
+    </div>
+    <nav id="menu" class="menu" data-nav>
+      <a href="index.html">Home</a>
+      <a href="pakketten.html">Pakketten</a>
+      <a href="betalen.html">Betalen</a>
+      <a href="contact.html" aria-current="page">Contact</a>
+      <a href="privacy.html">Privacy</a>
+    </nav>
+  </header>
+
+  <main id="inhoud">
+    <section class="hero">
+      <div class="wrap">
+        <p class="kicker">Mail eerst</p>
+        <h1>Eén adres. Niets naar een server.</h1>
+        <p class="lead">Het formulier opent uw eigen mailprogramma naar hello@studio.example. Telefoon en straat staan hier niet — die horen in een latere, echte OFFERTE, niet op een publieke demo-inbox.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap split">
+        <form id="mail-form" novalidate>
+          <label for="naam">Naam</label>
+          <input id="naam" name="naam" type="text" autocomplete="name" required>
+
+          <label for="zaak">Zaak of club (optioneel)</label>
+          <input id="zaak" name="zaak" type="text" autocomplete="organization">
+
+          <label for="pakket">Pakket</label>
+          <select id="pakket" name="pakket" required>
+            <option value="">Kies een pakket</option>
+            <option value="menu">Menukaart — €199</option>
+            <option value="sponsor">Sponsorblad — €199</option>
+            <option value="vakman">Vakman — €249</option>
+            <option value="inbox">Inbox-ops — €299</option>
+            <option value="lid">Lidformulier — €349</option>
+            <option value="club">Clubsite — €900</option>
+          </select>
+
+          <label for="bericht">Bericht</label>
+          <textarea id="bericht" name="bericht" placeholder="Wanneer hebt u het blad nodig? Voor welke zaak?"></textarea>
+          <p class="hint">Er gaat niets naar een server. Onderwerp wordt OFFERTE plus het pakket.</p>
+          <p style="margin-top:1rem">
+            <button class="btn btn-ember" type="submit">Open mailprogramma</button>
+          </p>
+          <p class="status" id="form-status" role="status"></p>
+        </form>
+
+        <aside class="legal">
+          <p><strong>SovereignForge</strong><br>Kempen (Geel) · atelier</p>
+          <p>E-mail: <a href="mailto:hello@studio.example">hello@studio.example</a> (RFC 2606, geen echte inbox tot we een werkadres zetten).</p>
+          <p>Geen GSM op deze pagina. Geen huisadres. KBO/BTW: nog niet toegekend.</p>
+          <p><a href="betalen.html">Hoe betalen in euro werkt</a></p>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <nav aria-label="Voet">
+        <a href="index.html">Home</a>
+        <a href="pakketten.html">Pakketten</a>
+        <a href="betalen.html">Betalen</a>
+        <a href="privacy.html">Privacy</a>
+      </nav>
+      <p>SovereignForge · hello@studio.example · © <span data-year>2026</span></p>
+    </div>
+  </footer>
+
+  <div class="dock" aria-label="Snel">
+    <a class="btn btn-ghost" href="pakketten.html">Pakketten</a>
+    <a class="btn btn-ember" href="mailto:hello@studio.example?subject=OFFERTE">Mail direct</a>
+  </div>
+  <script src="site.js"></script>
+</body>
+</html>
