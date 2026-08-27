@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="robots" content="index,follow" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Voorbeeldloodgieter — OFFERTE</title>
+  <meta name="description" content="Nederlands OFFERTE-blad van Voorbeeldloodgieter. Ontstopping, kraan, boiler-check. Stempel OFFERTE. Geen wettelijke factuur." />
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f1ea;
+      --ink: #161513;
+      --muted: #5c5850;
+      --line: #d8d2c6;
+      --card: #fffdf8;
+      --accent: #123c2e;
+      --soft: #e7efe9;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      color: var(--ink);
+      background: var(--bg);
+      font: 16px/1.45 "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    }
+    .bar { height: 10px; background: var(--accent); }
+    .sheet {
+      width: min(720px, calc(100% - 28px));
+      margin: 22px auto 40px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      padding: 28px 28px 22px;
+      position: relative;
+    }
+    .stamp {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      border: 2px solid var(--accent);
+      color: var(--accent);
+      font: 700 13px/1 ui-sans-serif, system-ui, sans-serif;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      padding: 7px 10px;
+      transform: rotate(-8deg);
+      background: #fffdf8;
+    }
+    .kicker {
+      margin: 0 0 6px;
+      font: 600 11px/1.2 ui-sans-serif, system-ui, sans-serif;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    h1 {
+      margin: 0 0 4px;
+      font-size: clamp(1.7rem, 4.6vw, 2.2rem);
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+    }
+    .place {
+      margin: 0 0 16px;
+      color: var(--muted);
+      font: 14px/1.45 ui-sans-serif, system-ui, sans-serif;
+    }
+    .meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 0 0 18px;
+      font: 13.5px/1.45 ui-sans-serif, system-ui, sans-serif;
+    }
+    .meta h2 {
+      margin: 0 0 4px;
+      font: 650 12px/1.2 ui-sans-serif, system-ui, sans-serif;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .meta p { margin: 0 0 2px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0 0 14px;
+      font: 14.5px/1.4 ui-sans-serif, system-ui, sans-serif;
+    }
+    th, td {
+      text-align: left;
+      padding: 8px 0;
+      border-bottom: 1px dotted #e4ddd0;
+      vertical-align: top;
+    }
+    th {
+      font: 650 11px/1.2 ui-sans-serif, system-ui, sans-serif;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border-bottom: 1px solid var(--line);
+    }
+    td.eur, th.eur { text-align: right; white-space: nowrap; }
+    .totals {
+      width: min(280px, 100%);
+      margin-left: auto;
+      font: 14.5px/1.45 ui-sans-serif, system-ui, sans-serif;
+    }
+    .totals div {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 5px 0;
+    }
+    .totals .sum {
+      border-top: 1px solid var(--line);
+      margin-top: 4px;
+      padding-top: 8px;
+      font-weight: 650;
+    }
+    .note {
+      margin: 16px 0 0;
+      padding: 10px 12px;
+      background: #fff8ee;
+      border: 1px solid #ecd4a4;
+      color: #5a3d12;
+      font: 13px/1.45 ui-sans-serif, system-ui, sans-serif;
+    }
+    footer {
+      margin-top: 16px;
+      color: var(--muted);
+      font: 13px/1.5 ui-sans-serif, system-ui, sans-serif;
+    }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.92em; }
+    .back {
+      width: min(720px, calc(100% - 28px));
+      margin: 0 auto 8px;
+      font: 14px/1.4 ui-sans-serif, system-ui, sans-serif;
+    }
+    .back a { color: var(--accent); }
+    @page { size: A4; margin: 12mm; }
+    @media print {
+      body { background: #fff; }
+      .bar, .stamp {
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+      .sheet {
+        width: auto;
+        margin: 0;
+        border: 0;
+        padding: 0;
+      }
+      .back, .no-print { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bar"></div>
+  <p class="back no-print"><a href="index.html">← Terug naar het pakket</a> · Afdrukken of bewaren als PDF via uw browser.</p>
+  <main class="sheet">
+    <p class="stamp" data-doc-stamp="OFFERTE">OFFERTE</p>
+    <p class="kicker">Studio Noord · voorbeeldzaak</p>
+    <h1>Voorbeeldloodgieter</h1>
+    <p class="place">Noorderlaan 12 · 2030 Antwerpen · <span class="mono">hello@studio.example</span></p>
+
+    <div class="meta">
+      <div>
+        <h2>Van</h2>
+        <p>Voorbeeldloodgieter</p>
+        <p>Noorderlaan 12 · 2030 Antwerpen</p>
+        <p><span class="mono">hello@studio.example</span></p>
+        <p>KBO/BTW: nog niet toegekend</p>
+        <p>IBAN: nog niet toegekend</p>
+      </div>
+      <div>
+        <h2>Aan (voorbeeld)</h2>
+        <p>Voorbeeldklant</p>
+        <p>Klusadres in te vullen</p>
+        <p>Document: OFF-VB-2026-001</p>
+        <p>Datum: 27 augustus 2026</p>
+        <p>Geldig tot: 27 september 2026</p>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Dienst</th>
+          <th>Omschrijving (voorbeeld)</th>
+          <th class="eur">Prijsindicatie</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Ontstopping</td>
+          <td>Keukenafvoer of wastafel, standaardbezoek overdag.</td>
+          <td class="eur">€ 95</td>
+        </tr>
+        <tr>
+          <td>Kraan</td>
+          <td>Kraan vervangen of herstellen. Kraan zelf niet inbegrepen.</td>
+          <td class="eur">€ 120</td>
+        </tr>
+        <tr>
+          <td>Boiler-check</td>
+          <td>Controle en onderhoud boiler, visuele check + spoelen.</td>
+          <td class="eur">€ 85</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="totals">
+      <div><span>Subtotaal (voorbeeld)</span><span>€ 300</span></div>
+      <div><span>BTW</span><span>n.v.t.</span></div>
+      <div class="sum"><span>Totaal voorbeeld</span><span>€ 300</span></div>
+    </div>
+
+    <p class="note">Dit blad is een <strong>OFFERTE</strong> / <strong>VOORBEELD</strong>, geen wettelijke factuur. De eurobedragen zijn een prijsindicatie. KBO/BTW: nog niet toegekend. Niet bindend tot een echte zaak met eigen nummer het blad overneemt.</p>
+
+    <footer>
+      Voorbeeldloodgieter · <span class="mono">hello@studio.example</span>
+      · KBO/BTW: nog niet toegekend
+      · Stempel OFFERTE · <a href="https://sovereignforge.surge.sh/privacy.html">Privacy</a>
+    </footer>
+  </main>
+</body>
+</html>

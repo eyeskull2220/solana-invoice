@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="robots" content="index,follow" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Voorbeeldkeuken — menukaart VOORBEELD</title>
+  <meta name="description" content="Nederlandse voorbeeld-menukaart van Voorbeeldkeuken, met allergenencodes en QR. Stempel VOORBEELD. Geen wettelijke factuur." />
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f1ea;
+      --ink: #161513;
+      --muted: #5c5850;
+      --line: #d8d2c6;
+      --card: #fffdf8;
+      --accent: #123c2e;
+      --soft: #e7efe9;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      color: var(--ink);
+      background: var(--bg);
+      font: 16px/1.45 "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    }
+    .bar { height: 10px; background: var(--accent); }
+    .sheet {
+      width: min(720px, calc(100% - 28px));
+      margin: 22px auto 40px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      padding: 28px 28px 22px;
+      position: relative;
+    }
+    .stamp {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      border: 2px solid var(--accent);
+      color: var(--accent);
+      font: 700 13px/1 ui-sans-serif, system-ui, sans-serif;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      padding: 7px 10px;
+      transform: rotate(-8deg);
+      background: #fffdf8;
+    }
+    .kicker {
+      margin: 0 0 6px;
+      font: 600 11px/1.2 ui-sans-serif, system-ui, sans-serif;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    h1 {
+      margin: 0 0 4px;
+      font-size: clamp(1.8rem, 5vw, 2.4rem);
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+    }
+    .place {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font: 14px/1.45 ui-sans-serif, system-ui, sans-serif;
+    }
+    h2 {
+      margin: 18px 0 8px;
+      font-size: 1.05rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 4px;
+    }
+    .item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px 16px;
+      padding: 8px 0;
+      border-bottom: 1px dotted #e4ddd0;
+    }
+    .item h3 { margin: 0; font-size: 1.02rem; font-weight: 650; }
+    .item p {
+      margin: 2px 0 0;
+      grid-column: 1;
+      color: var(--muted);
+      font: 13.5px/1.4 ui-sans-serif, system-ui, sans-serif;
+    }
+    .codes {
+      font: 650 12px/1.2 ui-sans-serif, system-ui, sans-serif;
+      color: var(--accent);
+      letter-spacing: 0.02em;
+    }
+    .eur { font: 650 15px/1.2 ui-sans-serif, system-ui, sans-serif; color: var(--ink); }
+    .qr {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 18px 0 0;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--soft);
+    }
+    .qr img { width: 112px; height: 112px; display: block; background: #f4f1ea; }
+    .qr p { margin: 0 0 6px; font: 13.5px/1.4 ui-sans-serif, system-ui, sans-serif; color: var(--ink); }
+    .qr .url {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      word-break: break-all;
+      color: var(--accent);
+    }
+    .legend {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font: 12.5px/1.45 ui-sans-serif, system-ui, sans-serif;
+    }
+    .note {
+      margin: 14px 0 0;
+      padding: 10px 12px;
+      background: #fff8ee;
+      border: 1px solid #ecd4a4;
+      color: #5a3d12;
+      font: 13px/1.45 ui-sans-serif, system-ui, sans-serif;
+    }
+    footer { margin-top: 16px; color: var(--muted); font: 13px/1.5 ui-sans-serif, system-ui, sans-serif; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.92em; }
+    .back {
+      width: min(720px, calc(100% - 28px));
+      margin: 0 auto 28px;
+      font: 14px/1.4 ui-sans-serif, system-ui, sans-serif;
+    }
+    .back a { color: var(--accent); }
+    @page { size: A4; margin: 12mm; }
+    @media print {
+      body { background: #fff; }
+      .bar, .stamp, .qr img { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+      .sheet { width: auto; margin: 0; border: 0; padding: 0; }
+      .back, .no-print { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bar"></div>
+  <p class="back no-print"><a href="index.html">← Terug naar het pakket</a> · <a href="allergenen.html">Allergenenlijst</a> · Afdrukken of bewaren als PDF via uw browser.</p>
+  <main class="sheet">
+    <p class="stamp" data-doc-stamp="VOORBEELD">VOORBEELD</p>
+    <p class="kicker">Studio Noord · voorbeeldzaak</p>
+    <h1>Voorbeeldkeuken</h1>
+    <p class="place">Noorderlaan 12 · 2030 Antwerpen · <span class="mono">hello@studio.example</span></p>
+
+    <h2>Voorgerechten</h2>
+    <div class="item"><div><h3>Soep van het seizoen <span class="codes">G · SE</span></h3><p>Dagverse groenten, kruidenolie, zuurdesembrood.</p></div><span class="eur">€ 9</span></div>
+    <div class="item"><div><h3>Bietencarpaccio <span class="codes">ME · NO</span></h3><p>Geitenkaas, walnoot, rucola, sinaasdressing.</p></div><span class="eur">€ 13</span></div>
+    <div class="item"><div><h3>Garnalenkroketten <span class="codes">G · SC · EI · ME</span></h3><p>Twee stuks, citroenmayonnaise, klein slaatje.</p></div><span class="eur">€ 15</span></div>
+
+    <h2>Hoofdgerechten</h2>
+    <div class="item"><div><h3>Gebakken kabeljauw <span class="codes">VI · ME</span></h3><p>Preipuree, kappertjesboter, groene asperges.</p></div><span class="eur">€ 27</span></div>
+    <div class="item"><div><h3>Stoofvlees van rund <span class="codes">G · SE · MO · SU</span></h3><p>Donker bier, mosterd, frieten of puree.</p></div><span class="eur">€ 26</span></div>
+    <div class="item"><div><h3>Groenterisotto <span class="codes">ME</span></h3><p>Seizoengroenten, parmezaan, citroenzeste.</p></div><span class="eur">€ 22</span></div>
+    <div class="item"><div><h3>Kip van de pan <span class="codes">ME · SU</span></h3><p>Tijmjus, gebakken aardappel, slaatje.</p></div><span class="eur">€ 24</span></div>
+
+    <h2>Desserts</h2>
+    <div class="item"><div><h3>Chocolademousse <span class="codes">EI · ME · SO</span></h3><p>Puur, zeezout, slagroom.</p></div><span class="eur">€ 9</span></div>
+    <div class="item"><div><h3>Citroentaart <span class="codes">G · EI · ME</span></h3><p>Kortekorst, meringue, framboos.</p></div><span class="eur">€ 9</span></div>
+    <div class="item"><div><h3>Kaasplankje <span class="codes">G · ME · NO</span></h3><p>Drie kazen, confituur, notenbrood.</p></div><span class="eur">€ 12</span></div>
+
+    <h2>Dranken</h2>
+    <div class="item"><div><h3>Huiswijn, glas <span class="codes">SU</span></h3><p>Wit of rood. Fles op vraag.</p></div><span class="eur">€ 6</span></div>
+    <div class="item"><div><h3>Ambachtelijk bier <span class="codes">G</span></h3><p>Wisselend vat of fles, 33 cl.</p></div><span class="eur">€ 5</span></div>
+    <div class="item"><div><h3>Koffie of thee</h3><p>Filterkoffie, espresso of kruidenthee.</p></div><span class="eur">€ 3</span></div>
+    <div class="item"><div><h3>Plat of bruisend water</h3><p>Karaf voor twee.</p></div><span class="eur">€ 4</span></div>
+
+    <div class="qr">
+      <img src="allergenen-qr.png" width="112" height="112" alt="QR-code naar de allergenenlijst" />
+      <div>
+        <p><strong>Allergenenlijst</strong> — scan de QR of open de URL.</p>
+        <p class="url">https://menu-kit-treasury.surge.sh/allergenen.html</p>
+        <p>Codes: G gluten · SC schaaldieren · EI eieren · VI vis · PI pinda’s · SO soja · ME melk · NO noten · SE selderij · MO mosterd · SES sesam · SU sulfiet · LU lupine · WE weekdieren</p>
+      </div>
+    </div>
+    <p class="legend">Dit blad is een <strong>VOORBEELD</strong>. De codes zijn een demo, geen juridisch advies en geen volledige wettelijke etikettering.</p>
+    <p class="note">Prijzen zijn voorbeeldbedragen in euro, inclusief service. Dit blad is geen wettelijke factuur.</p>
+    <footer>
+      Voorbeeldkeuken · Noorderlaan 12 · 2030 Antwerpen · <span class="mono">hello@studio.example</span><br />
+      KBO/BTW: nog niet toegekend · <a href="https://sovereignforge.surge.sh/privacy.html">Privacy</a>
+    </footer>
+  </main>
+</body>
+</html>
