@@ -1,0 +1,163 @@
+:root {
+  color-scheme: light;
+  --bg: #f6f3ee;
+  --card: #ffffff;
+  --ink: #1b1a17;
+  --muted: #5e5a53;
+  --line: #d9d3c7;
+  --accent: #0c4a36;
+  --accent-ink: #f4fff9;
+  --soft: #e4f0ea;
+  --stamp: #8a4b12;
+  --shadow: 0 14px 40px rgba(40, 32, 18, 0.07);
+  --radius: 14px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  min-height: 100vh;
+  font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+}
+a { color: var(--accent); }
+.wrap {
+  width: min(720px, 100%);
+  margin: 0 auto;
+  padding: 24px 16px 72px;
+}
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+.brand {
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  text-decoration: none;
+  color: var(--ink);
+}
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+}
+.links a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+.links a[aria-current="page"],
+.links a:hover { color: var(--ink); }
+h1 {
+  margin: 0 0 8px;
+  font-size: clamp(1.6rem, 4vw, 2.1rem);
+  letter-spacing: -0.03em;
+}
+.lead {
+  margin: 0 0 18px;
+  color: var(--muted);
+  max-width: 42rem;
+}
+.stamp {
+  display: inline-block;
+  margin: 0 0 16px;
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff6e8;
+  color: var(--stamp);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+  margin: 0 0 14px;
+}
+.pack {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px 16px;
+}
+.pack h2 {
+  margin: 0 0 4px;
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+}
+.pack p, .card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+.pack ul {
+  margin: 10px 0 0;
+  padding: 0 0 0 1.15em;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+.price {
+  display: inline-block;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--soft);
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 18px 0 8px;
+}
+a.btn, .btn {
+  display: inline-block;
+  font: 650 15px/1.2 ui-sans-serif, system-ui, sans-serif;
+  border-radius: 10px;
+  padding: 11px 14px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  text-decoration: none;
+}
+a.btn.ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+.note {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin: 0 0 18px;
+}
+.note p { margin: 0; color: var(--ink); font-size: 0.95rem; }
+footer {
+  margin-top: 28px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 13px;
+}
+footer p { margin: 0 0 6px; }
+.grid {
+  display: grid;
+  gap: 14px;
+}
+@media (min-width: 640px) {
+  .grid.two { grid-template-columns: 1fr 1fr; }
+}
