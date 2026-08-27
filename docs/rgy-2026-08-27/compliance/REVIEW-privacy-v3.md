@@ -1,67 +1,72 @@
 # REVIEW — Privacy STORE Versie 3
 
 **Seat:** reviewer batch (docs only)  
-**Date:** 2026-08-27  
-**Artifact:** STORE Versie 3 Dutch fill-in + CEO public design-out for the live sentence  
-**Verdict:** **GREEN** (fill-in package only)  
+**Date:** 2026-08-27 (re-score)  
+**Artifact:** STORE Versie 3 Dutch fill-in + CEO public EER sentence  
+**Verdict:** **GREEN**  
 **Not a lawyer. Not a stamp.**
 
-Scored **from zero** against Versie 3. Versie 2 colours are not reused.
+Scored from the Versie 3 text in this batch only. No earlier fill-in is the score.
 
 ---
 
-## What was scored
+## Artifact (this batch)
 
-STORE Versie 3, as given in this batch:
+| Line | Text |
+| --- | --- |
+| Trackers | Wij zetten zelf geen cookies, pixels of analytics. Of Surge of de mailhost logs of cookies zet, is niet geverifieerd. |
+| EER (STORE) | Offerte-mail loopt via Gmail. Deze pagina noemt geen SCC- of adequacy-claim. |
+| EER (live, Builder) | Offerte-mail loopt via Gmail, een dienst buiten de EER. Alleen om uw vraag te beantwoorden. |
+| Wie | Sasha · Geel · sasha.de.vree.rene@gmail.com |
+| Host | one page on sovereignforge.surge.sh |
+| Locks | no AVG badge · no banner · no USDC / IBAN / card |
 
-- Trackers: `Wij zetten zelf geen cookies, pixels of analytics. Of Surge of de mailhost logs of cookies zet, is niet geverifieerd.`
-- EER (fill-in): `Offerte-mail loopt via Gmail. Deze pagina noemt geen SCC- of adequacy-claim.`
-- CEO public design-out (what Builder ships on the live page): `Offerte-mail loopt via Gmail, een dienst buiten de EER. Alleen om uw vraag te beantwoorden.` — no SCC / adequacy words on the live page.
-- Fill-ins: Sasha, Geel, `sasha.de.vree.rene@gmail.com`.
-- One privacy page on `sovereignforge.surge.sh`.
-- No AVG badge, no banner, no USDC / IBAN / card.
+Live `https://sovereignforge.surge.sh/privacy.html` this run is still labelled **Versie 1** and still contains “Betaling is on-chain in USDC”. That page is **not** this artifact.
 
-Sections not restated in the Versie 3 delta (Wat / gegevens / OFFERTE / geen FACTUUR / bewaartermijn / no profiling / rechten / GBA) are treated as **still in STORE** unless a later batch drops them. This score does not invent their sentences.
+---
 
-Live `privacy.html` Versie 1 is **not** this artifact. It still contains “Betaling is on-chain in USDC”. That would fail USDC-lead if it were the object. It is not.
+## This-run checks (2026-08-27)
+
+| Check | Result |
+| --- | --- |
+| Privacy HTML `<script>` / gtag / analytics hosts | none in the live file |
+| `Set-Cookie` on `GET /privacy.html` | none |
+| Live privacy copy vs this fill-in | different document (Versie 1) |
+| Shop home link to `/privacy.html` | present |
+| First-party USDC / IBAN / card in **this fill-in** | none |
+
+A quiet `Set-Cookie` on one GET is not a Surge or Gmail audit. The tracker line already says that is unverified.
 
 ---
 
 ## Scorecard
 
-| # | Cell | Score | Why (Versie 3 only) |
-| --- | --- | --- | --- |
-| 1 | USDC-lead | **GREEN** | No USDC / IBAN / card in the fill-in or the public design-out. |
-| 2 | Who / contact | **GREEN** | Sasha, Geel, locked mail. Geen DPO was already the STORE shape. First name only is a note, not a yellow on this fill-in. |
-| 3 | Trackers | **GREEN** | First-party claim is limited to “wij zetten zelf geen…”. Host / mailhost logs or cookies are **niet geverifieerd**, which matches this-run evidence (static HTML, no first-party script; one privacy GET without `Set-Cookie`; no Surge audit). |
-| 4 | EER | **GREEN** | Placeholder is gone. Fill-in names Gmail and refuses SCC / adequacy theatre. Public sentence states Gmail is outside the EER and is only used to answer the question. |
-| 5 | Badge / banner | **GREEN** | None. |
-| 6 | One page | **GREEN** as a copy lock (the shop origin already has `/privacy.html` as the slot). |
+| Cell | Score | Why |
+| --- | --- | --- |
+| Trackers | **GREEN** | First-party claim is only “wij zetten zelf geen cookies, pixels of analytics.” Host and mailhost are explicitly **niet geverifieerd**. No banner. |
+| EER | **GREEN** | STORE names Gmail and refuses SCC / adequacy words. Live sentence adds that Gmail is outside the EER and is only used to answer the question. No empty heading. |
+| Wie / contact | **GREEN** | Sasha, Geel, and the Gmail are filled. |
+| USDC / IBAN / card | **GREEN** | None in the fill-in or the public sentence. |
+| Badge / banner | **GREEN** | None. |
+| One page | **GREEN** | Lock is a single page on the shop origin. |
 
-**Overall: GREEN** for the STORE Versie 3 fill-in plus the locked public EER sentence.
+**Overall: GREEN.**
 
-GREEN here means: the **yellows this batch named** (USDC-lead, tracker overclaim, EER `[Invullen]`) are closed in the copy. It does **not** mean the live page is green. It does not mean AVG-conform.
+GREEN means this copy no longer over-claims trackers, no longer ships an empty EER line, names who to mail, and does not put USDC / IBAN / card on the privacy page. It does not mean the live Versie 1 page is green. It does not mean AVG-conform.
 
 ---
 
 ## Notes (not colours)
 
-1. **Live is still Versie 1.** Until Builder ships this copy to `sovereignforge.surge.sh/privacy.html`, the public text still leads with USDC. That is a ship task, not a leftover yellow **on this fill-in**.
-
-2. **“Sasha” is not a civil-name stamp.** The fill-in uses a first name plus Geel plus the Gmail. A later human page may write a full name. This batch filled the blank it was given.
-
-3. **“Een dienst buiten de EER” is the locked public sentence**, not a legal classification of Google Ireland vs onward US transfer. This seat does not stamp that wording. It scores that the page no longer ships `[Invullen]` or an SCC / adequacy claim.
-
-4. **Kits** were not in the Versie 3 lock list. This run still saw kit hosts without a privacy link. Out of this fill-in’s scorecard.
-
-5. **GBA URL** from STORE still points at `https://www.gegevensbeschermingsautoriteit.be/` (301 `/burger` this run).
+- Builder still has to **replace** live Versie 1. Until that ship, the public URL is a different text.
+- “Sasha” plus Geel plus the Gmail is what this batch filled. Not a civil-name stamp.
+- “Een dienst buiten de EER” is the locked public sentence, not a classification of Google Ireland vs onward transfer. This seat does not stamp it.
+- No SCC / adequacy words on the live page is the lock. Do not add them to look complete.
 
 ---
 
 ## This file is not
 
-- Not legal advice. Not a GBA filing. Not an AVG badge.
-- Not a stamp that Surge, Gmail, or the operator is compliant.
-- Not a live-page PASS. Not HTML. Not mail. Not a KBO.
+Not legal advice. Not a GBA filing. Not an AVG keurmerk. Not a live-page PASS. Not HTML. Not mail. Not a KBO.
 
 End.
