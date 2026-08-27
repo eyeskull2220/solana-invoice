@@ -43,6 +43,6 @@ Uitoefenen: [sasha.de.vree.rene@gmail.com](mailto:sasha.de.vree.rene@gmail.com).
 
 ## Klacht bij de GBA
 
-U kunt een klacht indienen bij de Gegevensbeschermingsautoriteit: <https://www.gegevensbeschermingsautoriteit.be/>.
+U kunt een klacht indienen bij de Gegevensbeschermingsautoriteit: <https://www.gegevensbeschermingsautoriteit.be/burger/acties/klacht-indienen>.
 
 SovereignForge · Geel / België · KBO/BTW: nog niet toegekend
