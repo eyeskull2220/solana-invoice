@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Intake — Studio Noord</title>
+  <meta name="description" content="One-job intake for Studio Noord. Download a brief or open a mailto draft to hello@studio.example." />
+  <!-- Rebrand: Studio Noord, hello@studio.example (RFC 2606), Voorbeeldlaan. See README.md -->
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #eef2f4;
+      --card: #fffcf7;
+      --ink: #14202a;
+      --muted: #5b6570;
+      --line: #d3dbe1;
+      --accent: #163d52;
+      --accent-ink: #f3fbff;
+      --soft: #dce8ef;
+      --warn-bg: #fff6e8;
+      --warn-line: #ecd4a4;
+      --shadow: 0 14px 40px rgba(20, 32, 42, 0.07);
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(900px 320px at 0% -10%, #dce8ef 0%, transparent 55%),
+        var(--bg);
+    }
+    .wrap { width: min(680px, 100%); margin: 0 auto; padding: 28px 16px 72px; }
+    .brand {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px 16px;
+      margin: 0 0 18px;
+    }
+    .brand strong { letter-spacing: 0.14em; text-transform: uppercase; font-size: 12px; }
+    .brand span { color: var(--muted); font-size: 13px; }
+    nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 22px; }
+    nav a {
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 650;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: var(--card);
+    }
+    nav a[aria-current="page"] {
+      background: var(--accent);
+      color: var(--accent-ink);
+      border-color: var(--accent);
+    }
+    h1 { margin: 0 0 8px; font-size: clamp(1.55rem, 4vw, 2rem); letter-spacing: -0.03em; }
+    .lead { margin: 0 0 18px; color: var(--muted); }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      margin: 0 0 14px;
+    }
+    h2 { margin: 0 0 10px; font-size: 1.05rem; }
+    label.field { display: block; margin: 0 0 12px; }
+    label.field span { display: block; font-size: 12px; font-weight: 650; margin: 0 0 5px; color: var(--muted); letter-spacing: 0.03em; text-transform: uppercase; }
+    input, textarea, select {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #f4f7f9;
+      color: var(--ink);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font: 15px/1.4 ui-sans-serif, system-ui, sans-serif;
+    }
+    textarea { min-height: 96px; resize: vertical; }
+    input:focus, textarea:focus, select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+    .row { display: grid; gap: 10px; }
+    @media (min-width: 560px) { .row.two { grid-template-columns: 1fr 1fr; } }
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+    button {
+      font: 650 15px/1.2 ui-sans-serif, system-ui, sans-serif;
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 14px;
+      cursor: pointer;
+    }
+    .primary { background: var(--accent); color: var(--accent-ink); }
+    .ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+    .error {
+      background: var(--warn-bg);
+      border: 1px solid var(--warn-line);
+      border-radius: 12px;
+      padding: 10px 12px;
+      color: #6b3d0c;
+      margin: 0 0 12px;
+    }
+    .hidden { display: none !important; }
+    .ok { color: var(--accent); font-size: 14px; margin: 10px 0 0; }
+    .note { color: var(--muted); font-size: 13px; margin: 10px 0 0; }
+    footer { margin-top: 22px; color: var(--muted); font-size: 13px; }
+    footer a { color: inherit; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="brand">
+      <strong>Studio Noord</strong>
+      <span>hello@studio.example</span>
+    </div>
+    <nav aria-label="Pack">
+      <a href="index.html">Pack</a>
+      <a href="intake.html" aria-current="page">Intake</a>
+      <a href="invoice.html">Voorbeeld</a>
+      <a href="reminder.html">Reminder</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+
+    <header>
+      <h1>Eén job. Eén intake.</h1>
+      <p class="lead">Vertel wat er moet gebeuren. Niets wordt op een server bewaard. Je downloadt een brief of opent een mail naar Studio Noord.</p>
+    </header>
+
+    <form class="card" id="intake" novalidate>
+      <h2>Job intake</h2>
+      <p class="error hidden" id="error"></p>
+      <div class="row two">
+        <label class="field">
+          <span>Naam</span>
+          <input id="name" type="text" autocomplete="name" placeholder="Alex Example" />
+        </label>
+        <label class="field">
+          <span>Bedrijf (optioneel)</span>
+          <input id="company" type="text" autocomplete="organization" placeholder="Client BV" />
+        </label>
+      </div>
+      <div class="row two">
+        <label class="field">
+          <span>E-mail</span>
+          <input id="email" type="email" autocomplete="email" placeholder="billing@client.example" />
+        </label>
+        <label class="field">
+          <span>Telefoon (optioneel)</span>
+          <input id="phone" type="tel" autocomplete="tel" placeholder="+32 0 000 00 00" />
+        </label>
+      </div>
+      <label class="field">
+        <span>Wat moet er gebeuren?</span>
+        <textarea id="job" placeholder="Homepage herwerken, contactformulier, FAQ-pagina."></textarea>
+      </label>
+      <div class="row two">
+        <label class="field">
+          <span>Gewenste deadline</span>
+          <input id="deadline" type="date" />
+        </label>
+        <label class="field">
+          <span>Budget (indicatief, EUR)</span>
+          <input id="budget" type="text" inputmode="decimal" placeholder="1.200" autocomplete="off" />
+        </label>
+      </div>
+      <label class="field">
+        <span>Extra notities</span>
+        <textarea id="notes" placeholder="Links, merkkleuren, wie goedkeurt."></textarea>
+      </label>
+      <div class="actions">
+        <button type="button" class="primary" id="downloadBtn">Download brief</button>
+        <button type="button" class="ghost" id="mailBtn">Open mailto</button>
+      </div>
+      <p class="ok hidden" id="status"></p>
+      <p class="note">Mailto gaat naar hello@studio.example (RFC 2606 placeholder). Geen Gmail, geen live inbox.</p>
+    </form>
+
+    <footer>
+      Studio Noord · hello@studio.example · <a href="faq.html">FAQ</a>
+    </footer>
+  </div>
+  <script>
+    (function () {
+      var STUDIO = "Studio Noord";
+      var MAILTO = "hello@studio.example";
+      var $ = function (id) { return document.getElementById(id); };
+
+      function escapeHtml(value) {
+        return String(value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      function readForm() {
+        return {
+          name: $("name").value.trim(),
+          company: $("company").value.trim(),
+          email: $("email").value.trim(),
+          phone: $("phone").value.trim(),
+          job: $("job").value.trim(),
+          deadline: $("deadline").value.trim(),
+          budget: $("budget").value.trim(),
+          notes: $("notes").value.trim()
+        };
+      }
+
+      function looksLikeEmail(value) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+      }
+
+      function validate(data) {
+        if (!data.name) return "Vul een naam in.";
+        if (!data.email) return "Vul een e-mail in.";
+        if (!looksLikeEmail(data.email)) return "E-mail ziet er niet geldig uit.";
+        if (!data.job) return "Beschrijf de job.";
+        return "";
+      }
+
+      function setError(msg) {
+        var el = $("error");
+        var st = $("status");
+        if (msg) {
+          el.textContent = msg;
+          el.classList.remove("hidden");
+          st.classList.add("hidden");
+        } else {
+          el.textContent = "";
+          el.classList.add("hidden");
+        }
+      }
+
+      function line(label, value) {
+        if (!value) return "";
+        return label + ": " + value + "\n";
+      }
+
+      function bodyText(data) {
+        return (
+          "Intake voor " + STUDIO + "\n\n" +
+          line("Naam", data.name) +
+          line("Bedrijf", data.company) +
+          line("E-mail", data.email) +
+          line("Telefoon", data.phone) +
+          line("Deadline", data.deadline) +
+          line("Budget", data.budget) +
+          "\nJob\n" + data.job + "\n" +
+          (data.notes ? "\nNotities\n" + data.notes + "\n" : "")
+        );
+      }
+
+      function briefHtml(data) {
+        function row(label, value) {
+          if (!value) return "";
+          return "<div><div class=\"k\">" + escapeHtml(label) + "</div><div class=\"v\">" + escapeHtml(value) + "</div></div>";
+        }
+        return "<!doctype html>\n<html lang=\"nl\">\n<head>\n<meta charset=\"utf-8\" />\n" +
+          "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n" +
+          "<title>Intake — " + escapeHtml(data.name) + "</title>\n" +
+          "<style>\n" +
+          "body{margin:0;background:#eef2f4;color:#14202a;font:16px/1.5 ui-sans-serif,system-ui,sans-serif}" +
+          "main{width:min(680px,100%);margin:0 auto;padding:28px 16px 64px}" +
+          ".sheet{background:#fffcf7;border:1px solid #d3dbe1;border-radius:4px;padding:28px 24px;box-shadow:0 14px 40px rgba(20,32,42,.07)}" +
+          ".brand{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#5b6570}" +
+          "h1{margin:6px 0 18px;letter-spacing:-.03em}" +
+          ".grid{display:grid;gap:12px;margin:0 0 18px}" +
+          "@media(min-width:560px){.grid{grid-template-columns:1fr 1fr}}" +
+          ".k{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#5b6570;margin:0 0 4px}" +
+          ".v{white-space:pre-wrap;word-break:break-word}" +
+          ".job{border-top:1px solid #d3dbe1;padding-top:16px}" +
+          "footer{margin-top:22px;color:#5b6570;font-size:13px}" +
+          "</style>\n</head>\n<body>\n<main>\n<div class=\"sheet\">\n" +
+          "<div class=\"brand\">" + escapeHtml(STUDIO) + "</div>\n" +
+          "<h1>Job intake</h1>\n<div class=\"grid\">\n" +
+          row("Naam", data.name) +
+          row("Bedrijf", data.company) +
+          row("E-mail", data.email) +
+          row("Telefoon", data.phone) +
+          row("Deadline", data.deadline) +
+          row("Budget", data.budget) +
+          "</div>\n<div class=\"job\"><div class=\"k\">Job</div><div class=\"v\">" + escapeHtml(data.job) + "</div></div>\n" +
+          (data.notes ? "<div class=\"job\"><div class=\"k\">Notities</div><div class=\"v\">" + escapeHtml(data.notes) + "</div></div>\n" : "") +
+          "<footer>Mail: " + escapeHtml(MAILTO) + "</footer>\n" +
+          "</div>\n</main>\n</body>\n</html>\n";
+      }
+
+      function slug(name) {
+        var s = name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+        return s || "intake";
+      }
+
+      $("downloadBtn").addEventListener("click", function () {
+        var data = readForm();
+        var err = validate(data);
+        if (err) { setError(err); return; }
+        setError("");
+        var html = briefHtml(data);
+        var blob = new Blob([html], { type: "text/html;charset=utf-8" });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = "intake-" + slug(data.name) + ".html";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        $("status").textContent = "Downloaded " + a.download + ".";
+        $("status").classList.remove("hidden");
+      });
+
+      $("mailBtn").addEventListener("click", function () {
+        var data = readForm();
+        var err = validate(data);
+        if (err) { setError(err); return; }
+        setError("");
+        var subject = "Intake — " + data.name + (data.company ? " (" + data.company + ")" : "");
+        var href = "mailto:" + MAILTO +
+          "?subject=" + encodeURIComponent(subject) +
+          "&body=" + encodeURIComponent(bodyText(data));
+        window.location.href = href;
+        $("status").textContent = "Mailto opened to " + MAILTO + ".";
+        $("status").classList.remove("hidden");
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="robots" content="index,follow" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lid-inschrijving — Voorbeeldharmonie (OFFERTE)</title>
+  <meta name="description" content="Lid-formulier van Voorbeeldharmonie. Bijdragen zijn VOORBEELD. OFFERTE, geen factuur. KBO/BTW: nog niet toegekend. Mail naar hello@studio.example." />
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #161513;
+      --muted: #5c5850;
+      --line: #d4cdbf;
+      --rule: #123c2e;
+      --bg: #f3efe6;
+      --sheet: #fffdf8;
+      --soft: #e8efe8;
+      --accent-ink: #f3fff8;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      color: var(--ink);
+      background: var(--bg);
+      font: 16px/1.5 "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    }
+    .page {
+      width: min(720px, calc(100% - 24px));
+      margin: 16px auto 40px;
+      background: var(--sheet);
+      border: 1px solid var(--line);
+      padding: 28px 28px 22px;
+      position: relative;
+    }
+    .stamp {
+      position: absolute;
+      top: 22px;
+      right: 22px;
+      border: 2px solid var(--rule);
+      color: var(--rule);
+      font: 700 12px/1 ui-sans-serif, system-ui, sans-serif;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      padding: 7px 10px;
+      background: var(--sheet);
+    }
+    .mast {
+      border-bottom: 3px solid var(--rule);
+      padding: 0 7.5rem 16px 0;
+      margin: 0 0 18px;
+    }
+    .mast p {
+      margin: 0 0 4px;
+      font: 650 12px/1.3 ui-sans-serif, system-ui, sans-serif;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--rule);
+    }
+    h1 {
+      margin: 0 0 4px;
+      font-size: clamp(1.7rem, 5vw, 2.35rem);
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+    }
+    .season {
+      margin: 0;
+      color: var(--muted);
+      font: 15px/1.4 ui-sans-serif, system-ui, sans-serif;
+    }
+    .intro { margin: 0 0 18px; max-width: 40rem; }
+    .intro p { margin: 0 0 0.7em; }
+    .intro p:last-child { margin-bottom: 0; }
+    h2 {
+      margin: 20px 0 8px;
+      font-size: 1.05rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--rule);
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 4px;
+    }
+    .tag {
+      display: inline-block;
+      margin-left: 6px;
+      font: 700 10px/1 ui-sans-serif, system-ui, sans-serif;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--rule);
+      border: 1px solid var(--rule);
+      padding: 2px 5px;
+      vertical-align: 1px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 6px 0 4px;
+      font: 15px/1.4 ui-sans-serif, system-ui, sans-serif;
+    }
+    th, td {
+      text-align: left;
+      vertical-align: top;
+      padding: 10px 8px 10px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    th {
+      font: 650 12px/1.2 ui-sans-serif, system-ui, sans-serif;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--rule);
+    }
+    td strong { font: 650 16px/1.25 "Iowan Old Style", Palatino, Georgia, serif; }
+    .amt { white-space: nowrap; font-weight: 650; }
+    label {
+      display: block;
+      margin: 14px 0 6px;
+      font: 650 13px/1.3 ui-sans-serif, system-ui, sans-serif;
+      color: var(--muted);
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      border-radius: 2px;
+      background: #fff;
+      color: var(--ink);
+      font: 16px/1.4 inherit;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: 2px solid var(--rule);
+      outline-offset: 2px;
+    }
+    .row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0 16px;
+    }
+    @media (min-width: 560px) {
+      .row { grid-template-columns: 1fr 1fr; }
+    }
+    button, .btn {
+      margin-top: 18px;
+      padding: 12px 16px;
+      min-height: 44px;
+      border: 0;
+      border-radius: 2px;
+      background: var(--rule);
+      color: var(--accent-ink);
+      font: 650 15px/1 ui-sans-serif, system-ui, sans-serif;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    .note {
+      margin: 14px 0 0;
+      padding: 12px 14px;
+      background: var(--soft);
+      border: 1px solid var(--line);
+      font: 14px/1.45 ui-sans-serif, system-ui, sans-serif;
+    }
+    footer {
+      margin-top: 20px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font: 12.5px/1.45 ui-sans-serif, system-ui, sans-serif;
+    }
+    @media print {
+      .no-print, .kitbar { display: none !important; }
+      body { background: #fff; }
+      .page { width: auto; margin: 0; border: 0; padding: 12mm; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="kitbar no-print" style="width:min(720px,calc(100% - 24px));margin:16px auto 0;padding:12px 14px;border:1px solid #d4cdbf;background:#e8efe8;font:15px/1.45 ui-sans-serif,system-ui,sans-serif">
+    <p style="margin:0 0 6px"><strong>SovereignForge · Lid-inschrijving</strong> · OFFERTE · €349 · Geen BTW-factuur.</p>
+    <p style="margin:0">Dit is het voorbeeldformulier. Prijs €349. Betaalgegevens na akkoord. Mail <a href="mailto:sasha.de.vree.rene@gmail.com">sasha.de.vree.rene@gmail.com</a>. · <a href="https://sovereignforge.surge.sh/privacy.html">Privacy</a></p>
+  </div>
+
+  <article class="page">
+    <p class="stamp">OFFERTE</p>
+    <header class="mast">
+      <p>Harmonie · vzw-voorbeeld · lid-formulier</p>
+      <h1>Lid worden</h1>
+      <p class="season">Voorbeeldharmonie · seizoen 2026–27</p>
+    </header>
+
+    <section class="intro">
+      <p>Voorbeeldharmonie is een verzonnen fanfare voor dit formulier. In een echte levering staat hier het clubverhaal: wie jullie zijn, wanneer jullie repeteren, en hoe een nieuw lid binnenkomt — zonder account, zonder webshop.</p>
+      <p>Eén mail naar het secretariaat. De secretaris regelt de rest. Stempel <strong>OFFERTE</strong>. Bijdragen zijn <strong>VOORBEELD</strong>. Geen wettelijke factuur, geen rekeningnummer op dit blad.</p>
+    </section>
+
+    
+    <h2>Repetitie (voorbeeld)</h2>
+    <p class="intro" style="margin-bottom:0">Dinsdag 19:30–21:30 · zaal nog in te vullen. Jeugd donderdag 18:00–19:15. Geen echte club, geen echte zaal. Na levering staan hier jullie uren.</p>
+
+    <h2>Jaarbijdrage (voorbeeld)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Type lid</th>
+          <th>Voor wie</th>
+          <th>Bijdrage (voorbeeld)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Gewoon</strong></td>
+          <td>Spelend lid, volwassene. Repetitie + concerten.</td>
+          <td class="amt">€&nbsp;85 / jaar <em class="tag">voorbeeld</em></td>
+        </tr>
+        <tr>
+          <td><strong>Jeugd</strong></td>
+          <td>Spelend lid tot 18 jaar. Zelfde repetitie, lager tarief.</td>
+          <td class="amt">€&nbsp;45 / jaar <em class="tag">voorbeeld</em></td>
+        </tr>
+        <tr>
+          <td><strong>Steunend</strong></td>
+          <td>Geen instrument. Helpt de club, komt naar de concerten.</td>
+          <td class="amt">€&nbsp;120 / jaar <em class="tag">voorbeeld</em></td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="season" style="margin-top:10px">Geen IBAN op dit formulier. Betaling regelt de secretaris na de mail. Bedragen zijn voorbeeld, geen factuur.</p>
+
+    <h2>Aanvraag</h2>
+    <form action="mailto:hello@studio.example" method="post" enctype="text/plain">
+      <div class="row">
+        <p style="margin:0">
+          <label for="naam">Naam</label>
+          <input id="naam" name="naam" type="text" autocomplete="name" required />
+        </p>
+        <p style="margin:0">
+          <label for="mail">E-mail</label>
+          <input id="mail" name="mail" type="email" autocomplete="email" required />
+        </p>
+      </div>
+      <div class="row">
+        <p style="margin:0">
+          <label for="stem">Instrument of stem</label>
+          <input id="stem" name="instrument" type="text" placeholder="bijv. klarinet, tenor, geen" />
+        </p>
+        <p style="margin:0">
+          <label for="type">Type lid</label>
+          <select id="type" name="type">
+            <option>Gewoon lid</option>
+            <option>Jeugd</option>
+            <option>Steunend</option>
+          </select>
+        </p>
+      </div>
+      
+      <div class="row">
+        <p style="margin:0">
+          <label for="tel">Telefoon (optioneel)</label>
+          <input id="tel" name="telefoon" type="tel" autocomplete="tel" inputmode="tel" />
+        </p>
+        <p style="margin:0">
+          <label for="gemeente">Gemeente</label>
+          <input id="gemeente" name="gemeente" type="text" autocomplete="address-level2" />
+        </p>
+      </div>
+      <div class="row">
+        <p style="margin:0">
+          <label for="avond">Voorkeur repetitie</label>
+          <select id="avond" name="repetitie">
+            <option>Dinsdagavond (voorbeeld)</option>
+            <option>Donderdagavond (voorbeeld)</option>
+            <option>Nog niet gekozen</option>
+          </select>
+        </p>
+        <p style="margin:0">
+          <label for="start">Start (voorbeeld)</label>
+          <select id="start" name="start">
+            <option>September 2026</option>
+            <option>Januari 2027</option>
+            <option>Zo snel mogelijk</option>
+          </select>
+        </p>
+      </div>
+      <label for="nota">Nota (optioneel)</label>
+      <textarea id="nota" name="nota" rows="4" placeholder="Repetitie-avond, ervaring, vraag aan de secretaris…"></textarea>
+      <button type="submit">Mail naar de club</button>
+    </form>
+
+    <p class="note">Verzenden opent het mailprogramma naar <a href="mailto:hello@studio.example">hello@studio.example</a>. Niets wordt bewaard op deze pagina. Demo-adres, geen echte inbox.</p>
+
+    <footer>
+      OFFERTE-blad. Geen wettelijke factuur. Printen maakt er geen factuur van.
+      KBO/BTW: nog niet toegekend. Geen IBAN op dit formulier.
+      Demo-contact: hello@studio.example. <a href="https://sovereignforge.surge.sh/privacy.html">Privacy</a>
+    </footer>
+  </article>
+</body>
+</html>
