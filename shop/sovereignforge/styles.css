@@ -1,0 +1,303 @@
+/* SovereignForge chalkboard. System stack only — no webfonts. */
+
+:root {
+  --board: oklch(0.20 0.025 145);
+  --slate: oklch(0.28 0.04 145);
+  --chalk: oklch(0.93 0.02 110);
+  --chalk-soft: oklch(0.82 0.03 110);
+  --brass: oklch(0.72 0.13 85);
+  --brass-ink: oklch(0.18 0.04 145);
+  --wood: oklch(0.30 0.055 55);
+  --wood-edge: oklch(0.24 0.045 50);
+  --font-display: "Iowan Old Style", Palatino, "Palatino Linotype", Georgia, serif;
+  --font-body: "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  --gutter: clamp(1.15rem, 5vw, 2rem);
+  --measure: 42rem;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  font-size: 112.5%;
+  -webkit-text-size-adjust: 100%;
+  scrollbar-color: var(--brass) var(--board);
+}
+
+body {
+  margin: 0;
+  background: var(--board);
+  color: var(--chalk);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+::selection { background: oklch(0.72 0.13 85 / 0.38); color: var(--chalk); }
+
+a { color: inherit; text-underline-offset: 0.16em; }
+a:hover { text-decoration-thickness: 0.08em; }
+
+:focus-visible {
+  outline: 2px solid var(--chalk);
+  outline-offset: 3px;
+}
+.btn:focus-visible {
+  outline-color: var(--brass-ink);
+}
+
+.skip {
+  position: absolute;
+  left: var(--gutter);
+  top: 0.4rem;
+  z-index: 8;
+  padding: 0.4rem 0.65rem;
+  background: var(--board);
+  color: var(--chalk);
+  transform: translateY(-160%);
+}
+.skip:focus { transform: none; }
+
+.wrap {
+  width: min(var(--measure), 100%);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.wrap--wide { width: min(76rem, 100%); }
+
+.rail { padding: 0.55rem 0 0.15rem; }
+.rail-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.35rem 1rem;
+}
+.wordmark {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+.nav { display: flex; flex-wrap: wrap; gap: 0.15rem 0.85rem; }
+.nav a {
+  text-decoration: none;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  color: var(--chalk-soft);
+}
+.nav a[aria-current="page"] {
+  color: var(--chalk);
+  box-shadow: inset 0 -1.5px 0 var(--chalk);
+}
+
+.who {
+  margin: 0;
+  padding: 0.55rem 0 0.75rem;
+  color: var(--chalk-soft);
+  max-width: 36rem;
+}
+.who a { color: var(--chalk); font-weight: 700; }
+
+.stamp {
+  display: inline-block;
+  margin: 0 0 0.65rem;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--brass);
+  color: var(--brass);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.55rem, 6vw, 2.4rem);
+  line-height: 1.15;
+  letter-spacing: -0.028em;
+  text-wrap: balance;
+}
+.page-title { font-size: clamp(1.35rem, 4.6vw, 1.85rem); }
+h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.25rem;
+  line-height: 1.2;
+}
+
+.lede {
+  margin: 0.65rem 0 0;
+  max-width: 36rem;
+  color: var(--chalk-soft);
+}
+
+main { padding: 0.4rem 0 1.6rem; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.7rem 1.2rem;
+  background: var(--brass);
+  color: var(--brass-ink);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  border: 0;
+  border-radius: 2px;
+  cursor: pointer;
+  box-shadow: 0 2px 0 var(--wood-edge);
+}
+.btn:hover { filter: brightness(1.06); }
+.btn.ghost {
+  background: transparent;
+  color: var(--chalk);
+  box-shadow: inset 0 0 0 1px var(--chalk-soft);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 1.1rem 0 0;
+}
+
+.feat {
+  margin: 1.2rem 0 0;
+  padding: 0.9rem 0 0;
+  border-top: 1px solid oklch(0.55 0.03 145);
+}
+.feat h2 { margin-bottom: 0.35rem; }
+.feat p { margin: 0.3rem 0 0; color: var(--chalk-soft); max-width: 36rem; }
+.feat-price {
+  color: var(--chalk);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+.feat ul { margin: 0.4rem 0 0; padding-left: 1.2rem; max-width: 36rem; }
+.feat li { margin: 0 0 0.2rem; }
+.feat-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+  margin: 0.45rem 0 0;
+  padding: 0;
+}
+.feat-links a { min-height: 44px; display: inline-flex; align-items: center; }
+
+.price {
+  display: inline-block;
+  margin-top: 0.35rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+.grid {
+  display: grid;
+  gap: 0;
+}
+.grid .feat { margin-top: 0; }
+
+.table-wrap { overflow-x: auto; margin: 1rem 0 0; }
+table.kits {
+  width: 100%;
+  min-width: 40rem;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+table.kits caption {
+  text-align: left;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  margin: 0 0 0.6rem;
+}
+table.kits th, table.kits td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.65rem 0.55rem 0.65rem 0;
+  border-bottom: 1px solid oklch(0.55 0.03 145);
+}
+table.kits th {
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--chalk-soft);
+}
+table.kits a { min-height: 44px; display: inline-flex; align-items: center; }
+
+table.mini {
+  width: min(22rem, 100%);
+  margin: 0.55rem 0 0;
+  border-collapse: collapse;
+}
+table.mini caption {
+  text-align: left;
+  color: var(--chalk-soft);
+  font-size: 0.9rem;
+  margin: 0 0 0.35rem;
+}
+table.mini th, table.mini td {
+  text-align: left;
+  padding: 0.4rem 0.5rem 0.4rem 0;
+  border-bottom: 1px solid oklch(0.55 0.03 145);
+}
+
+.note {
+  margin: 1rem 0 0;
+  padding: 0.85rem 0 0;
+  border-top: 1px solid oklch(0.55 0.03 145);
+  max-width: 36rem;
+}
+.note p { margin: 0.35rem 0 0; color: var(--chalk-soft); }
+
+.steps { margin: 1rem 0 0; padding-left: 1.3rem; }
+.steps li { margin: 0 0 0.5rem; max-width: 36rem; }
+
+.mail {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 3.4vw, 1.3rem);
+  overflow-wrap: anywhere;
+}
+
+.legal h2 { margin: 1.15rem 0 0.35rem; }
+.legal p { margin: 0.35rem 0 0; max-width: 38rem; color: var(--chalk-soft); }
+.legal ul { margin: 0.35rem 0 0; padding-left: 1.25rem; max-width: 38rem; color: var(--chalk-soft); }
+
+.colophon { padding: 0 0 1.25rem; }
+.colophon p {
+  margin: 0;
+  padding-top: 0.75rem;
+  max-width: 38rem;
+  color: var(--chalk-soft);
+  font-size: 1rem;
+}
+.foot-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 1rem;
+  margin-top: 0.35rem;
+}
+.foot-nav a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
