@@ -1,20 +1,15 @@
-# Treasury tools
+# SovereignForge shop
 
-One-file HTML tools. No accounts. No wallet connect on these pages. No trading. USDC on Solana only — not XRP, not SOL.
+Offline HTML tools. Public sales face is euro-only. Document stamp is **OFFERTE**, not FACTUUR. **KBO/BTW: nog niet toegekend** — no invented enterprise number.
 
-**Treasury Solana USDC address:** `96BT6r5C35cvokdVop8ro4vDtv9zKUxpzrLbXqQbuHk3`
+Shop pages: [`index.html`](index.html) · [`catalog.html`](catalog.html) · [`pakketten.html`](pakketten.html) · [`betalen.html`](betalen.html)
 
-**USDC mint:** `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`
+Prices are whole euro amounts (€9, €49). Betalen: **betaalgegevens na akkoord** — no receive address on the marketing face.
 
-Pay page (this repo): [`index.html`](index.html) · Catalog: [`catalog.html`](catalog.html)
+## Live catalog
 
-Live catalog: https://treasury-tools.surge.sh/
+https://treasury-tools.surge.sh/
 
-## Live tools
+## Kit checkout (not the sales face)
 
-- [Solana Invoice](https://solana-invoice-treasury.surge.sh/) — one HTML file, 9 USDC. Amount, QR, copy-address. Offline. No account. Source: [`solana-invoice.html`](solana-invoice.html)
-- [CSV Cleaner](https://csv-cleaner-treasury.surge.sh/) — trim, drop empty/duplicate rows, pick columns. 49 USDC.
-- [Form to Email](https://form-to-email-treasury.surge.sh/) — mailto + copy form builder. 49 USDC.
-- [RSS to Webhook](https://rss-to-webhook-treasury.surge.sh/) — check a feed, POST new items as JSON. 49 USDC.
-
-Send USDC on Solana to the treasury address above (or copy it from the pay page). These pages do not trade.
+The offerte kit file stays separate: [`solana-invoice.html`](solana-invoice.html). Shop home / catalog / pakketten / betalen do not print rail copy or a pay-to address.
