@@ -1,0 +1,154 @@
+# In-house Builder CI. Free GitHub-hosted runner only.
+# Do not add CodeRabbit, CircleCI, Codecov, or other paid CI.
+#
+# Shop-face trees only:
+#   shop/sovereignforge-builder/**   (required for robots)
+#   shop/sovereignforge/**           (if present)
+# Root leftover invoice HTML (index.html, catalog.html, solana-invoice.html)
+# is out of scope. Live Surge is still the old chalkboard — do not curl it.
+
+name: builder-ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  leftover-digit:
+    name: leftover-digit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fail 9 USDC / 49 USDC / fake BE0 on shop faces
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! command -v rg >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y ripgrep
+          fi
+
+          shop_faces=()
+          if [ -d shop/sovereignforge-builder ]; then
+            shop_faces+=(shop/sovereignforge-builder)
+          fi
+          if [ -d shop/sovereignforge ]; then
+            shop_faces+=(shop/sovereignforge)
+          fi
+
+          if [ "${#shop_faces[@]}" -eq 0 ]; then
+            echo 'leftover-digit: no shop-face dirs; leftover root invoice HTML is out of scope'
+            echo 'leftover-digit: PASS'
+            exit 0
+          fi
+
+          echo "leftover-digit: scanning ${shop_faces[*]}"
+          set +e
+          rg -n -i \
+            -e '9 USDC' \
+            -e '49 USDC' \
+            -e 'BE0[0-9]' \
+            -- "${shop_faces[@]}"
+          status=$?
+          set -e
+          if [ "$status" -eq 0 ]; then
+            echo 'leftover-digit: 9 USDC / 49 USDC / fake BE0 on shop face'
+            exit 1
+          fi
+          if [ "$status" -eq 1 ]; then
+            echo 'leftover-digit: PASS'
+            exit 0
+          fi
+          echo "leftover-digit: rg failed with status $status"
+          exit 1
+
+  usdc-grep:
+    name: usdc-grep
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Shop-face USDC / Phantom / Solana grep must be empty
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! command -v rg >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y ripgrep
+          fi
+
+          shop_faces=()
+          if [ -d shop/sovereignforge-builder ]; then
+            shop_faces+=(shop/sovereignforge-builder)
+          fi
+          if [ -d shop/sovereignforge ]; then
+            shop_faces+=(shop/sovereignforge)
+          fi
+
+          if [ "${#shop_faces[@]}" -eq 0 ]; then
+            echo 'usdc-grep: no shop-face dirs; leftover root invoice HTML is out of scope'
+            echo 'usdc-grep: PASS'
+            exit 0
+          fi
+
+          echo "usdc-grep: scanning ${shop_faces[*]}"
+          set +e
+          rg -n -i 'USDC|Phantom|Solana' -- "${shop_faces[@]}"
+          status=$?
+          set -e
+          if [ "$status" -eq 0 ]; then
+            echo 'usdc-grep: coin/chain/wallet vendor on shop face'
+            exit 1
+          fi
+          if [ "$status" -eq 1 ]; then
+            echo 'usdc-grep: PASS'
+            exit 0
+          fi
+          echo "usdc-grep: rg failed with status $status"
+          exit 1
+
+  robots:
+    name: robots
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Shop-face robots.txt must Allow / and must not Disallow /
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! command -v rg >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y ripgrep
+          fi
+
+          check_robots() {
+            local robots_file="$1/robots.txt"
+            if [ ! -f "$robots_file" ]; then
+              echo "robots: $robots_file missing in git"
+              exit 1
+            fi
+            if rg -n -e '^[[:space:]]*Disallow:[[:space:]]*/[[:space:]]*$' "$robots_file"; then
+              echo "robots: Disallow: / is a shop fail ($robots_file)"
+              exit 1
+            fi
+            if ! rg -q -e '^[[:space:]]*Allow:[[:space:]]*/[[:space:]]*$' "$robots_file"; then
+              echo "robots: missing Allow: / ($robots_file)"
+              exit 1
+            fi
+            echo "robots: $robots_file ok"
+          }
+
+          if [ ! -d shop/sovereignforge-builder ]; then
+            echo 'robots: shop/sovereignforge-builder missing (shop-face robots.txt required)'
+            exit 1
+          fi
+          check_robots shop/sovereignforge-builder
+
+          if [ -d shop/sovereignforge ]; then
+            check_robots shop/sovereignforge
+          fi
+
+          echo 'robots: PASS (git only; live Surge is not a required gate)'
