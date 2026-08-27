@@ -1,0 +1,96 @@
+/* Print stylesheet — A4 kaart + allergenenmatrix.
+   Linked from kaart.html and allergenen.html. Screen chrome stays in screen.css. */
+
+@page {
+  size: A4 portrait;
+  margin: 10mm;
+}
+
+@page :left {
+  margin: 10mm;
+}
+
+@media print {
+  :root {
+    color-scheme: light;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    color: #1c1410 !important;
+    font-size: 10.5pt;
+    line-height: 1.35;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .no-print,
+  nav,
+  .site-nav,
+  .offerte-link,
+  .screen-only {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  a {
+    color: inherit !important;
+    text-decoration: none !important;
+  }
+
+  a[href]::after {
+    content: none !important;
+  }
+
+  .sheet,
+  .kaart,
+  .matrix-sheet,
+  .offerte-sheet {
+    box-shadow: none !important;
+    border-color: #1c1410 !important;
+    margin: 0 !important;
+    max-width: none !important;
+    width: 100% !important;
+    background: #fff !important;
+    break-inside: avoid;
+  }
+
+  .qr-block {
+    break-inside: avoid;
+  }
+
+  .qr-block svg,
+  .qr-block canvas,
+  .qr-block img {
+    width: 28mm !important;
+    height: 28mm !important;
+  }
+
+  h1, h2, h3 {
+    break-after: avoid;
+  }
+
+  table {
+    break-inside: auto;
+  }
+
+  tr, td, th {
+    break-inside: avoid;
+  }
+
+  footer,
+  .fine {
+    font-size: 8pt;
+  }
+}
+
+@media print and (orientation: landscape) {
+  @page {
+    size: A4 landscape;
+    margin: 8mm;
+  }
+}

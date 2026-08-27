@@ -1,0 +1,285 @@
+:root {
+  color-scheme: light;
+  --paper: #f3ead8;
+  --sheet: #fffaf1;
+  --ink: #1c1410;
+  --muted: #5c5146;
+  --rule: #cbb79a;
+  --ember: #8f3216;
+  --moss: #3d4a32;
+  --stamp: #8f3216;
+  --shadow: 0 18px 50px rgba(40, 28, 16, 0.1);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  min-height: 100vh;
+  font: 16px/1.5 "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  color: var(--ink);
+  background:
+    radial-gradient(900px 420px at 8% -10%, #efe0c4 0%, transparent 55%),
+    var(--paper);
+}
+
+.site-nav {
+  width: min(720px, calc(100% - 24px));
+  margin: 0 auto;
+  padding: 14px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.85rem;
+}
+.site-nav a {
+  color: var(--ember);
+  font-weight: 700;
+  text-decoration: none;
+}
+.site-nav a:hover { text-decoration: underline; }
+
+.stamp {
+  display: inline-block;
+  border: 2px solid var(--stamp);
+  color: var(--stamp);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 0.72rem;
+  padding: 4px 8px;
+  transform: rotate(-2deg);
+}
+
+.sheet {
+  width: min(720px, calc(100% - 24px));
+  margin: 16px auto 48px;
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  box-shadow: var(--shadow);
+  padding: clamp(18px, 4vw, 36px);
+}
+
+.kaart-kicker {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--moss);
+  margin: 10px 0 0;
+}
+
+h1 {
+  font-weight: 600;
+  font-size: clamp(1.8rem, 6vw, 2.6rem);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin: 6px 0 8px;
+}
+
+.lede {
+  color: var(--muted);
+  margin: 0 0 18px;
+}
+
+.periode {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  align-items: baseline;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 10px 0;
+  margin: 0 0 22px;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.92rem;
+}
+
+.menus {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 0 0 26px;
+}
+.menu-box {
+  border: 1px solid var(--rule);
+  padding: 10px 12px;
+}
+.menu-box strong { display: block; font-size: 1.05rem; }
+.menu-box span {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  color: var(--ember);
+  font-weight: 700;
+}
+
+.sectie { margin: 0 0 22px; }
+.sectie h2 {
+  font-size: 0.78rem;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--moss);
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 6px;
+  margin: 0 0 10px;
+}
+
+.gerecht {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 12px;
+  padding: 7px 0;
+  border-bottom: 1px dotted var(--rule);
+}
+.gerecht h3 {
+  margin: 0;
+  font-size: 1.02rem;
+  font-weight: 600;
+}
+.gerecht .prijs {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.gerecht p {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.codes {
+  grid-column: 1 / -1;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.75rem;
+  color: var(--moss);
+  letter-spacing: 0.04em;
+}
+
+.qr-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: center;
+  border: 1px solid var(--rule);
+  padding: 12px;
+  margin: 8px 0 18px;
+}
+.qr-row svg, .qr-row canvas, .qr-row img {
+  width: 112px;
+  height: 112px;
+  background: #fff;
+  display: block;
+}
+.qr-row p { margin: 0 0 6px; }
+.qr-url {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+  word-break: break-all;
+  color: var(--muted);
+}
+
+.fine {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin: 0 0 8px;
+}
+
+.warn {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.82rem;
+  border: 1px solid #d7b48a;
+  background: #fff6ea;
+  padding: 8px 10px;
+  color: #5a3a12;
+}
+
+.print-only { display: none; }
+
+@media (max-width: 640px) {
+  body { font-size: 17px; }
+  .menus { grid-template-columns: 1fr; }
+  .qr-row { grid-template-columns: 1fr; justify-items: start; }
+  .gerecht { grid-template-columns: 1fr auto; }
+}
+
+/* Allergenen matrix */
+.matrix-wrap { overflow-x: auto; }
+table.matrix {
+  border-collapse: collapse;
+  width: 100%;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.78rem;
+}
+table.matrix th,
+table.matrix td {
+  border: 1px solid var(--rule);
+  padding: 6px 5px;
+  text-align: center;
+  vertical-align: middle;
+}
+table.matrix th:first-child,
+table.matrix td:first-child {
+  text-align: left;
+  min-width: 11rem;
+}
+table.matrix thead th {
+  background: #efe4cf;
+  font-weight: 700;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  height: 7.5rem;
+  white-space: nowrap;
+}
+table.matrix thead th:first-child {
+  writing-mode: horizontal-tb;
+  transform: none;
+  height: auto;
+}
+table.matrix .hit {
+  background: #f3d7c8;
+  font-weight: 800;
+  color: var(--ember);
+}
+
+/* Offerte */
+.offerte-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.92rem;
+  margin: 18px 0;
+}
+.offerte-meta h2 {
+  margin: 0 0 6px;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--moss);
+}
+.price-face {
+  font-size: clamp(2.2rem, 8vw, 3.2rem);
+  letter-spacing: -0.04em;
+  margin: 8px 0 4px;
+}
+.price-face span {
+  color: var(--ember);
+}
+.lines {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  margin: 8px 0 18px;
+}
+.lines th, .lines td {
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  padding: 8px 4px;
+}
+.lines td:last-child, .lines th:last-child { text-align: right; }
+
+@media (max-width: 640px) {
+  .offerte-meta { grid-template-columns: 1fr; }
+}
