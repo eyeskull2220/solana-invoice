@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VOORBEELD — paper journaal invert-paper</title>
+  <meta name="description" content="Statisch paper journaal. Named book invert-paper. fills=1. Gate NOT MET. Geen live handel. Geen FACTUUR. Niet te koop.">
+  <style>
+    :root {
+      --paper: #f4efe6;
+      --sheet: #fffdf8;
+      --ink: #1c1915;
+      --muted: #5c564c;
+      --rule: #d4cbbd;
+      --stamp: #b42318;
+      --stamp-soft: rgba(180, 35, 24, 0.08);
+      --lock: #3d2a12;
+      --lock-bg: #f3e6d0;
+      --ok: #1f4d38;
+      --ok-bg: #e7f2ea;
+      --ban: #7a1c16;
+      --ban-bg: #f8e8e4;
+      --note: #6a4a12;
+      --note-bg: #fff3d8;
+      --fail: #7a1c16;
+      --fail-bg: #f8e8e4;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(900px 280px at 50% -80px, #efe6d4 0%, transparent 70%),
+        var(--paper);
+      font: 16px/1.5 "Iowan Old Style", Palatino, "Palatino Linotype", Georgia, serif;
+    }
+    .wrap {
+      width: min(880px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 28px 0 72px;
+    }
+    .sheet {
+      background: var(--sheet);
+      border: 1px solid var(--rule);
+      box-shadow: 0 18px 50px rgba(40, 32, 18, 0.08);
+      padding: 28px 24px 36px;
+    }
+    .stamp-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+    .stamp {
+      display: inline-block;
+      border: 4px double var(--stamp);
+      color: var(--stamp);
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-weight: 800;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      font-size: 1.15rem;
+      padding: 8px 14px 7px 18px;
+      transform: rotate(-4deg);
+      background: var(--stamp-soft);
+    }
+    .doc-type {
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: right;
+    }
+    h1 {
+      margin: 18px 0 6px;
+      font-size: clamp(1.55rem, 4vw, 2.05rem);
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+    }
+    .lead { margin: 0 0 18px; color: var(--muted); max-width: 44rem; }
+    h2 {
+      margin: 28px 0 10px;
+      font-size: 1.12rem;
+      letter-spacing: -0.02em;
+      border-bottom: 1px solid var(--rule);
+      padding-bottom: 6px;
+    }
+    .kicker {
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0 0 4px;
+    }
+    .card {
+      border: 1px solid var(--rule);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin: 0 0 12px;
+    }
+    .id-grid {
+      display: grid;
+      gap: 8px 18px;
+      grid-template-columns: 9.5rem 1fr;
+    }
+    .id-grid dt {
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .id-grid dd { margin: 0; }
+    .lock {
+      background: var(--lock-bg);
+      border-color: #c9b089;
+    }
+    .lock ol { margin: 8px 0 0; padding: 0 0 0 1.2em; }
+    .lock li { margin: 0 0 10px; }
+    .pill {
+      display: inline-block;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-radius: 999px;
+      padding: 3px 8px;
+      margin-right: 6px;
+      vertical-align: 1px;
+    }
+    .pill-paper { background: var(--ok-bg); color: var(--ok); }
+    .pill-hold { background: #ece6dc; color: var(--lock); }
+    .pill-sep { background: #eadfce; color: #5a3d12; }
+    .pill-kill { background: var(--ban-bg); color: var(--ban); }
+    .pill-fail { background: var(--fail-bg); color: var(--fail); }
+    .ban, .tax, .sim, .fail, .seal {
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 0.95rem;
+    }
+    .sim { background: var(--ok-bg); border-color: #b7d4c4; }
+    .ban { background: var(--ban-bg); border-color: #e3b6af; color: var(--ban); }
+    .tax { background: var(--note-bg); border-color: #ead7a2; color: var(--note); }
+    .fail { background: var(--fail-bg); border-color: #e3b6af; }
+    .seal { background: #ece6dc; border-color: #c9b089; }
+    .ban ul, .tax ul, .fail ul, .check ul { margin: 8px 0 0; padding: 0 0 0 1.15em; }
+    .ban li, .tax li, .fail li { margin: 0 0 6px; }
+    code, .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.88em;
+      word-break: break-all;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 13px;
+    }
+    th, td {
+      text-align: left;
+      border-bottom: 1px solid var(--rule);
+      padding: 7px 8px 7px 0;
+      vertical-align: top;
+    }
+    th {
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .totals {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+      margin: 12px 0 0;
+    }
+    .stat {
+      border: 1px solid var(--rule);
+      border-radius: 8px;
+      padding: 10px 12px;
+      background: #faf7f1;
+    }
+    .stat b {
+      display: block;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 1.05rem;
+      margin-top: 2px;
+    }
+    .stat.not-met {
+      background: var(--fail-bg);
+      border-color: #e3b6af;
+    }
+    .check label {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      margin: 0 0 9px;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    .check input { margin-top: 4px; flex: 0 0 auto; }
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0 0; }
+    button {
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-weight: 650;
+      border: 1px solid var(--rule);
+      background: #fff;
+      color: var(--ink);
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+    .fine {
+      margin: 22px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+    }
+    @media print {
+      body { background: #fff; }
+      .wrap { width: auto; padding: 0; }
+      .sheet { box-shadow: none; border: 0; padding: 0; }
+      .no-print { display: none !important; }
+      .stamp { transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <article class="sheet">
+      <header class="stamp-row">
+        <div class="stamp" aria-label="Documentstempel">VOORBEELD</div>
+        <div class="doc-type">
+          Journaal / checklist<br>
+          Paper / simulated<br>
+          Niet te koop / not for sale<br>
+          Geen FACTUUR · geen INVOICE
+        </div>
+      </header>
+
+      <h1>Paper journaal — named book <span class="mono">invert-paper</span></h1>
+      <p class="lead">Statische operator-checklist. Paper only. <strong>fills = 1</strong>. Gate <strong>NOT MET</strong>. Openen, afvinken, bewaren. Geen login, geen backend, geen API-sleutels. Niet live. VOORBEELD is <strong>niet te koop</strong>. Niet resetten: <span class="mono">dca-paper</span>. Niet resealen: <span class="mono">c9689f5d</span>.</p>
+
+      <section class="card" aria-labelledby="id-title">
+        <p class="kicker" id="id-title">Identiteit</p>
+        <dl class="id-grid">
+          <dt>Operator</dt>
+          <dd>Natuurlijke persoon (geen vennootschap, geen firmanaam)</dd>
+          <dt>Plaats</dt>
+          <dd>Geel</dd>
+          <dt>KBO / BTW</dt>
+          <dd><strong>nog niet toegekend</strong> — geen BE0…, geen verzonnen KBO/BTW</dd>
+          <dt>Document</dt>
+          <dd>VOORBEELD-journaal. <strong>Niet te koop / not for sale.</strong> Geen verkoopkopij. Indien ooit verkooptekst: label <strong>OFFERTE</strong>, nooit FACTUUR/INVOICE.</dd>
+          <dt>Named book</dt>
+          <dd><code>invert-paper</code> — paper / simulated. Still paper.</dd>
+        </dl>
+      </section>
+
+      <section class="card fail" aria-labelledby="gate-title">
+        <p class="kicker" id="gate-title">Fund gate</p>
+        <h2 style="margin-top:0;border:0;padding:0;">Gate NOT MET</h2>
+        <p style="margin:8px 0 10px;">Promotion needs <strong>all three</strong>. Have none of a complete sample. Stay paper. Sleeve FAIL is <strong>not</strong> this gate.</p>
+        <div class="totals">
+          <div class="stat not-met"><span class="kicker">Fills</span><b>1</b>need ≥ 8</div>
+          <div class="stat not-met"><span class="kicker">Return after fees</span><b>NOT MET</b>need return &gt; 0</div>
+          <div class="stat not-met"><span class="kicker">maxDD</span><b>NOT MET</b>need ≤ 8%</div>
+          <div class="stat not-met"><span class="kicker">Gate</span><b>NOT MET</b>still paper</div>
+        </div>
+        <ul>
+          <li><strong>≥ 8 fills</strong> — closed or fully filled prints with a <code>PAPER-*****</code> id. Resting limits are not fills. Have <strong>1</strong>.</li>
+          <li><strong>return &gt; 0 after fees</strong> — Kraken Starter 0.26% taker already in the paper engine. Round-trip is not done: TP 00030 has not printed.</li>
+          <li><strong>maxDD ≤ 8%</strong> — not enough sample on this book to promote. Do not pretend.</li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="snap-title">
+        <h2 id="snap-title">Snapshot <code>invert-paper</code> — paper / simulated</h2>
+        <p class="lead" style="margin-bottom:10px;">Datum: <strong>2026-08-27</strong>. Named book <code>invert-paper</code>. Pair <strong>XRPEUR</strong>. Mode <strong>paper</strong>. <strong>fills = 1</strong>. Dit is geen belastingfeit.</p>
+        <div class="card sim">
+          <p style="margin:0;">Fill 1 is <code>PAPER-00029</code>. Resting TP and the still-open 00028 <strong>do not count</strong> toward the gate. Do not add extra clips to rush 8 fills. Do not flatten the book for cosmetics.</p>
+        </div>
+        <div style="overflow-x:auto;">
+          <table>
+            <caption class="kicker" style="text-align:left;margin:0 0 8px;">invert-paper orders — 1 fill, 2 still working</caption>
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>State</th>
+                <th>Side</th>
+                <th>Type</th>
+                <th>Pair</th>
+                <th class="num">Price</th>
+                <th>Counts as fill?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>PAPER-00029</code></td>
+                <td><strong>FILL 1</strong></td>
+                <td>buy</td>
+                <td>filled</td>
+                <td>XRPEUR</td>
+                <td class="num">1.24496</td>
+                <td>Yes — fill 1 of 8</td>
+              </tr>
+              <tr>
+                <td><code>PAPER-00030</code></td>
+                <td>Resting TP</td>
+                <td>sell</td>
+                <td>LIMIT</td>
+                <td>XRPEUR</td>
+                <td class="num">1.26778</td>
+                <td>No — not a fill until it prints</td>
+              </tr>
+              <tr>
+                <td><code>PAPER-00028</code></td>
+                <td>Still open</td>
+                <td>working</td>
+                <td>open</td>
+                <td>XRPEUR</td>
+                <td class="num">1.23084</td>
+                <td>No — still open, not a fill</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="totals">
+          <div class="stat"><span class="kicker">Named book</span><b>invert-paper</b></div>
+          <div class="stat"><span class="kicker">Pair</span><b>XRPEUR</b></div>
+          <div class="stat not-met"><span class="kicker">fills</span><b>1</b></div>
+          <div class="stat"><span class="kicker">PAPER-00029</span><b>buy @ 1.24496</b></div>
+          <div class="stat"><span class="kicker">PAPER-00030 TP</span><b>sell LIMIT @ 1.26778</b></div>
+          <div class="stat"><span class="kicker">PAPER-00028</span><b>open @ 1.23084</b></div>
+        </div>
+      </section>
+
+      <section class="card lock" aria-labelledby="lock-title">
+        <p class="kicker" id="lock-title">Books — paper only</p>
+        <h2 style="margin-top:0;border:0;padding:0;">Named book invert-paper. Do not reset dca-paper. Do not reseal c9689f5d.</h2>
+        <ol>
+          <li>
+            <span class="pill pill-paper">Named book</span><span class="pill pill-fail">fills = 1</span>
+            <strong>invert-paper</strong> — this journal. <code>PAPER-00029</code> buy XRPEUR @ 1.24496 (fill 1). TP <code>PAPER-00030</code> sell LIMIT @ 1.26778. <code>PAPER-00028</code> still open @ 1.23084. Do not cancel 00030/00028 to “clean the book.”
+          </li>
+          <li>
+            <span class="pill pill-hold">Hold</span><span class="pill pill-paper">Do not reset</span>
+            <strong>dca-paper</strong> — existing BTCUSD HOLD stack. Leave it. Never <code>init</code>/<code>reset</code>. Fibonacci → new <code>fib-paper</code>. Grids → new <code>grid-paper</code>.
+          </li>
+          <li>
+            <span class="pill pill-sep">Sealed</span>
+            <strong>c9689f5d</strong> — sealed paper-book stamp. Coder may read and cite it. <strong>Do not reseal.</strong>
+          </li>
+          <li>
+            <span class="pill pill-sep">Separate sleeve</span><span class="pill pill-kill">FAIL</span>
+            <strong>3x futures sleeve FAIL</strong> — separate book, cap 3x, kill switch (flatten + cancel-all on kill file, 10% sleeve drawdown, or leverage &gt; 3x). <strong>Sleeve FAIL is not the gate.</strong> Never mix that PnL into this journal.
+          </li>
+        </ol>
+      </section>
+
+      <section class="card seal" aria-labelledby="seal-title">
+        <p class="kicker" id="seal-title">Sealed stamp</p>
+        <p style="margin:0;"><code>c9689f5d</code> is sealed. Cite it. Do not rewrite, rotate, or reseal it to make this journal look newer. This page does not reseal it.</p>
+      </section>
+
+      <section class="card check" aria-labelledby="ops-title">
+        <h2 id="ops-title" style="margin-top:0;">Operator-checklist</h2>
+        <label><input type="checkbox" data-k="still-paper"> Still paper. Paper blijven tot de CEO live zegt. Geen live keys op deze pagina.</label>
+        <label><input type="checkbox" data-k="fills-one"> Journal prints fills = 1 (<code>PAPER-00029</code> buy XRPEUR @ 1.24496). 00030 and 00028 are not fills.</label>
+        <label><input type="checkbox" data-k="gate-not-met"> Gate NOT MET: need ≥ 8 fills, return &gt; 0 after fees, maxDD ≤ 8%.</label>
+        <label><input type="checkbox" data-k="sleeve-not-gate"> Sleeve FAIL is not the gate. Do not mix sleeve PnL into invert-paper.</label>
+        <label><input type="checkbox" data-k="no-reset"> Do not reset <code>dca-paper</code>. Fibonacci/grids in <code>fib-paper</code> / <code>grid-paper</code>.</label>
+        <label><input type="checkbox" data-k="no-reseal"> Do not reseal <code>c9689f5d</code>.</label>
+        <label><input type="checkbox" data-k="no-keys"> No API keys. No key fields on this page. Never paste keys.</label>
+        <label><input type="checkbox" data-k="not-for-sale"> VOORBEELD is not for sale / niet te koop. No FACTUUR. No INVOICE.</label>
+        <label><input type="checkbox" data-k="kbo"> KBO/BTW nog niet toegekend. Geen verzonnen BE0…</label>
+        <label><input type="checkbox" data-k="no-live"> Do not go live from this page.</label>
+        <div class="actions no-print">
+          <button type="button" id="printBtn">Afdrukken</button>
+          <button type="button" id="clearBtn">Checklist wissen</button>
+        </div>
+      </section>
+
+      <section class="card ban" aria-labelledby="ban-title">
+        <h2 id="ban-title" style="margin-top:0;border-color:#e3b6af;">Hard bans</h2>
+        <ul>
+          <li>Still paper. Do not go live. No <code>kraken order</code> / live futures from this journal.</li>
+          <li>No API keys. Geen broker-keyvelden op deze pagina.</li>
+          <li>Do not reset <code>dca-paper</code>. Do not reseal <code>c9689f5d</code>.</li>
+          <li>Do not rush 8 fills with extra clips or extra pairs. Have 1 fill. Wait.</li>
+          <li>Sleeve FAIL is not the gate. Never mix that PnL into spot journals.</li>
+          <li>VOORBEELD is <strong>niet te koop / not for sale</strong>. Geen FACTUUR- of INVOICE-titel.</li>
+          <li>Geen nep-KBO/BTW. KBO/BTW: <strong>nog niet toegekend</strong>.</li>
+          <li>Geen leftover 9 USDC HTML. Dit is geen shop/cataloguskaart.</li>
+        </ul>
+      </section>
+
+      <section class="card tax" aria-labelledby="tax-title">
+        <h2 id="tax-title" style="margin-top:0;border-color:#ead7a2;">Fiscale splitsing — herinnering, geen advies</h2>
+        <ul>
+          <li>Phantom sales-USDC is <strong>beroepsinkomen</strong>.</li>
+          <li>Kraken is een <strong>apart handelsdossier</strong> (later, live, operator).</li>
+          <li>Paper is <strong>geen belastingfeit</strong>.</li>
+          <li>Dit is geen advocaat. Dit is geen live-handelsadvies.</li>
+        </ul>
+      </section>
+
+      <p class="fine">VOORBEELD · niet te koop · paper / simulated · named book <code>invert-paper</code> · PAPER-00029 buy XRPEUR @ 1.24496 · fills=1 · gate NOT MET · still paper · 2026-08-27 · dca-paper niet resetten · c9689f5d niet resealen.</p>
+    </article>
+  </main>
+  <script>
+    (function () {
+      var KEY = "invert-paper-journal-checks-v1";
+      var boxes = document.querySelectorAll("input[data-k]");
+      var saved = {};
+      try { saved = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { saved = {}; }
+      boxes.forEach(function (el) {
+        el.checked = !!saved[el.getAttribute("data-k")];
+        el.addEventListener("change", persist);
+      });
+      function persist() {
+        var next = {};
+        boxes.forEach(function (el) { next[el.getAttribute("data-k")] = el.checked; });
+        try { localStorage.setItem(KEY, JSON.stringify(next)); } catch (e) {}
+      }
+      document.getElementById("printBtn").addEventListener("click", function () { window.print(); });
+      document.getElementById("clearBtn").addEventListener("click", function () {
+        boxes.forEach(function (el) { el.checked = false; });
+        persist();
+      });
+    })();
+  </script>
+</body>
+</html>
