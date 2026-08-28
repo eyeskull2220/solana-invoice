@@ -1,0 +1,311 @@
+{
+  "book": "adaeur-widefib-paper",
+  "is_fund_gate": false,
+  "is_fund_gate_note": "this NEW book only; not invert-paper; not dca-paper",
+  "still_paper": true,
+  "venue": "Kraken ADAEUR",
+  "pair": "ADAEUR",
+  "fetched_at_utc": "2026-08-28T20:08:52Z",
+  "ticker_last": 0.174194,
+  "recipe": {
+    "clip_eur": 200.0,
+    "cap_long": 1,
+    "prices": "prior_complete_utc_day_H_and_L",
+    "arm_min_range_frac": 0.0104,
+    "fee_taker_per_fill": 0.0026,
+    "start_equity_eur": 10000.0,
+    "fill_model_named": "4h_wick_touch",
+    "dual_touch": "DUAL_TOUCH_SKIP",
+    "cross_skip_buy": "skip rest if open<=L or prev_close<=L",
+    "not": [
+      "invert",
+      "14_rungs",
+      "15m",
+      "third_clip",
+      "binance_splice"
+    ]
+  },
+  "named_tape": {
+    "interval": 240,
+    "interval_name": "4h",
+    "n_bars_fetched": 721,
+    "n_bars_scored": 720,
+    "window_start": "2026-04-30T20:00:00Z",
+    "window_end": "2026-08-28T16:00:00Z",
+    "forming_bar_dropped": true,
+    "api_last": 1787932800,
+    "sha256": "b1b170f978b953c2b9939e200c8747d37c3c37885145aecf7b52467e8040a8cf",
+    "hint": "last ~720 bars is the NAMED tape (~120d)"
+  },
+  "daily_rails": {
+    "interval": 1440,
+    "n_bars_fetched": 721,
+    "n_complete": 720,
+    "first": "2024-09-07T00:00:00Z",
+    "last_complete": "2026-08-27T00:00:00Z",
+    "forming_bar_dropped": true,
+    "sha256": "780fd43335d55c2df1935c56638a8ea29d7179721dfcc97427e7f0fc4165e46f"
+  },
+  "named_score": {
+    "tape": "named_4h",
+    "n_bars_scored": 720,
+    "window_start": "2026-04-30T20:00:00Z",
+    "window_end": "2026-08-28T16:00:00Z",
+    "fills": 5,
+    "n_buy_fills": 3,
+    "n_sell_fills": 2,
+    "n_closed_pairs": 2,
+    "n_dual_touch_skips": 0,
+    "n_cross_skips": 0,
+    "days_in_window": 121,
+    "days_armed": 121,
+    "days_skipped": 0,
+    "start_equity_eur": 10000.0,
+    "ending_equity_eur": 9962.82708526,
+    "ending_cash_eur": 9813.16156211,
+    "ending_qty": 857.6329331046,
+    "ending_state": "LONG",
+    "ending_mark": 0.17451,
+    "fees_eur": 2.64108689,
+    "return_after_fees_pct": -0.371729,
+    "max_dd_pct": 0.945972,
+    "peak_equity_eur": 10014.19929796,
+    "open_inventory": {
+      "entry_iso": "2026-05-12T08:00:00Z",
+      "pair_L": 0.2332,
+      "pair_H": 0.240499,
+      "bars_after_entry": 650,
+      "max_high_after_entry": 0.239999,
+      "sell_tagged": false
+    },
+    "gate": {
+      "return_gt_0": false,
+      "fills_ge_8": false,
+      "max_dd_le_8pct": true,
+      "result": "FAIL"
+    },
+    "fills_log": [
+      {
+        "i": 1,
+        "side": "buy",
+        "price": 0.221927,
+        "qty": 901.197240534,
+        "fee_eur": 0.52,
+        "bar_iso": "2026-05-07T16:00:00Z",
+        "pair_L": 0.221927,
+        "pair_H": 0.232437
+      },
+      {
+        "i": 2,
+        "side": "sell",
+        "price": 0.232437,
+        "qty": 901.197240534,
+        "fee_eur": 0.54462612,
+        "bar_iso": "2026-05-08T20:00:00Z",
+        "pair_L": 0.221927,
+        "pair_H": 0.232437
+      },
+      {
+        "i": 3,
+        "side": "buy",
+        "price": 0.228903,
+        "qty": 873.7325417317,
+        "fee_eur": 0.52,
+        "bar_iso": "2026-05-10T00:00:00Z",
+        "pair_L": 0.228903,
+        "pair_H": 0.236149
+      },
+      {
+        "i": 4,
+        "side": "sell",
+        "price": 0.236149,
+        "qty": 873.7325417317,
+        "fee_eur": 0.53646077,
+        "bar_iso": "2026-05-10T12:00:00Z",
+        "pair_L": 0.228903,
+        "pair_H": 0.236149
+      },
+      {
+        "i": 5,
+        "side": "buy",
+        "price": 0.2332,
+        "qty": 857.6329331046,
+        "fee_eur": 0.52,
+        "bar_iso": "2026-05-12T08:00:00Z",
+        "pair_L": 0.2332,
+        "pair_H": 0.240499
+      }
+    ]
+  },
+  "shadow_1d": {
+    "tape": "shadow_1d",
+    "n_bars_scored": 720,
+    "window_start": "2024-09-07T00:00:00Z",
+    "window_end": "2026-08-27T00:00:00Z",
+    "fills": 11,
+    "n_buy_fills": 6,
+    "n_sell_fills": 5,
+    "n_closed_pairs": 5,
+    "n_dual_touch_skips": 5,
+    "n_cross_skips": 0,
+    "days_in_window": 720,
+    "days_armed": 719,
+    "days_skipped": 1,
+    "start_equity_eur": 10000.0,
+    "ending_equity_eur": 9936.95894263,
+    "ending_cash_eur": 9903.16379705,
+    "ending_qty": 184.3193960222,
+    "ending_state": "LONG",
+    "ending_mark": 0.183351,
+    "fees_eur": 6.00383585,
+    "return_after_fees_pct": -0.630411,
+    "max_dd_pct": 1.888308,
+    "peak_equity_eur": 10117.4538955,
+    "open_inventory": {
+      "entry_iso": "2024-12-05T00:00:00Z",
+      "pair_L": 1.085073,
+      "pair_H": 1.182437,
+      "bars_after_entry": 630,
+      "max_high_after_entry": 1.17,
+      "sell_tagged": false
+    },
+    "gate": {
+      "return_gt_0": false,
+      "fills_ge_8": true,
+      "max_dd_le_8pct": true,
+      "result": "FAIL"
+    },
+    "fills_log": [
+      {
+        "i": 1,
+        "side": "buy",
+        "price": 0.317,
+        "qty": 630.9148264984,
+        "fee_eur": 0.52,
+        "bar_iso": "2024-09-15T00:00:00Z",
+        "pair_L": 0.317,
+        "pair_H": 0.326162
+      },
+      {
+        "i": 2,
+        "side": "sell",
+        "price": 0.326162,
+        "qty": 630.9148264984,
+        "fee_eur": 0.53502915,
+        "bar_iso": "2024-09-24T00:00:00Z",
+        "pair_L": 0.317,
+        "pair_H": 0.326162
+      },
+      {
+        "i": 3,
+        "side": "buy",
+        "price": 0.357924,
+        "qty": 558.7778411059,
+        "fee_eur": 0.52,
+        "bar_iso": "2024-09-28T00:00:00Z",
+        "pair_L": 0.357924,
+        "pair_H": 0.372231
+      },
+      {
+        "i": 4,
+        "side": "sell",
+        "price": 0.372231,
+        "qty": 558.7778411059,
+        "fee_eur": 0.54078553,
+        "bar_iso": "2024-11-08T00:00:00Z",
+        "pair_L": 0.357924,
+        "pair_H": 0.372231
+      },
+      {
+        "i": 5,
+        "side": "buy",
+        "price": 0.515138,
+        "qty": 388.245479852,
+        "fee_eur": 0.52,
+        "bar_iso": "2024-11-13T00:00:00Z",
+        "pair_L": 0.515138,
+        "pair_H": 0.61
+      },
+      {
+        "i": 6,
+        "side": "sell",
+        "price": 0.61,
+        "qty": 388.245479852,
+        "fee_eur": 0.61575733,
+        "bar_iso": "2024-11-15T00:00:00Z",
+        "pair_L": 0.515138,
+        "pair_H": 0.61
+      },
+      {
+        "i": 7,
+        "side": "buy",
+        "price": 0.666526,
+        "qty": 300.0633133591,
+        "fee_eur": 0.52,
+        "bar_iso": "2024-11-17T00:00:00Z",
+        "pair_L": 0.666526,
+        "pair_H": 0.775
+      },
+      {
+        "i": 8,
+        "side": "sell",
+        "price": 0.775,
+        "qty": 300.0633133591,
+        "fee_eur": 0.60462758,
+        "bar_iso": "2024-11-20T00:00:00Z",
+        "pair_L": 0.666526,
+        "pair_H": 0.775
+      },
+      {
+        "i": 9,
+        "side": "buy",
+        "price": 0.974608,
+        "qty": 205.2107103574,
+        "fee_eur": 0.52,
+        "bar_iso": "2024-11-24T00:00:00Z",
+        "pair_L": 0.974608,
+        "pair_H": 1.101375
+      },
+      {
+        "i": 10,
+        "side": "sell",
+        "price": 1.101375,
+        "qty": 205.2107103574,
+        "fee_eur": 0.58763626,
+        "bar_iso": "2024-12-02T00:00:00Z",
+        "pair_L": 0.974608,
+        "pair_H": 1.101375
+      },
+      {
+        "i": 11,
+        "side": "buy",
+        "price": 1.085073,
+        "qty": 184.3193960222,
+        "fee_eur": 0.52,
+        "bar_iso": "2024-12-05T00:00:00Z",
+        "pair_L": 1.085073,
+        "pair_H": 1.182437
+      }
+    ],
+    "label": "SHADOW",
+    "interval": 1440,
+    "interval_name": "1d",
+    "n_bars_fetched": 721,
+    "sha256": "780fd43335d55c2df1935c56638a8ea29d7179721dfcc97427e7f0fc4165e46f",
+    "note": "1d-touch shadow on interval=1440 last ~720 days. Not the named score."
+  },
+  "operator_box": {
+    "name": "adaeur-widefib-paper",
+    "created": "2026-08-28 21:59 Europe/Brussels",
+    "equity_eur": 10000,
+    "fee": "0.26%",
+    "allow": "ADAEUR only",
+    "fills": 0,
+    "orders": 0,
+    "live_resters": "SKIPPED \u2014 last 0.17451 already below prior-day L 0.178212",
+    "invert_paper": "not touched",
+    "dca_paper": "not touched",
+    "this_vm": "did not use Kraken paper CLI"
+  },
+  "script": "docs/rgy-2026-08-28/coder/score_adaeur_widefib.py"
+}
