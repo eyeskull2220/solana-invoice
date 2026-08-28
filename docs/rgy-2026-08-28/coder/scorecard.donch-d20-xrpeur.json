@@ -1,0 +1,927 @@
+{
+  "recipe": "donch-d20-xrpeur",
+  "unlock": "CEO UNLOCK 2026-08-28 22:05 Europe/Brussels",
+  "published": "20/10",
+  "parameter_search": false,
+  "pair": "XRPEUR",
+  "venue": "Kraken",
+  "clock": "1d",
+  "in": 20,
+  "out": 10,
+  "side": "long_only",
+  "invert": false,
+  "fib_pair_swap": false,
+  "rearm_opposite": false,
+  "decide": "close",
+  "fill": "next_open",
+  "clip_eur": 200.0,
+  "start_eur": 10000.0,
+  "window": {
+    "start": "2023-01-01",
+    "end": "2026-08-27"
+  },
+  "tape": {
+    "first": "2023-01-01",
+    "last": "2026-08-27",
+    "bars": 1335,
+    "warmup_first": "2022-12-01",
+    "warmup_bars": 31,
+    "total_bars_incl_warmup": 1366,
+    "coverage": "2023+",
+    "venue": "Kraken"
+  },
+  "fills": 37,
+  "return_after_fees_pct": 5.759519,
+  "maxDD_pct": 3.162919,
+  "verdict": "PASS",
+  "gates": {
+    "return_gt_0": true,
+    "fills_gte_8": true,
+    "maxDD_lte_8": true
+  },
+  "fee_primary_pct": 0.26,
+  "columns": {
+    "0.26": {
+      "fee_pct": 0.26,
+      "fills": 37,
+      "buys": 19,
+      "sells": 18,
+      "return_after_fees_pct": 5.759519,
+      "maxDD_pct": 3.162919,
+      "final_equity_eur": 10575.95188,
+      "final_cash_eur": 10346.066208,
+      "final_units": 184.25198301,
+      "still_long": true,
+      "fill_list": [
+        {
+          "day": "2023-01-14",
+          "side": "buy",
+          "price": 0.35573,
+          "units": 562.22415877,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2023-02-10",
+          "side": "sell",
+          "price": 0.35563,
+          "units": 562.22415877,
+          "notional_eur": 199.943778
+        },
+        {
+          "day": "2023-03-22",
+          "side": "buy",
+          "price": 0.43656,
+          "units": 458.1271761,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2023-04-20",
+          "side": "sell",
+          "price": 0.44903,
+          "units": 458.1271761,
+          "notional_eur": 205.712846
+        },
+        {
+          "day": "2023-05-29",
+          "side": "buy",
+          "price": 0.44951,
+          "units": 444.9289226,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2023-06-29",
+          "side": "sell",
+          "price": 0.42587,
+          "units": 444.9289226,
+          "notional_eur": 189.48188
+        },
+        {
+          "day": "2023-07-14",
+          "side": "buy",
+          "price": 0.72679,
+          "units": 275.18265249,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2023-08-04",
+          "side": "sell",
+          "price": 0.60465,
+          "units": 275.18265249,
+          "notional_eur": 166.389191
+        },
+        {
+          "day": "2023-09-21",
+          "side": "buy",
+          "price": 0.48912,
+          "units": 408.89761204,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2023-10-10",
+          "side": "sell",
+          "price": 0.47555,
+          "units": 408.89761204,
+          "notional_eur": 194.451259
+        },
+        {
+          "day": "2023-10-25",
+          "side": "buy",
+          "price": 0.52668,
+          "units": 379.73722184,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2023-11-22",
+          "side": "sell",
+          "price": 0.53,
+          "units": 379.73722184,
+          "notional_eur": 201.260728
+        },
+        {
+          "day": "2023-12-09",
+          "side": "buy",
+          "price": 0.62526,
+          "units": 319.86693535,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2024-01-04",
+          "side": "sell",
+          "price": 0.53347,
+          "units": 319.86693535,
+          "notional_eur": 170.639414
+        },
+        {
+          "day": "2024-02-15",
+          "side": "buy",
+          "price": 0.50162,
+          "units": 398.70818548,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2024-04-03",
+          "side": "sell",
+          "price": 0.54493,
+          "units": 398.70818548,
+          "notional_eur": 217.268052
+        },
+        {
+          "day": "2024-07-14",
+          "side": "buy",
+          "price": 0.48197,
+          "units": 414.96358695,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2024-08-03",
+          "side": "sell",
+          "price": 0.51297,
+          "units": 414.96358695,
+          "notional_eur": 212.863871
+        },
+        {
+          "day": "2024-09-29",
+          "side": "buy",
+          "price": 0.55042,
+          "units": 363.35888958,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2024-10-03",
+          "side": "sell",
+          "price": 0.48713,
+          "units": 363.35888958,
+          "notional_eur": 177.003016
+        },
+        {
+          "day": "2024-11-11",
+          "side": "buy",
+          "price": 0.54805,
+          "units": 364.9302071,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2025-02-03",
+          "side": "sell",
+          "price": 2.5205,
+          "units": 364.9302071,
+          "notional_eur": 919.806587
+        },
+        {
+          "day": "2025-03-03",
+          "side": "buy",
+          "price": 2.82294,
+          "units": 70.84812288,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2025-03-11",
+          "side": "sell",
+          "price": 1.86437,
+          "units": 70.84812288,
+          "notional_eur": 132.087115
+        },
+        {
+          "day": "2025-05-10",
+          "side": "buy",
+          "price": 2.082,
+          "units": 96.06147935,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2025-05-24",
+          "side": "sell",
+          "price": 2.02224,
+          "units": 96.06147935,
+          "notional_eur": 194.259366
+        },
+        {
+          "day": "2025-07-10",
+          "side": "buy",
+          "price": 2.04942,
+          "units": 97.58858604,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2025-08-03",
+          "side": "sell",
+          "price": 2.39203,
+          "units": 97.58858604,
+          "notional_eur": 233.434825
+        },
+        {
+          "day": "2026-01-05",
+          "side": "buy",
+          "price": 1.78616,
+          "units": 111.97205178,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2026-01-19",
+          "side": "sell",
+          "price": 1.71307,
+          "units": 111.97205178,
+          "notional_eur": 191.815963
+        },
+        {
+          "day": "2026-03-16",
+          "side": "buy",
+          "price": 1.26729,
+          "units": 157.81707423,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2026-03-27",
+          "side": "sell",
+          "price": 1.17964,
+          "units": 157.81707423,
+          "notional_eur": 186.167333
+        },
+        {
+          "day": "2026-04-17",
+          "side": "buy",
+          "price": 1.2345,
+          "units": 162.00891049,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2026-04-29",
+          "side": "sell",
+          "price": 1.17758,
+          "units": 162.00891049,
+          "notional_eur": 190.778453
+        },
+        {
+          "day": "2026-05-11",
+          "side": "buy",
+          "price": 1.25363,
+          "units": 159.53670541,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2026-05-23",
+          "side": "sell",
+          "price": 1.14968,
+          "units": 159.53670541,
+          "notional_eur": 183.416159
+        },
+        {
+          "day": "2026-08-21",
+          "side": "buy",
+          "price": 1.08547,
+          "units": 184.25198301,
+          "notional_eur": 200.0
+        }
+      ]
+    },
+    "0.40": {
+      "fee_pct": 0.4,
+      "fills": 37,
+      "buys": 19,
+      "sells": 18,
+      "return_after_fees_pct": 5.647984,
+      "maxDD_pct": 3.211311,
+      "final_equity_eur": 10564.798388,
+      "final_cash_eur": 10334.912717,
+      "final_units": 184.25198301,
+      "still_long": true,
+      "fill_list": [
+        {
+          "day": "2023-01-14",
+          "side": "buy",
+          "price": 0.35573,
+          "units": 562.22415877,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2023-02-10",
+          "side": "sell",
+          "price": 0.35563,
+          "units": 562.22415877,
+          "notional_eur": 199.943778
+        },
+        {
+          "day": "2023-03-22",
+          "side": "buy",
+          "price": 0.43656,
+          "units": 458.1271761,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2023-04-20",
+          "side": "sell",
+          "price": 0.44903,
+          "units": 458.1271761,
+          "notional_eur": 205.712846
+        },
+        {
+          "day": "2023-05-29",
+          "side": "buy",
+          "price": 0.44951,
+          "units": 444.9289226,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2023-06-29",
+          "side": "sell",
+          "price": 0.42587,
+          "units": 444.9289226,
+          "notional_eur": 189.48188
+        },
+        {
+          "day": "2023-07-14",
+          "side": "buy",
+          "price": 0.72679,
+          "units": 275.18265249,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2023-08-04",
+          "side": "sell",
+          "price": 0.60465,
+          "units": 275.18265249,
+          "notional_eur": 166.389191
+        },
+        {
+          "day": "2023-09-21",
+          "side": "buy",
+          "price": 0.48912,
+          "units": 408.89761204,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2023-10-10",
+          "side": "sell",
+          "price": 0.47555,
+          "units": 408.89761204,
+          "notional_eur": 194.451259
+        },
+        {
+          "day": "2023-10-25",
+          "side": "buy",
+          "price": 0.52668,
+          "units": 379.73722184,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2023-11-22",
+          "side": "sell",
+          "price": 0.53,
+          "units": 379.73722184,
+          "notional_eur": 201.260728
+        },
+        {
+          "day": "2023-12-09",
+          "side": "buy",
+          "price": 0.62526,
+          "units": 319.86693535,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2024-01-04",
+          "side": "sell",
+          "price": 0.53347,
+          "units": 319.86693535,
+          "notional_eur": 170.639414
+        },
+        {
+          "day": "2024-02-15",
+          "side": "buy",
+          "price": 0.50162,
+          "units": 398.70818548,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2024-04-03",
+          "side": "sell",
+          "price": 0.54493,
+          "units": 398.70818548,
+          "notional_eur": 217.268052
+        },
+        {
+          "day": "2024-07-14",
+          "side": "buy",
+          "price": 0.48197,
+          "units": 414.96358695,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2024-08-03",
+          "side": "sell",
+          "price": 0.51297,
+          "units": 414.96358695,
+          "notional_eur": 212.863871
+        },
+        {
+          "day": "2024-09-29",
+          "side": "buy",
+          "price": 0.55042,
+          "units": 363.35888958,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2024-10-03",
+          "side": "sell",
+          "price": 0.48713,
+          "units": 363.35888958,
+          "notional_eur": 177.003016
+        },
+        {
+          "day": "2024-11-11",
+          "side": "buy",
+          "price": 0.54805,
+          "units": 364.9302071,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2025-02-03",
+          "side": "sell",
+          "price": 2.5205,
+          "units": 364.9302071,
+          "notional_eur": 919.806587
+        },
+        {
+          "day": "2025-03-03",
+          "side": "buy",
+          "price": 2.82294,
+          "units": 70.84812288,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2025-03-11",
+          "side": "sell",
+          "price": 1.86437,
+          "units": 70.84812288,
+          "notional_eur": 132.087115
+        },
+        {
+          "day": "2025-05-10",
+          "side": "buy",
+          "price": 2.082,
+          "units": 96.06147935,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2025-05-24",
+          "side": "sell",
+          "price": 2.02224,
+          "units": 96.06147935,
+          "notional_eur": 194.259366
+        },
+        {
+          "day": "2025-07-10",
+          "side": "buy",
+          "price": 2.04942,
+          "units": 97.58858604,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2025-08-03",
+          "side": "sell",
+          "price": 2.39203,
+          "units": 97.58858604,
+          "notional_eur": 233.434825
+        },
+        {
+          "day": "2026-01-05",
+          "side": "buy",
+          "price": 1.78616,
+          "units": 111.97205178,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2026-01-19",
+          "side": "sell",
+          "price": 1.71307,
+          "units": 111.97205178,
+          "notional_eur": 191.815963
+        },
+        {
+          "day": "2026-03-16",
+          "side": "buy",
+          "price": 1.26729,
+          "units": 157.81707423,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2026-03-27",
+          "side": "sell",
+          "price": 1.17964,
+          "units": 157.81707423,
+          "notional_eur": 186.167333
+        },
+        {
+          "day": "2026-04-17",
+          "side": "buy",
+          "price": 1.2345,
+          "units": 162.00891049,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2026-04-29",
+          "side": "sell",
+          "price": 1.17758,
+          "units": 162.00891049,
+          "notional_eur": 190.778453
+        },
+        {
+          "day": "2026-05-11",
+          "side": "buy",
+          "price": 1.25363,
+          "units": 159.53670541,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2026-05-23",
+          "side": "sell",
+          "price": 1.14968,
+          "units": 159.53670541,
+          "notional_eur": 183.416159
+        },
+        {
+          "day": "2026-08-21",
+          "side": "buy",
+          "price": 1.08547,
+          "units": 184.25198301,
+          "notional_eur": 200.0
+        }
+      ]
+    },
+    "0.80": {
+      "fee_pct": 0.8,
+      "fills": 37,
+      "buys": 19,
+      "sells": 18,
+      "return_after_fees_pct": 5.329313,
+      "maxDD_pct": 3.349857,
+      "final_equity_eur": 10532.931269,
+      "final_cash_eur": 10303.045597,
+      "final_units": 184.25198301,
+      "still_long": true,
+      "fill_list": [
+        {
+          "day": "2023-01-14",
+          "side": "buy",
+          "price": 0.35573,
+          "units": 562.22415877,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2023-02-10",
+          "side": "sell",
+          "price": 0.35563,
+          "units": 562.22415877,
+          "notional_eur": 199.943778
+        },
+        {
+          "day": "2023-03-22",
+          "side": "buy",
+          "price": 0.43656,
+          "units": 458.1271761,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2023-04-20",
+          "side": "sell",
+          "price": 0.44903,
+          "units": 458.1271761,
+          "notional_eur": 205.712846
+        },
+        {
+          "day": "2023-05-29",
+          "side": "buy",
+          "price": 0.44951,
+          "units": 444.9289226,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2023-06-29",
+          "side": "sell",
+          "price": 0.42587,
+          "units": 444.9289226,
+          "notional_eur": 189.48188
+        },
+        {
+          "day": "2023-07-14",
+          "side": "buy",
+          "price": 0.72679,
+          "units": 275.18265249,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2023-08-04",
+          "side": "sell",
+          "price": 0.60465,
+          "units": 275.18265249,
+          "notional_eur": 166.389191
+        },
+        {
+          "day": "2023-09-21",
+          "side": "buy",
+          "price": 0.48912,
+          "units": 408.89761204,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2023-10-10",
+          "side": "sell",
+          "price": 0.47555,
+          "units": 408.89761204,
+          "notional_eur": 194.451259
+        },
+        {
+          "day": "2023-10-25",
+          "side": "buy",
+          "price": 0.52668,
+          "units": 379.73722184,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2023-11-22",
+          "side": "sell",
+          "price": 0.53,
+          "units": 379.73722184,
+          "notional_eur": 201.260728
+        },
+        {
+          "day": "2023-12-09",
+          "side": "buy",
+          "price": 0.62526,
+          "units": 319.86693535,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2024-01-04",
+          "side": "sell",
+          "price": 0.53347,
+          "units": 319.86693535,
+          "notional_eur": 170.639414
+        },
+        {
+          "day": "2024-02-15",
+          "side": "buy",
+          "price": 0.50162,
+          "units": 398.70818548,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2024-04-03",
+          "side": "sell",
+          "price": 0.54493,
+          "units": 398.70818548,
+          "notional_eur": 217.268052
+        },
+        {
+          "day": "2024-07-14",
+          "side": "buy",
+          "price": 0.48197,
+          "units": 414.96358695,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2024-08-03",
+          "side": "sell",
+          "price": 0.51297,
+          "units": 414.96358695,
+          "notional_eur": 212.863871
+        },
+        {
+          "day": "2024-09-29",
+          "side": "buy",
+          "price": 0.55042,
+          "units": 363.35888958,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2024-10-03",
+          "side": "sell",
+          "price": 0.48713,
+          "units": 363.35888958,
+          "notional_eur": 177.003016
+        },
+        {
+          "day": "2024-11-11",
+          "side": "buy",
+          "price": 0.54805,
+          "units": 364.9302071,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2025-02-03",
+          "side": "sell",
+          "price": 2.5205,
+          "units": 364.9302071,
+          "notional_eur": 919.806587
+        },
+        {
+          "day": "2025-03-03",
+          "side": "buy",
+          "price": 2.82294,
+          "units": 70.84812288,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2025-03-11",
+          "side": "sell",
+          "price": 1.86437,
+          "units": 70.84812288,
+          "notional_eur": 132.087115
+        },
+        {
+          "day": "2025-05-10",
+          "side": "buy",
+          "price": 2.082,
+          "units": 96.06147935,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2025-05-24",
+          "side": "sell",
+          "price": 2.02224,
+          "units": 96.06147935,
+          "notional_eur": 194.259366
+        },
+        {
+          "day": "2025-07-10",
+          "side": "buy",
+          "price": 2.04942,
+          "units": 97.58858604,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2025-08-03",
+          "side": "sell",
+          "price": 2.39203,
+          "units": 97.58858604,
+          "notional_eur": 233.434825
+        },
+        {
+          "day": "2026-01-05",
+          "side": "buy",
+          "price": 1.78616,
+          "units": 111.97205178,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2026-01-19",
+          "side": "sell",
+          "price": 1.71307,
+          "units": 111.97205178,
+          "notional_eur": 191.815963
+        },
+        {
+          "day": "2026-03-16",
+          "side": "buy",
+          "price": 1.26729,
+          "units": 157.81707423,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2026-03-27",
+          "side": "sell",
+          "price": 1.17964,
+          "units": 157.81707423,
+          "notional_eur": 186.167333
+        },
+        {
+          "day": "2026-04-17",
+          "side": "buy",
+          "price": 1.2345,
+          "units": 162.00891049,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2026-04-29",
+          "side": "sell",
+          "price": 1.17758,
+          "units": 162.00891049,
+          "notional_eur": 190.778453
+        },
+        {
+          "day": "2026-05-11",
+          "side": "buy",
+          "price": 1.25363,
+          "units": 159.53670541,
+          "notional_eur": 200.0
+        },
+        {
+          "day": "2026-05-23",
+          "side": "sell",
+          "price": 1.14968,
+          "units": 159.53670541,
+          "notional_eur": 183.416159
+        },
+        {
+          "day": "2026-08-21",
+          "side": "buy",
+          "price": 1.08547,
+          "units": 184.25198301,
+          "notional_eur": 200.0
+        }
+      ]
+    }
+  },
+  "sanity_last_complete": {
+    "day": "2026-08-27",
+    "close": 1.24767,
+    "donch20": 1.45274,
+    "donch10": 0.85315,
+    "enter": false,
+    "exit_if_long": false,
+    "note": "live book: no enter on 2026-08-27 close 1.24767 vs Donch20 1.45274"
+  },
+  "data": {
+    "used": "kraken_trades_agg_1d + rest_ohlc_1440_tail",
+    "ohlcvt_status": "FAIL Drive quota (anonymous download of official zips blocked)",
+    "ohlcvt_quarters": [
+      {
+        "quarter": "Q1_2023",
+        "file_id": "17ghRNMQGK0Is7_by784qGzP1eCUokI2V",
+        "url": "https://drive.usercontent.google.com/download?id=17ghRNMQGK0Is7_by784qGzP1eCUokI2V&export=download&confirm=t",
+        "bars": 0,
+        "ok": false
+      }
+    ],
+    "urls_downloaded": [
+      "https://api.kraken.com/0/public/OHLC?pair=XRPEUR&interval=1440",
+      "https://api.kraken.com/0/public/Trades?pair=XRPEUR&since=1669852800000000000&count=1000",
+      "https://drive.usercontent.google.com/download?id=17ghRNMQGK0Is7_by784qGzP1eCUokI2V&export=download&confirm=t"
+    ],
+    "overlap_check": {
+      "compared_days": 1,
+      "mismatches": 0,
+      "first": {
+        "day": "2024-09-07",
+        "trades_ohlc": [
+          0.47059,
+          0.48159,
+          0.46952,
+          0.47426
+        ],
+        "rest_ohlc": [
+          0.47059,
+          0.48159,
+          0.46952,
+          0.47426
+        ],
+        "match": true
+      },
+      "ohlc_match": true,
+      "method": "splice_day_trades_vs_rest_ohlc"
+    },
+    "splice_day": "2024-09-07",
+    "notes": "OHLCVT zip download failed (Google Drive quota exceeded on the official complete file https://drive.google.com/file/d/1ptNqWYidLkhb2VAKuLCxmp2OXEfGO-AP/view and quarterly folder https://drive.google.com/drive/folders/15RSlNuW_h0kVM8or8McOGOMfHeBFvFGI linked from https://support.kraken.com/articles/360047124832-downloadable-historical-ohlcvt-open-high-low-close-volume-trades-data). Tape is Kraken-native anyway: public Trades REST aggregated to UTC 1d from 2022-12-01 through the day before REST OHLC 1440 begins (2024-09-07), then REST OHLC 1440 through 2026-08-27. Not Binance. No invented OHLC: daily bars are first/max/min/last Kraken prints. Overlap vs REST 1440 on the splice day is recorded below. coverage=2023+.",
+    "coverage_ok_2023": true
+  },
+  "locks": {
+    "do_not_touch": [
+      "invert-paper",
+      "dca-paper",
+      "adaeur-widefib-paper"
+    ],
+    "do_not_reseal": "c9689f5d",
+    "still_paper": true,
+    "not_fund_gate": true
+  },
+  "lead": "37 / 5.759519 / 3.162919 / PASS / 2023-01-01\u21922026-08-27 / Kraken"
+}
